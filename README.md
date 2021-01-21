@@ -15,8 +15,11 @@ I have since updated Solid-Head's patch to improve handling of health pickups an
 
 # Versions 
 Legacy - The original 1.60 version of the mod, with patches
+
 RPG-Lite - Current 2.x branch started by Ixcuazl
+
 RPG-Lite-DoomRLA - DoomRLA-compatible version based off of the 2.x branch
+
 RPG-Lite-Redux - Monkeybtm6's initial re-write of the Legacy branch
 
 # Usage
