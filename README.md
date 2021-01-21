@@ -11,4 +11,4 @@ A version 2.x revamp of the mod was later posted by Ixcuazl: https://forum.zdoom
 
 A compatibility patch was added for the DoomRLA mod by Solid-Head: https://forum.zdoom.org/viewtopic.php?f=43&t=56272&start=105#p1138973
 
-I have since updated Solid-Head's patch to improve handling of health picks and also grant the stealth damage multiplier to DoomRLA's silenced weapons. 
+I have since updated Solid-Head's patch to improve handling of health pickups and also grant the stealth damage multiplier to DoomRLA's silenced weapons. 
