@@ -1,0 +1,98 @@
+I'm in no way a programmer, but I like this dumb half-broken mod and have been tinkering with it a bit.  Thought I'd share.
+
+Fixes
+- Instant level 999 bug fixed... i think?  Not 100% sure why it even happened in the first place.  Something to do with reading EXPMULT as 0 under certain circumstances, possibly involving bitshifting going awry?  Whatever, i threw some delays in and killed EXPMULT and it doesn't seem to happen now.
+- Used another method to point to the player's TID for ACS scripts to fix compatibility issues with other mods that fiddle with the player's TID, which resulted in the player not gaining experience.  Anything with a radar, for instance.  It's not perfect but it's better than it was.
+- Halved the UI size in SBARINFO.  Bit of a kludge, but it stops that annoying effect where other UIs get bounded to the top left quadrant of the screen, especially with the map open.  You can still mess with the UI scale in zdoom's options.  Looks best set to 1, imo.
+- Spell cooldown crossout effect is now actually centered on the spell icon.  Biggest fix right here.
+- Summons have SXF_NOCHECKPOSITION set and so shouldn't fail to spawn quite so often.  There's also a decorate check to see if they'd spawn in a wall, and if so they spawn on the player's exact position.  Usually.
+- Menu text should be a little more helpful now.  Tidied the menu up a bit, too.
+- Increased HUDMSG ids to reduce menu flickering effect with various other wads.  Valid numbers are between -2147483648 and 2147483647, so don't use 1-100, folks.
+- Fixed being stuck unable to cast if you changed maps while on cooldown in strife.  Probably hexen too, didn't try that.
+
+Mechanical Changes 
+
+Stats/XP
+ - The Attack stat now gives 1% per point rather than 5%(!!!).  It's still pretty good.
+ - DEF has more impact on the player's mass (ie knockback resistance).
+ - Starting energy is now 30 rather than 75, but each point of Power gives 5 rather than 2.  You'll need to invest in power to use most of the spells.  Most expensive are heal (90) and timestop (120).
+ - stats, skills and spells have been given the unclearable flag, so they shouldn't be wiped by pistol start scripts and so forth.  using map * to pistol start still wipes everything, but the character autosave system mostly handles that (it forgets spells though).
+ - You can set base damage dealt and damage taken as CVARS in the options.  Mostly so you can start weaker than normal but end up stronger, if that's your bag.  Note that there's a cap at +100% dealt / -50% taken.
+ - You can set whether or not to get stat/skill points at first level.
+ - You now get XP for finding secrets.  10 per, then half as much again if you find them all.
+ - Character autosave now saves skills, rather than refunding skill points.  There's also an option to save your spells.
+ - Monster scaling was beyond my ability to fix, so it's gone.
+
+Skills:
+ - Three skills renamed.  (refuel -> scavenger, vampirisim[sic]-> lifetap, magic potancy[sic] -> spellcasting)
+ - Scan's gone.  The health bar works, but now it's a menu option.  Position's locked to either the top or the bottom of the screen (also a menu option).
+ - New skills: Swiftness & quicken.  Swiftness increases movement speed, quicken increases regen rate for the three regen skills as well shortening the cooldown time between spells.
+ - The Spellcasting skill generally has more effect on spells.  Minions are tougher and fire faster, regen and reinforce give more health/armour, Ammo Synth gives better stuff, and everything else has a longer duration.
+ - Cost of the Health and Armour regen skills halved.  Previously it took 110 skill points to raise each of them to 10, which is a tad more than they're worth.
+ - Armour regen skill now works in increments of 20 armour, but only works if you have at least 1 armour.
+ - Regen skills are paused if PowerTimeFreezer is active.
+ - Scavenger drops spawn on the dead monster rather than the player.
+
+Spells:
+ - Most spells renamed.
+ - Orange summons are no longer strictly inferior to the blue ones; now each has a different role:
+   - Guard Minions (Purple) are stationary, tough and have a low pain chance.  They also deal minimal damage, literally.  Their one damage attacks still provoke enemies into attacking them, though, and they follow them up with slowing and weakening spells.  They work best as distractions, provoking strong enemies while the player hammers their flanks.
+   - Attack Minions (Blue) are mobile fliers with a decent piercing attack similar to hexen's sapphire wand.  They're much more fragile, though, and have a 100% pain chance.  Basically lost souls with a laser instead of a charge.  They work best in the opposite role to the orange ones, picking off hitscanners and chipping at stronger enemies that are fixated on the player.
+ - Minion shots no longer harm the player.  They fire more often, too, especially at high skill levels.
+ - Minions have +ALWAYSTELEFRAG set so that they can't block monster appearances.
+ - The Slow and Weaken spells are deprecated and now only used by guard minions.
+ - Holy Fire and Push don't spawn, either.  They still work if you spawn them with the console, though. (summon spholyfire / summon sppush).  They're entirely unchanged, except i fixed the typo that was making Holy Fire uncastable.
+ 
+ - New Spells: Timestop (freeze), Heal(regenerate), Reinforce (which gives a chunk of armour),infravision (torch), minion mine and aura.
+ - Aura's not self-explanatory: it sets four flags on the caster for the duration: NOTELEFRAG, CANTSEEK, NORADIUSDMG and DONTRIP.  Basically, stops revenant missiles from homing and protects from splash & piercing damage.  The player's already quasi-immune to telefrag except on map30, so that's an edge case.  There's a failsafe to prevent those flags from being stripped if the player already has them, for whatever reason.
+ - Minion mines are basically summonable barrels, although they have a weak melee attack that provokes monsters into smashing them.
+ - The circle colours of the spell icons follow a rainbow pattern: this is to help you figure out which one's next when scrolling between them.  They're also loosely organised by type: general/protective powerups -> summons -> restoration -> speed powerups -> general again.
+ 
+ - Spells you already have will turn into mana motes after spawning.  Picking these up gives a bit of energy and a few xp points.
+ - The radsuit, blursphere and infrared powerups are replaced by glowy things that give you the spell equivalent if you don't have it, and also a chunk of energy and xp (more if you have the spell already).  Radsuit ones give less xp than the others on the grounds that they're more common.
+ - Powerup-type spells all have cumulative duration.  Durations have all been adjusted, with the combat-useful ones having shorter durations than the utility ones.
+Backstage changes:
+- The radsuit and invis spells now use PowerMask and PowerShadow (set to non-cumulative).  This is pretty much entirely to stop the DRLA commando from having an infinite supply of rapidfire.  Does make the invis effect look nicer, though.  This is also why the vision spell uses torch instead of infrared.
+- The VIT stat now works by giving APROP_STAMINA rather than APROP_STARTHEALTH.  Mostly this means that health kits work properly without item replacement shenanigans.  As a side effect, HP is no longer reset to starting values on level start.
++ The EXPMULT cvar's gone.  It was entirely extraneous and all it did was cause weird problems.  Exp for the next level is now just (EXPBase * Level) +1.  The +1's hidden - it's there to make extra sure the level up cost is never 0.
+The nullspell placeholder spell (empty circle) is no longer always readded on level entry.  It's also removed the first time you pick up a mana mote or one of the powerup replacer orbs. (It exists to prevent the spell selector script from running away when you have no spells, although the script's too small to lag the game when it does that.)
+ - Added a check that sets the player's species to "Player" on level entry.  Additionally, the player gets the THRUSPECIES and DONTHURTSPECIES flags.  This is to reduce friendly fire, although it's not reliable at protecting minions from the player's attacks, since that seems to depend on how the weapon's set up.  Turning teamplay on will stop minions taking damage from the player, though not from blocking rockets.  There's a CVAR control for the species check in case you're running something that needs the player's species set to something specific, or has a bunch of enemies with their species set to player for some reason. 
+ 
+ 
+Compat. Functions:
+ - Made a bunch of compatibility patches for various mods, wads and iwads.  Mostly all they do is change the ammo synth / scavenger effect, though.  Any gameplay mod that uses/replaces the regular four ammo types won't need one, but they're easy to make.  Strife's one has a small script:
+ - Tried to have strife's stamina upgrades give VIT points, but couldn't find a way to do it cleanly, mostly because the UpgradeStamina item doesn't stick around in inventory and you can't decorate-replace items that are given by scripts.  Instead, the "HealthTraining" ticket you get that you trade in for upgrades gets converted into vit points instead.  Not ideal since you get stamina points from the training course as well, but you can always use the console for that.  Note that the punch dagger's damage caps at 20 VIT, equal to the ten upgrades in the base game.
+ - Speed skill specifically accounts for the DRLA scout's speed boost.
+  
+ Known incompatibilities:
+ I've tested with a bunch of stuff but obviously not everything.  Should be at least mostly compatible with anything.
+ 
+ Ultimate Custom Doom, partially.  It overrides the effect of the attack and defence stats as well as the speed skill, even when set to 0.  the rest works ok though i suppose, but running both is kinda redundant anyway.
+ This is also a UI mod, so other UI mods don't always like it.  This one only affects the fullscreen/alternate hud, though.  Other uis work fine, mind you, you just don't get a visible energy bar.  The spell icon's drawn by ACS so that's always ok.
+ That said, UDV hates the speed skill thanks to its own speed overrides. How hard is it to put in an if(!getcvar=whatever) clause, guys?  Or the zscript equivalent. I know doom doesn't care if you have like a thousand scripts setting APROPS every tick but cmon.
+ Space Amazon: There's no acs source file for this so i'm not sure, but i think this mod's radar constantly fiddles with the player's tid.  consequently you only occasionally get experience.  annoying.  Works if you run UDV over the top, presumably because UDV's radar tid muckery overrides TSA's in some way that RPGL can deal with, even though it's udv's radar that breaks when you do this.  Honestly, it's all voodoo to me. 
+ 
+ Known Issues:
+ 
+ - Not sure how to get the fixed point values for atk/def to visually round up to two decimal places.  I know why they're like that (binary gonna binary), but it just looks messy.  Tried a few methods, to no success.
+ - Sometimes, ACS added items from other wads manage to intrude into the spell list struct as little useless capital As.  I have no idea how or why.  The radcount tokens from Ashes 2063, for instance.  Hell, the basic fist does it if you're not supposed to have one.
+ - Monsterinit still has trouble with really huge maps.  You can sort of fix this with the console if you notice monsters aren't giving XP/energy/drops in sections of a big map (summon monsterinitgiver).
+ - I haven't tested this in coop and I suspect this won't work properly.  Not sure if it worked before I mucked about with it.  Players after the first might not get EXP and will probably struggle to pick up spells (since the mote effect only checks player 1's inventory).  I could set a cvar for the mote effect if that's somehow the only problem.
+ - Backpacks in neodoom give mana and the first one you find sets your energy cap to 666 temporarily.  Annoying, but not a huge problem; it's because neodoom has an ammo type called 'mana'.  Should probably rename RPGL's one to something more distinct, but for now the compat patch mostly resolves the problem by replacing neodoom's mana with a renamed version, at least as far as the guns & ammo drops are concerned.  Hence backpacks being the holdout.
+ - Status bars on the lower left look a bit odd if there's no portrait to show, since they end up indented for no apparent reason.  Could make a cvar that hides the portrait, I guess.
+  
+  
+General Notes
+  - I'd note that you should raise the exp base cost if you're using a monster mod that inflates hp values, like GMOTA.  Exp values of monsters are still just HP/20, so you level a bit fast if basic enemies have 200hp rather than 20.  Same's probably true if you're slaughtermapping through hundreds of barons.
+  
+   - There's an optional language file that flips the terminology from fantasy to space fantasy, if you prefer your spells to be called nanoabilities or whatever.  Easy to customise (it's a txt file in a pk3, and .pk3 files are just .zip files).  It also changes the spell icons from circles to vaguely silicon chip looking square things.
+
+  Plans?
+  
+  - I'm considering making ammo synth an infiniteammo powerup.  Saves the whole compatibility business, but would mean scrapping the scavenger skill.  Maybe retooling it to have enemies drop more spells/motes/mana?
+ 
+ - I thought about setting a cap on individual stats of (2 * level), but haven't got round to figuring out how.  Probably really easy.  Probably also unnecessary.
+ - Also wanted to have the max bonus health amount increase with vit, but i can't find a a way to dynamically set inventory capacity for anything that isn't ammo.  Currently it's always 200.  Looks like the other guy had a go at it, but it never worked for me.
+ - Have the armour spell check for green/blue and only give up to 100 if green?
+ - CVar for the mote replacement effect?
+ - CVar to hide the mugshot / move the status bars left a bit?

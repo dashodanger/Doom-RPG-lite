@@ -1,0 +1,613 @@
+
+ACTOR RLStealthRifle : RLWeapon
+{
+  Obituary "%o was shot by %k's stealth rifle."
+  Decal BulletChip
+  Tag "Stealth Rifle"
+  Weapon.SelectionOrder 25
+  Weapon.SlotNumber 4
+  Weapon.AmmoUse1 1
+  Weapon.AmmoGive1 0
+  Weapon.AmmoType1 "RLStealthRifleClip"
+  Weapon.AmmoType2 "Clip"
+  Inventory.Icon "STELICON"
+  States
+  {
+  Ready:
+	TNT1 A 0 A_JumpIfInventory("RLMisfireSpamPreventionCooldown",1,"MisfirePrevention")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleNanoMod",1,"NanoRegenCheck")
+    STEL A 1 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+    Goto Ready
+  NanoRegenCheck:
+    STEL A 70 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+  NanoRegenCheckBegin2:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleBulkMod",1,2)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip", 20, "Ready")
+	Goto NanoRegen
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleBulkMod",2,2)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip", 26, "Ready")
+	Goto NanoRegen
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip", 32, "Ready")
+	Goto NanoRegen
+  NanoRegen:
+	TNT1 A 0 A_GiveInventory("RLStealthRifleClip", 1)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleNanoMod",2,"NanoRegen2")
+    STEL A 17 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+    Goto NanoRegenCheckBegin2
+  NanoRegen2:
+    STEL A 9 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+    Goto NanoRegenCheckBegin2
+	
+  ScavengerDrop:
+	TNT1 A 0 A_JumpIfInventory("RLScavengerDrop",1,"WeaponDropConfirm")
+	TNT1 A 0 A_GiveInventory("RLScavengerDrop",1)
+	TNT1 A 0 A_Print("Press again to drop current weapon,\nor press \crAlt Fire\c- to scrap it to retrieve a Mod Pack.")
+	Goto AfterModDrop
+  WeaponDropConfirm:
+	TNT1 A 0 A_GiveInventory("RLMisfireSpamPreventionCooldown",1)
+	TNT1 A 0 A_TakeInventory("RLScavengerDrop",1)
+	TNT1 A 0 A_TakeInventory("RLWeaponDrop",1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleModLimit", 1, "WeaponDropModded")
+	TNT1 A 0 A_SpawnItemEx("RLStealthRiflePickup", 0, 0, 40, 12, 0, 0, 0, SXF_SETMASTER)
+	Goto WeaponDropRemoval
+  WeaponDropModded:
+	TNT1 A 2 A_SpawnItemEx("RLStealthRiflePickupModded", 0, 0, 40, 12, 0, 0, 0, SXF_SETMASTER)
+  WeaponDropRemoval:
+    TNT1 A 0 A_TakeInventory("RLStealthRifleModLimit", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRiflePowerMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleBulkMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleAgilityMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleTechnicalMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleFirestormMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleSniperMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleNanoMod", 2)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("RLStealthRifleSelected", 1)
+	TNT1 A 0 A_TakeInventory("RLWeaponLimit",1)
+	TNT1 A 1 A_TakeInventory("RLStealthRifle",1)
+	Stop
+	
+  AfterModDrop:
+    STEL A 8 A_WeaponReady (16)
+    Goto Ready
+  MisfirePrevention:
+    STEL A 1 A_WeaponReady (WRF_NOFIRE | WRF_NOBOB)
+    TNT1 A 0 A_JumpIfInventory("RLMisfireSpamPreventionCooldown", 1, "MisfirePrevention")
+    Goto Ready
+	
+  Deselect:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("RLDeselectionFunction",1)
+	TNT1 A 0 A_TakeInventory("RLStealthRifleSelected", 1)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+  DeselectLoop:
+    TNT1 A 0 A_JumpIfInventory("RLShellshockPerk", 1, "DeselectRenegade")
+    TNT1 A 0 A_Lower
+    STEL A 1 A_Lower
+    Loop
+  DeselectRenegade:
+    TNT1 A 0 A_Lower
+    loop
+  SelectRenegade: 
+    TNT1 A 0 A_Raise
+    loop
+  SelectSetWeapon:
+	TNT1 A 0 A_GiveInventory("RLBasicAssemblyTypeWeapon", 1)
+	TNT1 A 0 A_GiveInventory("RLRapidfireTypeWeapon", 1)
+	TNT1 A 0 A_GiveInventory("RLAssembledWeaponToken", 1)
+	TNT1 A 0 A_GiveInventory("RLStealthRifleSelected", 1)
+	TNT1 A 0 A_JumpIfInventory("RLScavengerPerk",1, 1)
+    Goto SelectLoop
+	TNT1 A 0 A_GiveInventory("PowerRLTechnicianBasicDamage", 1)
+    Goto SelectLoop
+  SelectLoop:
+    TNT1 A 0 A_JumpIfInventory("RLShellshockPerk", 1, "SelectRenegade")
+    TNT1 A 0 A_Raise
+    STEL A 1 A_Raise
+    Loop
+	
+// Does 4x damage while under effect of Blursphere
+  Fire:
+	STEL A 0 A_JumpIfInventory("RLRestrictionMeleeOnly",1,"MeleeRestricted") // Cannot fire in levels that restrict it
+	STEL A 0 A_JumpIfInventory("RLRestrictionBoomOnly",1,"BoomRestricted") // Cannot fire in levels that restrict it
+	STEL A 0 A_JumpIfInventory("RLRestrictionHighTechOnly",1,"HighTechRestricted") // Cannot fire in levels that restrict it
+	STEL A 0 A_JumpIfInventory("RLRestrictionCunningOnly",1,"CunningRestricted") // Cannot fire in levels that restrict it
+	
+	TNT1 A 0 A_JumpIfNoAmmo("Reload")
+	TNT1 A 0 A_AlertMonsters (random(50,256))
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleSniperMod",1,"FireS")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRiflePowerMod",1,"FireP")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAgilityMod",1,"FireA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisible")
+    TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisible")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*5), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*5), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisible:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*20), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*20), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireP:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRiflePowerMod",2,"FirePP")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAgilityMod",1,"FirePA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleP")
+		TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleP")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*6), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleP:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*24), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireA:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRiflePowerMod",1,"FirePA")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAgilityMod",2,"FireAA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleA")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*5), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*5), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleA:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*20), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*20), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FirePP:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisiblePP")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisiblePP")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*7), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*7), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisiblePP:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*28), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0.5, -1, (random(1,5)*28), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FirePA:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisiblePA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisiblePA")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*6), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisiblePA:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*24), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireAA:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleAA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleAA")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (1, 0, -1, (random(1,5)*5), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1, 0, -1, (random(1,5)*5), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleAA:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (1, 0, -1, (random(1,5)*20), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1, 0, -1, (random(1,5)*20), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireS:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleSniperMod",2,"FireSS")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRiflePowerMod",1,"FireSP")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAgilityMod",1,"FireSA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleS")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleS")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*5), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*5), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleS:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*20), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*20), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireSS:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleSS")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleSS")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*5), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*5), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleSS:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*20), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*20), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireSP:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleSP")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleSP")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*6), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleSP:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*24), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireSA:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleSA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleSA")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*5), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*5), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireInvisibleSA:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",0,2)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*20), "RLBulletPuff", FBF_USEAMMO | FBF_NORANDOM)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*20), "RLBulletPuff", FBF_NORANDOM)
+    Goto FireFinish
+  FireFinish:
+    TNT1 A 0 A_PlaySound("weapons/stealthrifle", CHAN_WEAPON, 1, 0, 1.4)
+	TNT1 A 0 A_JumpIfInventory("RLAmmochainPerk",1,"FireFinishPowerupCheck") // Check for powerups.
+  FireFinishPowerupCheckDone: // No valid powerups detected.
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleFirestormMod",2,"FireFinishFF")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleFirestormMod",1,"FireFinishF")
+    TNT1 A 0 A_SpawnItemEx ("RLBattleRifleRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    STEL B 1 Bright A_GunFlash
+    STEL CDA 1
+    Goto FireFinishContinue
+  FireFinishF:
+    TNT1 A 0 A_SpawnItemEx ("RLUziRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    STEL B 1 Bright A_GunFlash
+    STEL CD 1
+    Goto FireFinishContinue
+  FireFinishFF:
+    TNT1 A 0 A_SpawnItemEx ("RLThompsonRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    STEL B 1 Bright A_GunFlash
+    STEL A 1
+    Goto FireFinishContinue
+	
+  FireFinishContinue:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleAmmochain",3,2)
+	TNT1 A 0 A_Jump(256,3)
+	TNT1 A 0 A_TakeInventory("RLStealthRifleAmmochain",3)
+    TNT1 A 0 A_ReFire
+    Goto Ready
+	TNT1 A 0 A_GiveInventory("RLStealthRifleAmmochain",1)
+    TNT1 A 0 A_ReFire
+    Goto Ready
+
+//-------------------------------------------------------------------------------------------------
+  FireFinishPowerupCheck: // Marine fires one Firestorm's worth faster while affected by powerups.
+	TNT1 A 0 A_JumpIfInventory("PowerInvulnerable",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerIronFeet",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerLightAmp",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerInfiniteAmmo",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerDrain",1,"FireFinishPowerupCheckConfirmed")
+	TNT1 A 0 A_JumpIfInventory("PowerRLBerserkResistance",1,"FireFinishPowerupCheckConfirmed")
+	Goto FireFinishPowerupCheckDone
+  FireFinishPowerupCheckConfirmed:
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleFirestormMod",1,"FireFinishFF")
+	Goto FireFinishF
+//-------------------------------------------------------------------------------------------------
+  
+  Reload:
+	STEL A 1 A_WeaponReady (WRF_NOPRIMARY | WRF_ALLOWZOOM)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleBulkMod",1,2)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip", 20, "Ready")
+	Goto ReloadStartingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleBulkMod",2,2)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip", 26, "Ready")
+	Goto ReloadStartingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip", 32, "Ready")
+  ReloadStartingAmmoCheck:
+	TNT1 A 0 A_JumpIfInventory("Clip", 1, 1)
+	Goto Ready
+	TNT1 A 0 // Play the reload animation.
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleTechnicalMod",2,"Reload2")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleTechnicalMod",1,"Reload1")
+    STEL E 2
+    STEL F 2
+    STEL G 2
+    STEL H 2
+    STEL I 2
+    TNT1 A 0 A_PlaySound("weapons/stealthrifleunload", CHAN_ITEM)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadOutRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    STEL J 2
+    STEL K 2
+    STEL L 9
+    STEL M 2
+	Goto ReloadWorking
+  Reload1:
+    STEL E 2
+    STEL F 2
+    STEL G 2
+    STEL H 2
+    STEL I 2
+    TNT1 A 0 A_PlaySound("weapons/stealthrifleunload", CHAN_ITEM)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadOutRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    STEL J 2
+    STEL K 2
+    STEL L 6
+    STEL M 2
+	Goto ReloadWorking
+  Reload2:
+    STEL E 2
+    STEL F 2
+    STEL G 2
+    STEL H 2
+    STEL I 2
+    TNT1 A 0 A_PlaySound("weapons/stealthrifleunload", CHAN_ITEM)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadOutRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    STEL J 2
+    STEL K 2
+    STEL L 3
+    STEL M 2
+	Goto ReloadWorking
+  ReloadWorking:
+	TNT1 A 0 A_TakeInventory("Clip", 1)
+	TNT1 A 0 A_GiveInventory("RLStealthRifleClip", 1)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleBulkMod",1,2)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip",20,5)
+	Goto ReloadWorkingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleBulkMod",2,2)
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip",26,3)
+	Goto ReloadWorkingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleClip",32,2)
+  ReloadWorkingAmmoCheck:
+	TNT1 A 0 A_JumpIfInventory("Clip",1,2)
+	TNT1 A 0
+	Goto ReloadFinish
+	TNT1 A 0
+	Goto ReloadWorking
+  ReloadFinish:
+    TNT1 A 0 A_PlaySound("weapons/stealthrifleload", 7)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadInRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleTechnicalMod",2,"ReloadFinish2")
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleTechnicalMod",1,"ReloadFinish1")
+    STEL N 2
+    STEL O 2
+    TNT1 A 0 A_PlaySound("weapons/stealthriflecock", CHAN_ITEM)
+    STEL P 2
+    STEL G 2
+    STEL F 2
+    STEL E 2
+	Goto Ready
+  ReloadFinish1:
+    STEL N 2
+    STEL O 2
+    TNT1 A 0 A_PlaySound("weapons/stealthriflecock", CHAN_ITEM)
+    STEL P 2
+    STEL G 1
+    STEL F 1
+    STEL E 1
+	Goto Ready
+  ReloadFinish2:
+    STEL N 1
+    STEL O 1
+    TNT1 A 0 A_PlaySound("weapons/stealthriflecock", CHAN_ITEM)
+    STEL P 1
+    STEL G 1
+    STEL F 1
+    STEL E 1
+	Goto Ready
+  Flash:
+    TNT1 A 1 A_Light1
+    TNT1 A 1 A_Light2
+    Goto LightDone
+  Spawn:
+	TNT1 A 0 NoDelay A_SpawnItemEx("RLStealthRiflePickup",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION, 0, tid)
+    Stop
+  Altfire:
+	TNT1 A 0 A_JumpIfInventory("RLArmorModItemActivate",1, "ArmorModConversion")
+	TNT1 A 0 A_JumpIfInventory("RLScavengerDrop",1,"ScavengerTime")
+	Goto Ready
+  ModDiscombobulation:
+	TNT1 A 0 A_Print("Applied Mod pack extracted from discarded weapon.")
+	TNT1 A 0 ACS_NamedExecuteAlways("ScavengeMods", 0)
+	TNT1 A 3
+	TNT1 A 0 A_TakeInventory("RLScavengerDrop",1)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleModLimit", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRiflePowerMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleBulkMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleAgilityMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleTechnicalMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleSniperMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleFirestormMod", 2)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("RLStealthRifleSelected", 1)
+	TNT1 A 0 A_TakeInventory("RLWeaponLimit",1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+	Goto ScavengerTimeEnd
+  ScavengerTime:
+	TNT1 A 0 A_GiveInventory("RLScavengingExtraEffects", 1)
+    TNT1 A 0 A_GiveInventory("RLSilencedPistolAssemblyLearntToken", 1) // Assembly is now listed in the HUD menus
+	TNT1 A 0 A_JumpIfInventory("RLStealthRifleModLimit",1,"ModDiscombobulation")
+	TNT1 A 0 A_Print("Mod pack extracted from discarded weapon.")
+	TNT1 A 0 A_TakeInventory("RLScavengerDrop",1)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleModLimit", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRiflePowerMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleBulkMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleAgilityMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleTechnicalMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleSniperMod", 2)
+    TNT1 A 0 A_TakeInventory("RLStealthRifleFirestormMod", 2)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("RLStealthRifleSelected", 1)
+	TNT1 A 0 A_TakeInventory("RLWeaponLimit",1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+    TNT1 A 0 A_StopSound(6)
+	TNT1 A 0 A_Jump(256,1,2)
+	TNT1 A 0 A_FireCustomMissile("DroppedRLTechnicalMod",0,0,0)
+	Goto ScavengerTimeEnd
+	TNT1 A 0 A_FireCustomMissile("DroppedRLTechnicalMod",0,0,0)
+	Goto ScavengerTimeEnd
+  ScavengerTimeEnd:
+	TNT1 A 1 A_TakeInventory("RLStealthRifle",1)
+	Stop
+  }
+}
+
+//-------------------------------------------------------------------
+//		MECHANICS
+
+Actor RLStealthRifleSelected : RLPermanentInventory {}
+Actor RLStealthRifleAmmochain : RLAmmochainDefault {}
+Actor RLStealthRifleModLimit : RLBasicAssemblyModAmount {}
+Actor RLStealthRiflePowerMod : RLBasicAssemblyModAmount {}
+Actor RLStealthRifleBulkMod : RLBasicAssemblyModAmount {}
+Actor RLStealthRifleAgilityMod : RLBasicAssemblyModAmount {}
+Actor RLStealthRifleTechnicalMod : RLBasicAssemblyModAmount {}
+Actor RLStealthRifleFirestormMod : RLBasicAssemblyModAmount {}
+Actor RLStealthRifleNanoMod : RLBasicAssemblyModAmount {}
+Actor RLStealthRifleSniperMod : RLBasicAssemblyModAmount {}
+
+ACTOR RLStealthRifleClip : Ammo
+{
+   +INVENTORY.IGNORESKILL
+   Inventory.MaxAmount 32
+   Inventory.Icon ""
+}
+
+//-------------------------------------------------------------------
+//		PICKUPS
+
+ACTOR RLStealthRiflePickup : RLBasicAssembledWeaponPickup 17438
+{
+	//$Sprite STELX0
+	Tag "Stealth Rifle [Pickup]"
+	States
+	{
+	SpawnFrame:
+		STEL X 4
+		"####" "#" 0 A_Jump(256, "SpawnLoop")
+		Goto SpawnLoop
+	SpawnLoop:
+		"####" "#" 0 A_JumpIf(Abs(VelZ) <= 0.01 && user_floorhit == 0, "FloorHit")
+		"####" "#" 1
+		Loop
+	FloorHit:
+		"####" "#" 0 A_PlaySound("weapons/gundropmedium")
+		"####" "#" 0 A_ScaleVelocity (0.5)
+		"####" "#" 0 A_ChangeFlag("SPECIAL", true)
+		"####" "#" 0 A_ChangeFlag("THRUACTORS", false)
+		"####" "#" 0 A_SetUserVar("user_floorhit", 1)
+		"####" "#" 0 A_Jump(256, "SpawnLoop")
+		Stop
+	Pickup:
+		"####" "#" 0
+		"####" "#" 0 A_JumpIfInventory("RLStealthRifle",1,"NotPickup") // If the player already has this weapon, they are not given the weapon
+		"####" "#" 0 A_JumpIfInventory("RLWeaponLimit",0,"NotPickupLimit") // The absolute max limit check for weapons
+		"####" "#" 0 A_Jump(256, "GiveWeapon")
+		Goto GiveWeapon
+	GiveWeapon:
+		"####" "#" 0 A_GiveInventory("RLStealthRifle",1)
+		"####" "#" 0 A_GiveInventory("RLWeaponLimit",1)
+		"####" "#" 0 A_Print("\ccPicked up a \cvStealth Rifle.")
+		Goto PickupSound
+	NotPickupLimit:
+		"####" "#" 0 A_Jump(256, "NotPickup")
+		Goto NotPickup
+	NotPickup:
+		"####" "#" 0 A_JumpIfInventory("DRLA_WeaponAntiLogFloodCheck",1,"NotPickup_NoPrint")
+		"####" "#" 0 A_GiveInventory("DRLA_WeaponAntiLogFloodCheck")
+		"####" "#" 0 A_Print("\cv= Stealth Rifle =", 2, "CONFONT")
+		Goto NotPickup_NoPrint
+	NotPickup_NoPrint:
+		"####" "#" 0
+		Fail
+	PickupSound:
+		"####" "#" 0 A_PlaySound("weapons/StealthRiflepickup")
+		Stop
+//==============================================================================
+	MarathonStuff:
+		"####" "#" 0 A_SpawnItemEx("RLMarathonShells",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+ACTOR RLStealthRiflePickupModded : RLStealthRiflePickup
+{
+	+INVENTORY.TRANSFER
+	+DONTGIB
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay ACS_NamedExecuteAlways("GetWeaponMods", 0)
+		TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 0, "NoSpecialStartsStuff")
+		"####" "#" 0 A_Jump(256, "SpecialStartsStuff")
+		Goto SpecialStartsStuff
+		
+	SpawnFrame:
+		STEL X 4
+		"####" "#" 0 A_Jump(256, "SpawnLoop")
+		Goto SpawnLoop
+	SpawnLoop:
+		"####" "#" 0 A_JumpIf(VelZ <= 0.01 && user_floorhit == 0, "FloorHit")
+		"####" "#" 0 ACS_NamedExecuteAlways("RLWeaponModDisplay", 0)
+		"####" "#" 1
+		Loop
+	GiveWeapon:
+		"####" "#" 0 A_GiveInventory("RLStealthRifle",1)
+		"####" "#" 0 A_GiveInventory("RLWeaponLimit",1)
+		"####" "#" 0 A_Print("\ccPicked up a \cbmodded \cvStealth Rifle.")
+		Goto PickupSound
+	NotPickupLimit:
+		"####" "#" 0 A_JumpIfInventory("DRLA_WeaponAntiLogFloodCheck",1,"NotPickup_NoPrint")
+		"####" "#" 0 A_GiveInventory("DRLA_WeaponAntiLogFloodCheck")
+		"####" "#" 0 A_Print("\cv= Stealth Rifle =", 2, "CONFONT")
+		Goto NotPickup_NoPrint
+	NotPickup:
+		"####" "#" 0 A_JumpIfInventory("RLStealthRifleModLimit", 1, "NotPickup_Modded")
+		"####" "#" 0 A_JumpIfInventory("DRLA_WeaponAntiLogFloodCheck",1,"NotPickup_NoPrint")
+		"####" "#" 0 A_GiveInventory("DRLA_WeaponAntiLogFloodCheck")
+		"####" "#" 0 A_Print("\cv= Stealth Rifle =\n\n\ccYou replace your unmodded\n\ccweapon with the one you picked up.", 5, "CONFONT")
+		"####" "#" 0 A_GiveInventory("Clip",20)
+		Goto PickupSound
+	NotPickup_Modded:
+		"####" "#" 0 A_Print("\cv= Stealth Rifle =\n\n\caYou are already carrying a modded\n\caweapon of this type", 5, "CONFONT")
+		Fail
+	}
+}

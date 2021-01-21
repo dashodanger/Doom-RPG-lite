@@ -1,0 +1,265 @@
+ACTOR SPGuardian : Inventory
+{
+	+FLOATBOB
+	+INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+	Scale 0.1
+	FloatBobStrength 0.6
+	inventory.maxamount 1
+	Inventory.PickupMessage "$SP_BGUA" 
+	States
+	{
+	Spawn:
+		GSSP E 0
+		TNT1 A 0 A_JumpIfInventory("SPGuardian",1,"GotAlready",AAPTR_PLAYER1)
+    TNT1 A 0 A_SetScale(0.5)
+		GSSP E 12 Bright
+    TNT1 A 0 A_SetScale(0.55)
+		GSSP E 2 Bright
+    TNT1 A 0 A_SetScale(0.6)
+		GSSP E 2 Bright
+    TNT1 A 0 A_SetScale(0.65)
+		GSSP E 2 Bright
+    TNT1 A 0 A_SetScale(0.7)
+		GSSP E 2 Bright
+    TNT1 A 0 A_SetScale(0.75)
+		GSSP E -1 Bright
+		Stop
+		GotAlready:
+		Goto Death
+	Death:
+		GSSP E 0
+		TNT1 A 0 A_SpawnItemEx("ManaMote")
+		Stop
+	}
+}
+
+ACTOR SPGuardianCast : CustomInventory
+{
+  //+INVENTORY.INVBAR
+  +INVENTORY.AUTOACTIVATE
+  +FLOATBOB
+  +INVENTORY.ALWAYSPICKUP
+  States
+  {
+  Spawn:
+    GSSP E -1 Bright
+    Stop
+  Use:
+	TNT1 A 0 A_Playsound("misc/p_pkup", CHAN_WEAPON)
+  TNT1 A 0 A_CheckBlock("Walled", CBF_NOACTORS , AAPTR_DEFAULT,45,0,10,0)
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1")
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power1:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect1",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power2:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect2",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power3:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect3",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power4:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect4",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power5:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect5",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+	Walled:
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1W")
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power1W:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power2W:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power3W:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect3",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power4W:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  Power5W:
+	TNT1 A 0 A_SpawnItemEx("GuardianEffect5",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	Stop
+  }
+}
+
+ACTOR GuardianEffect
+{
+	Tag "$SP_BGUA"
+	Health 75
+	Radius 16
+	Height 16
+	Mass 50
+	Speed 5
+	Scale 0.75
+	PainChance 255
+  Species "Player"
+	Monster
+  DamageFactor "Vacuum", 0 // For Square
+	+FLOAT
+	+FLOATBOB
+	+NOGRAVITY
+	+Friendly
+  +THRUSPECIES
+  +MISSILEMORE
+  +ALWAYSTELEFRAG
+  +AVOIDMELEE
+  +DONTGIB
+	-CountKill
+	-Solid
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ACS_NamedExecuteAlways("FriendlySummon",0,45)
+	Spawn2:
+		GSSP F 8 A_Look
+		Loop
+	See:
+		GSSP F 3 A_Chase
+		Loop
+	Missile:
+		GSSP F 9 A_FaceTarget
+		GSSP FG 2
+		GSSP H 5 A_CustomMissile("SummonedGuardianAttack")
+		Goto See
+	Pain:
+		GSSP F 2
+		GSSP F 2 A_Pain
+		Goto See
+	Death:
+		BAL1 CDE 6 BRIGHT
+		Stop
+	}
+}
+
+ACTOR GuardianEffect1 : GuardianEffect
+{
+	Health 100
+	Speed 6
+	States
+	{
+	Missile:
+		GSSP F 8 A_FaceTarget
+		GSSP FG 2
+		GSSP H 5 A_CustomMissile("SummonedGuardianAttack")
+		Goto See
+	}
+}
+
+ACTOR GuardianEffect2 : GuardianEffect
+{
+	Health 125
+	Speed 7
+	States
+	{
+	Missile:
+		GSSP F 7 A_FaceTarget
+		GSSP FG 2
+		GSSP H 5 A_CustomMissile("SummonedGuardianAttack")
+		Goto See
+	}
+}
+
+ACTOR GuardianEffect3 : GuardianEffect
+{
+	Health 150
+	Speed 8
+	States
+	{
+	Missile:
+		GSSP F 6 A_FaceTarget
+		GSSP FG 2
+		GSSP H 5 A_CustomMissile("SummonedGuardianAttack")
+		Goto See
+	}
+}
+
+ACTOR GuardianEffect4 : GuardianEffect
+{
+	Health 175
+	Speed 9
+	States
+	{
+	Missile:
+		GSSP F 5 A_FaceTarget
+		GSSP FG 2
+		GSSP H 5 A_CustomMissile("SummonedGuardianAttack")
+		Goto See
+	}
+}
+
+ACTOR GuardianEffect5 : GuardianEffect
+{
+	Health 200
+	Speed 10
+	States
+	{
+	Missile:
+		GSSP F 4 A_FaceTarget
+		GSSP FG 2
+		GSSP H 5 A_CustomMissile("SummonedGuardianAttack")
+		Goto See
+	}
+}
+
+Actor SummonedGuardianSmokeBlue
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+SHADOW
+	+NOTELEPORT
+	+CANNOTPUSH
+	+NODAMAGETHRUST
+	RenderStyle "Translucent"
+	Alpha 0.6
+	States
+	{
+	Spawn:
+		MSGB ABAB 4
+		Stop
+	}
+}
+
+Actor SummonedGuardianAttack : FastProjectile
+{
+  Speed 184
+  Radius 8
+  Height 8
+  Damage 2
+  Species "Player"
+  DamageType "MinshotBlue"
+  +RIPPER
+  +CANNOTPUSH
+  +THRUSPECIES
+  +MTHRUSPECIES
+  +NODAMAGETHRUST
+  +SPAWNSOUNDSOURCE
+  MissileType "SummonedGuardianSmokeBlue"
+  States
+  {
+	Spawn:
+		MSGB AB 4 Bright
+		Loop
+	Death:
+		MSGB C 4 Bright
+		MSGB D 3 Bright
+		MSGB E 4 Bright
+		MSGB F 3 Bright
+		MSGB G 4 Bright
+		Stop
+  }
+}

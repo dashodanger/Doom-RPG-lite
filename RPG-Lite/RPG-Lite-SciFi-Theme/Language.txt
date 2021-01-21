@@ -1,0 +1,61 @@
+[enu default]
+	Submenu1 = "Stats Menu";
+	Submenu2 = "Skills Menu";
+	
+	Menu1opt01 = "Vitality ";
+	Menu1opt02 = "Attack ";
+	Menu1opt03 = "Power ";
+	Menu1opt04 = "Defense ";
+	Menu1opt05 = "Expertise ";
+	Menu1opt06 = "Skills Menu";
+	Menu1opt07 = "Exit Menu";
+	
+	Menu1Desc01 = "Increases max health by 5.";
+	Menu1Desc02 = "Increases damage dealt by 1%.";
+	Menu1Desc03 = "Increases max energy by 5.";
+	Menu1Desc04 = "Decreases damage taken by 0.5% and reduces knockback.";
+	Menu1Desc05 = "Converts 2 stat points to 1 skill point.";
+	Menu1Desc06 = "Assign skill points";
+	Menu1Desc07 = "Get back to shooting things already!";
+	
+	Menu2opt01 = "Microfusion ";
+	Menu2opt02 = "Medical Nanobots ";
+	Menu2opt03 = "Repair Nanobots ";
+	Menu2opt04 = "Energy Leech ";
+	Menu2opt05 = "Stats Menu";
+	Menu2opt06 = "Adrenaline Rush ";
+	Menu2opt07 = "Tech Power ";
+	Menu2opt08 = "Hyperathletics ";
+	Menu2opt09 = "System Efficiency ";
+	
+	Menu2Desc01 = "Regenerates Energy slowly. \n1 point per rank, per cycle.";
+	Menu2Desc02 = "Regenerates Health slowly to a max of 10% per rank. \nMax is affected by Vitality.";
+	Menu2Desc03 = "Regenerates Armor slowly to a max of 20 per rank. \nMust have at least 1 point of armor.";
+	Menu2Desc04 = "Killing enemies yields 2 more energy per rank.\n+Enemies drop more microcells and abilities, and sometimes artifacts.";
+	Menu2Desc05 = "Enter stats menu";
+	Menu2Desc06 = "Killing monsters restores health. \nAmount is random, between 1 and (rank) health.";
+	Menu2Desc07 = "Increases the power or duration of tech effects. \nRaises HP and speed of drones.";
+	Menu2Desc08 = "Raises movement speed by 6.25% per rank. \nThat's 1/16th if you're wondering.";
+	Menu2Desc09 = "Speeds regen cycles and tech cooldowns. \nBoth timers are 70 tics (2s), minus 7 tics per rank.";
+	
+	SP_RADS = "Hazmat Shield";
+	SP_PGUA = "Decoy Drone";
+	SP_BGUA = "Laser Drone";
+	SP_BOMG = "Techmine";
+	SP_VISI = "Night Vision";
+	SP_INVI = "Cloaking Device";
+	SP_ALAC = "AWS System";
+	SP_SPSP = "Friction Converter";
+	SP_AMSY = "Nanosynthesis Unit";
+	SP_RGEN = "EMS Integration";
+	SP_STOP = "Tachyon Inverter";
+	SP_ARMR = "Shield Booster";
+	SP_PRWA = "Thermal Jammer";
+	SP_PUSH = "Kinetic Projector";
+	
+	rpglmanamote = "Microcell";
+	rpglgreenmana = "Protective Artifact";
+	rpglbrightmana = "Luminous Artifact";
+	rpglinvismana = "Umbral Artifact";
+	rpgltoughmana = "Hardening Artifact";
+	rpglmegamana = "Biorestorative Artifact";

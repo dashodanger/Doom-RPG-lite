@@ -1,0 +1,220 @@
+#library "MRPGSkills"
+#include "zcommon.acs"
+
+Script "ConstSkillActivator" (void)
+{
+  int scriptmaxhealthcheck = GetActorProperty(0,APROP_STAMINA) + 100,
+	Healthregenammount = ((Fixeddiv(scriptmaxhealthcheck,10) + 0.9) >> 16),
+	RegenSpeedQuicken = (CheckInventory("SKQuicken") * 7);
+	
+	If(CheckInventory("PowerTimeFreezer") > 0)
+   {
+	Delay(35);
+	Restart;
+	 }
+	
+	if (CheckInventory("SKManaRegen") >= 1)
+	{
+		Giveinventory("QMana",1 * CheckInventory("SKManaRegen"));
+	}
+	
+	if((CheckInventory("SKHealthRegen") >= 1) && ((CheckInventory("Health")) < (Healthregenammount * CheckInventory("SKHealthRegen"))))
+		{
+			Giveinventory("Skillhealthgiver",1);
+		}
+	
+	if((CheckInventory("SKArmorRegen") >= 1) && (CheckInventory("Armor") >= 1) && ((CheckInventory("Armor")) < (20 * CheckInventory("SKArmorRegen"))))
+	{
+        Giveinventory("Skillarmorgiver",1);
+  }
+	Delay(70 - RegenSpeedQuicken);
+	Restart;
+}
+
+Script "SkillActivator" (void)
+{
+	Terminate;
+}
+
+Script "SkillMagicPotency" (void)
+{
+	int checkpotency = checkinventory("SKMagicPotency");
+	
+	setresultvalue(checkpotency);
+}
+
+Script "SpellSlow" (int Duration)
+{
+	SetActivator(0,AAPTR_TRACER);
+	if (Checkinventory("SlowDebuff") > 0)
+		{Terminate;}
+	if (Checkinventory("SPLesserGuardian") > 0)
+		{Terminate;}
+	Giveinventory("SlowDebuff",1);
+	
+	int Saveval = GetActorProperty(0,APROP_SPEED),
+	Time = 35;
+	SetActorProperty(0,APROP_SPEED,GetActorProperty(0,APROP_SPEED) / 2);
+	Delay(time * Duration);
+	SetActorProperty(0,APROP_SPEED,Saveval);
+	Takeinventory("SlowDebuff",1);
+}
+
+Script "SpellStop" (int Duration)
+{
+	int Saveval = GetActorProperty(0,APROP_SPEED),
+	Time = 35;
+	
+	SetActorProperty(0,APROP_SPEED,0.0);
+	Delay(time * Duration);
+	SetActorProperty(0,APROP_SPEED,Saveval);
+}
+
+Script "SpellWeaken" (int Duration)
+{
+	SetActivator(0,AAPTR_TRACER);
+	if (Checkinventory("WeakenDebuff") > 0)
+		{Terminate;}
+	if (Checkinventory("SPLesserGuardian") > 0)
+		{Terminate;}
+	Giveinventory("WeakenDebuff",1);
+	int Saveval = GetActorProperty(0,APROP_DamageMultiplier),
+	Time = 35;
+	
+	SetActorProperty(0,APROP_DamageMultiplier,GetActorProperty(0,APROP_DamageMultiplier) / 2);
+	Delay(time * Duration);
+	SetActorProperty(0,APROP_DamageMultiplier,Saveval);
+	Takeinventory("WeakenDebuff",1);
+}
+
+Script "SpellTimeFreeze" (void)
+{
+	If((CheckInventory("PowerTimeFreezer") < 1) && (CheckInventory("SPTimeStopToken") > 0))
+	{
+	GiveInventory("SPTimeStopEffect", 1);
+	GiveInventory("SPTimeStopActive", 1);
+	}
+	If((CheckInventory("PowerTimeFreezer") > 0) && (CheckInventory("SPTimeStopToken") < 1) && (CheckInventory("SPTimeStopToken") > 0))
+	{
+	TakeInventory("PowerTimeFreezer", 1);
+	TakeInventory("SPTimeStopActive", 1);
+	terminate;
+	}
+	If((CheckInventory("PowerTimeFreezer") > 0) && (CheckInventory("SPTimeStopToken") > 0))
+	{
+	TakeInventory("SPTimeStopToken", 1);
+	Delay(45);
+	Restart;
+	}
+	else
+	{
+	TakeInventory("SPTimeStopToken", 999);
+	TakeInventory("SPTimeStopActive", 1);
+	terminate;
+	}
+}
+
+Script "SpellProtectionWard" (void)
+{
+  if(CheckInventory("SPWardActive") < 1)
+  {
+   if(CheckFlag(0, "NOTELEFRAG") == TRUE)
+    {
+     GiveInventory("PWTelefragFailsafe", 1);
+    }
+   if(CheckFlag(0, "CANTSEEK") == TRUE)
+    {
+     GiveInventory("PWCantSeekFailsafe", 1);
+    }
+   if(CheckFlag(0, "NORADIUSDMG") == TRUE)
+    {
+     GiveInventory("PWRadiusDmgFailsafe", 1);
+    }
+   if(CheckFlag(0, "DONTRIP") == TRUE)
+    {
+     GiveInventory("PWRipperFailsafe", 1);
+    }
+     setactorflag (0, "NOTELEFRAG", true);
+     setactorflag (0, "CANTSEEK", true);
+     setactorflag (0, "NORADIUSDMG", true);
+     setactorflag (0, "DONTRIP", true);
+     GiveInventory("SPWardActive", 1);
+   }
+	If(CheckInventory("PWardSpellToken") > 0)
+	 {
+	TakeInventory("PWardSpellToken", 1);
+	Delay(45);
+	Restart;
+	 }
+	else
+	{
+	If(CheckInventory("PWTelefragFailsafe") < 1)
+    {
+     setactorflag (0, "NOTELEFRAG", false);
+     }
+	If(CheckInventory("PWCantSeekFailsafe") < 1)
+    {
+     setactorflag (0, "CANTSEEK", false);
+     }
+	If(CheckInventory("PWRadiusDmgFailsafe") < 1)
+    {
+     setactorflag (0, "NORADIUSDMG", false);
+     }
+	If(CheckInventory("PWRipperFailsafe") < 1)
+    {
+     setactorflag (0, "DONTRIP", false);
+     }
+     TakeInventory("SPWardActive", 1);
+     TakeInventory("PWTelefragFailsafe", 1);
+     TakeInventory("PWCantSeekFailsafe", 1);
+     TakeInventory("PWRadiusDmgFailsafe", 1);
+     TakeInventory("PWRipperFailsafe", 1);
+    terminate;
+   }
+}
+
+Script "SpellProtectionWardUnload" UNLOADING
+{
+ if(CheckInventory("SPWardActive") > 0)
+	{
+	If(CheckInventory("PWTelefragFailsafe") < 1)
+    {
+     setactorflag (0, "NOTELEFRAG", false);
+     }
+	If(CheckInventory("PWCantSeekFailsafe") < 1)
+    {
+     setactorflag (0, "CANTSEEK", false);
+     }
+	If(CheckInventory("PWRadiusDmgFailsafe") < 1)
+    {
+     setactorflag (0, "NORADIUSDMG", false);
+     }
+	If(CheckInventory("PWRipperFailsafe") < 1)
+    {
+     setactorflag (0, "DONTRIP", false);
+     }
+     TakeInventory("SPWardActive", 1);
+     TakeInventory("PWTelefragFailsafe", 1);
+     TakeInventory("PWCantSeekFailsafe", 1);
+     TakeInventory("PWRadiusDmgFailsafe", 1);
+     TakeInventory("PWRipperFailsafe", 1);
+    terminate;
+   }
+   else
+   terminate;
+}
+
+script "SPCheckArmourColour" (void)
+{
+  float SPArmourColour = GetArmorInfo(ARMORINFO_SAVEPERCENT);
+  if (SPArmourColour >= 0.5)
+  {
+    SetResultValue(1);
+    terminate;
+  }
+  else if (SPArmourColour < 0.5)
+  {
+    SetResultValue(0);
+    terminate;
+  }
+}

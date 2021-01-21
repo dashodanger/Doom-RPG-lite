@@ -1,0 +1,7 @@
+[enu default]
+// Damage colour typing for DamNums.
+
+DAMNUM_TYPECOLOR_MinshotBlue	= "DamBlue";
+DAMNUM_TYPECOLOR_MinshotPurp	= "DamPurple";
+DAMNUM_TYPECOLOR_MinMineMo		= "DamDeepPurple";
+DAMNUM_TYPECOLOR_HolyDooley		= "DamLavender";

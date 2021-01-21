@@ -1,0 +1,2525 @@
+/*
+Welcome to the almighty SatanBARINFO of DRLA. This thing is fuuuuucking huge and is an abomination. GOOD LUCK GETTING LOST IN THERE!
+But yeah, I want to say a big thankyou to amv2k9, who has put in so much love and effort into this thing, I can never thank him enough for his work.
+
+You the best, amv2k9, you the best.
+
+
+Hopefully this gives you some insight into the dark workings of DRLA's SatanBARINFO.
+	- Yholl
+
+
+
+   HI THERE THIS IS YHOLL FROM 20/08/2016
+   FUCK EVERYTHING
+   THAT IS ALL
+
+
+
+   GREETINGS THIS IS YHOLL FROM 05/11/2018
+   THESE HUDS AREN'T DEATH TO WORK WITH ANYMORE
+   ALL GLORY TO RYAN
+*/
+
+height 32;
+monospacefonts true, "0";
+Resolution 320, 200;
+
+statusbar fullscreen, fullscreenoffsets // ZDoomRL HUD
+{
+	InInventory RLFullscreenShinyHUDType
+	{
+		// razzn frazzn mugshot
+		DrawMugShot 5, animatedgodmode, 64, -88;
+
+		// Left side hud
+		DrawImage "SNBARL2", 50, -26, center;
+
+		// Health
+		DrawBar "SNHPBRF", "SNHPBRE", health, horizontal, reverse, 62, -50;
+		DrawNumber 3, BNUM, untranslated, health, Interpolate(2), 95, -42;
+		// Mana
+		DrawBar "SNSTBRY", "SNSTBRE", ammo("QMana"), horizontal, interpolate(4096), 25, -6;
+		 //XP
+        DrawNumber 6, SMALLFONT, GREEN,"QExperience", 40, -29;
+
+	    DrawNumber 3, SMALLFONT, White,"QPlayerLevel", 40, -41;
+	
+	    //Stats
+	    drawimage "STALIT", 0, -191;
+		DrawNumber 3, SMALLFONT, Red, "StatVit",alignment(left),19,-187;
+	   
+
+	    DrawNumber 3, SMALLFONT, Yellow, "StatATK",alignment(left),19,-176;
+
+	DrawNumber 3, SMALLFONT, Blue, "StatINT",alignment(left),19,-155;
+
+	DrawNumber 3, SMALLFONT, Green, "StatDEF",alignment(left),19,-166;
+
+
+		// Armor
+		InInventory not RLIndestructibleArmorWorn
+		{
+			DrawBar "SNARBRF", "SNARBRE", armor, horizontal, reverse, 62, -6;
+			DrawNumber 3, BNUM, untranslated, armor, whennotzero, Interpolate(2), 95, -21, orange, 25, green, 75;
+		}
+		else
+			DrawImage "BNUMINF", 68, -16, center;
+
+		// Staminade!
+		DrawBar "SNSTBRF", "SNSTBRE", Ammo("RLStamina"), horizontal, interpolate(4096), 62, -28;
+
+		// Inventory
+		DrawImage "SNINVBOX", -53, 0;
+		DrawSelectedInventory alwaysshowcounter, itemflash, centerbottom, DNUM, -26, 40, -21, 46, untranslated;
+
+		gamemode deathmatch
+		{
+			DrawNumber 2, HUDFONT_DOOM, untranslated, frags, drawshadow, -31, 55;
+		}
+		gamemode singleplayer, cooperative, teamgame
+		{
+			DrawSwitchableImage keyslot 2 && 5, "nullimage", "STKEYS0", "STKEYS3", "STKEYS6", -42, 55;
+			DrawSwitchableImage keyslot 3 && 6, "nullimage", "STKEYS1", "STKEYS4", "STKEYS7", -31, 55;
+			DrawSwitchableImage keyslot 1 && 4, "nullimage", "STKEYS2", "STKEYS5", "STKEYS8", -20, 55;
+		}
+
+		InInventory RLWeaponDrop || RLScavengerDrop
+		{
+			Drawimage "SNDROP", -27, 98, centerbottom;
+		}
+
+		/*
+		// Have this toggle-able I dunno
+		// HP/ARM + AMMO bars
+		DrawImage "SNBARL", 70, -20, center;
+
+		// Health
+		DrawNumber 3, DNUM, untranslated, health, Interpolate(2), 96, -29;
+
+		// Armor
+		InInventory not RLIndestructibleArmorWorn
+		{
+			DrawNumber 3, DNUM, untranslated, armor, whennotzero, Interpolate(4096), 96, -18, orange, 25, green, 75;
+		}
+		else
+		{
+			DrawImage "DNUMINF", 67, -14, center;
+		}
+
+		// Armor + Boots box
+		//DrawImage "SNARMBOX", 20, 0;
+		//DrawImage armoricon, 20, 0;
+		// [RC] ^ not fucking happening anytime this decade without animated armoricons
+
+		// Stamina Bar
+		DrawBar "SNSTMBAR", "SNSTMBRE", Ammo("RLStamina"), horizontal, interpolate(4096), 61, -36;
+
+		*/
+
+		// Right side
+		DrawImage "SNBARR", -28, -20, center;
+
+		// Display amount of modpacks on a current weapon. Super space saving!
+		// From 2448 lines to 10 lines. All hail ACS/C string concatenation!
+
+        // here just to avoid blipping
+        DrawNumber 1, DNUM, white, 0, -47, -14, 0;
+        InInventory RLStandardWeaponToken || RLExoticWeaponToken
+        {
+            DrawNumber 1, DNUM, white, "RLTrackModLimit", -47, -14, 0, white, 3, gold, 4;
+        }
+        InInventory RLSuperiorWeaponToken || RLBasicAssemblyTypeWeapon
+        {
+            DrawNumber 1, DNUM, white, "RLTrackModLimit", -47, -14, 0, white, 0, gold, 2;
+        }
+        InInventory RLUniqueWeaponToken || RLDemonicWeaponToken
+        {
+            IsSelected NOT RLDuke2Rifle, RLChameleonRifle
+            {
+                IsSelected NOT RLWidowmakerSMG
+                {
+                    DrawNumber 1, DNUM, white, "RLTrackModLimit", -47, -14, 0, white, 0, gold, 1;
+                }
+            }
+        }
+        InInventory RLLegendaryWeaponToken || RLAdvancedAssemblyTypeWeapon
+        {
+            IsSelected NOT RLDuke2Rifle, RLChameleonRifle
+            {
+                IsSelected NOT RLWidowmakerSMG
+                {
+                    DrawNumber 1, DNUM, white, "RLTrackModLimit", -47, -14, 0, white, 0, gold, 1;
+                }
+            }
+        }
+        IsSelected RLDuke2Rifle, RLChameleonRifle
+        {
+            DrawNumber 1, DNUM, white, "RLTrackModLimit", -47, -14, 0, white, 0, gold, 3;
+        }
+        IsSelected RLWidowmakerSMG
+        {
+            DrawNumber 1, DNUM, white, "RLTrackModLimit", -47, -14, 0, white, 0, gold, 3;
+        }
+        InInventory RLMasterAssemblyTypeWeapon || RLSuperiorAssembledWeaponToken
+        {
+            DrawNumber 1, DNUM, gold, "RLTrackModLimit", -47, -14, 0;
+        }
+		IsSelected RLUnmaker
+        {
+            DrawNumber 1, DNUM, gold, "RLTrackModLimit", -47, -14, 0;
+        }
+
+		DrawNumber 1, DNUM, lightblue,	"RLTrackBulkMod", 		-39,	-14;
+		DrawNumber 1, DNUM, red,		"RLTrackPowerMod", 		-34,	-14;
+		DrawNumber 1, DNUM, green,		"RLTrackAgilityMod", 	-29, 	-14;
+		DrawNumber 1, DNUM, yellow,		"RLTrackTechnicalMod",	-24, 	-14;
+		DrawNumber 1, DNUM, purple, 	"RLTrackSniperMod", 	-19, 	-14;
+		DrawNumber 1, DNUM, orange, 	"RLTrackFirestormMod", 	-14, 	-14;
+		DrawNumber 1, DNUM, white,		"RLTrackNanoMod", 		-9, 	-14;
+		DrawNumber 1, DNUM, darkred,	"RLTrackDemonArtifacts",-4, 	-14;
+
+		// THANKS FOR NOT HAVING CONSTANTS, SBARINFO ;_;
+
+		// Number Y positions ---- Icon Y positions
+		// Top
+		//		-50				 	-48
+		// Middle
+		//		-38					-36
+		// Bottom
+		//		-28					-25
+
+		// Number X position ----- Icon X position
+		//		-27				 	-69
+
+		// Ammo counter
+		InInventory not RLMultiAmmoWeapon
+		{
+			InInventory RLInfiniteAmmoWeapon || RLNuclearAmmoWeapon
+			{
+				DrawImage "DNUMINF", -31, -36, center;
+				DrawImage "DNUMINF", -31, -25, center;
+			}
+			InInventory RLRechargingAmmoWeapon
+				DrawImage "DNUMINF", -31, -36, center;
+
+			DrawImage "SNMAG", -44, -36, center, 8, 9;
+			DrawNumber 4, DNUM, untranslated, ammo1, alignment(right), -2, -39;
+
+			IsSelected RLBulletstormRifle, RLBulletstormChaingun
+			{
+				DrawImage "AMMOA0", -44, -25, center, 8, 9;
+				DrawNumber 4, DNUM, untranslated, ammo1, alignment(right), -2, -28;
+			}
+		}
+		// For speshul wepon
+		InInventory RLMultiAmmoWeapon
+		{
+			InInventory RLAntiFreakJackalSelected
+			{
+				InInventory RLAntiFreakJackalDemonArtifacts
+				{
+					DrawImage "SNAMOBR2", -25, -47, center;
+
+					DrawImage "SNMAG", -44, -48, center, 8, 9;
+					DrawNumber 3, DNUM, untranslated, "RLAntiFreakJackalClip", alignment(right), -2, -50;
+
+					DrawImage "SNMAG", -44, -36, center, 8, 9;
+					DrawNumber 3, DNUM, untranslated, "RLHellsingARMSCasullClip", alignment(right), -2, -39;
+				}
+				InInventory not RLAntiFreakJackalDemonArtifacts
+				{
+					DrawImage "SNMAG", -44, -36, center, 8, 9;
+					DrawNumber 3, DNUM, untranslated, "RLAntiFreakJackalClip", alignment(right), -2, -39;
+				}
+			}
+			InInventory RLMarathonShotgunsSelected
+			{
+				InInventory RLMarathonShotgunsDemonArtifacts
+				{
+					DrawImage "SNAMOBR2", -25, -47, center;
+
+					DrawImage "SNMAG", -44, -48, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLMarathonShotgunsClip1", alignment(right), -2, -50;
+
+					DrawImage "SNMAG", -44, -36, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLMarathonShotgunsClip2", alignment(right), -2, -39;
+				}
+				InInventory not RLMarathonShotgunsDemonArtifacts
+				{
+					DrawImage "SNMAG", -44, -36, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLMarathonShotgunsClip1", alignment(right), -2, -39;
+				}
+			}
+			InInventory RLStormUziSelected
+			{
+				DrawImage "SNAMOBR2", -25, -47, center;
+
+				DrawImage "SNMAG", -44, -48, center, 8, 9;
+				DrawNumber 2, DNUM, untranslated, "RLStormUziClip", alignment(right), -2, -50;
+
+				DrawImage "SNMAG", -44, -36, center, 8, 9;
+				DrawNumber 2, DNUM, untranslated, "RLStormUziClip2", alignment(right), -2, -39;
+			}
+			InInventory RLLonghornSelected
+			{
+				InInventory RLLonghornNanoMod
+				{
+					DrawImage "SNAMOBR2", -25, -47, center;
+
+					DrawImage "SNMAG", -44, -48, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLLonghornClip", alignment(right), -2, -50;
+
+					DrawImage "SNMAG", -44, -36, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLLonghornClip2", alignment(right), -2, -39;
+				}
+				InInventory not RLLonghornNanoMod
+				{
+					DrawImage "SNMAG", -44, -36, center, 8, 9;
+					DrawNumber 3, DNUM, untranslated, "RLLonghornClip", alignment(right), -2, -39;
+				}
+			}
+		}
+
+		//Extra ammo counters for special snowflake guns
+		InInventory RLMarathonAssaultRifleSelected
+		{
+			DrawImage "SNAMOBR2", -25, -47, center;
+			// Mag
+			DrawImage "SNMAG", -44, -48, center, 8, 9;
+			DrawNumber 4, DNUM, untranslated, ammo1, -2, -50;
+			// Extra
+			DrawImage "ROCKA0", -44, -36, center, 8, 9;
+			DrawNumber 1, DNUM, untranslated, "RLMarathonAssaultRifleGrenades", alignment(right), -2, -39;
+		}
+		InInventory RLWidowmakerSMGSelected
+		{
+			InInventory RLWidowmakerSMGFirestormAltActive
+			{
+				DrawImage "SNAMOBR2", -25, -47, center;
+				// Mag
+				DrawImage "SNMAG", -44, -48, center, 8, 9;
+				DrawNumber 4, DNUM, untranslated, ammo1, -2, -50;
+				// Extra
+				DrawImage "ROCKA0", -44, -36, center, 8, 9;
+				DrawNumber 3, DNUM, untranslated, "RocketAmmo", alignment(right), -2, -39;
+			}
+			InInventory RLWidowmakerSMGNanoAltActive
+			{
+				DrawImage "SNAMOBR2", -25, -47, center;
+				// Mag
+				DrawImage "SNMAG", -44, -48, center, 8, 9;
+				DrawNumber 4, DNUM, untranslated, ammo1, -2, -50;
+				// Extra
+				DrawImage "CELLA0", -44, -36, center, 8, 9;
+				DrawNumber 3, DNUM, untranslated, "Cell", alignment(right), -2, -39;
+			}
+			InInventory NOT RLWidowMakerSMGFirestormAltActive, 1 || RLWidowmakerSMGNanoAltActive, 1
+			{
+				// Mag
+				DrawImage "SNMAG", -44, -36, center, 8, 9;
+				DrawNumber 4, DNUM, untranslated, ammo1, -2, -39;
+			}
+		}
+		InInventory RLGaussRifleSelected
+		{
+			DrawImage "SNAMOBR2", -25, -47, center;
+
+			// Actual ammo
+			DrawImage "SNMAG", -44, -48, center, 8, 9;
+			DrawNumber 1, DNUM, untranslated, "RLGaussRifleClip", alignment(right), -2, -50;
+
+			// Charge meter
+			DrawImage ammoicon1, -44, -36, center, 8, 9;
+			DrawNumber 4, DNUM, untranslated, ammo1, alignment(right), -2, -39;
+
+		}
+		// Ammo box
+		usesammo
+		{
+			// Reserve ammo
+			usessecondaryammo
+			{
+				// Reserve ammo icon
+				WeaponAmmo "Clip"		{ DrawImage ammoicon2, -44, -25, center, 7, 8; }
+				WeaponAmmo "Shell"		{ DrawImage ammoicon2, -44, -25, center, 8, 9; }
+				WeaponAmmo "RocketAmmo"	{ DrawImage ammoicon2, -44, -25, center, 8, 9; }
+				WeaponAmmo "Cell"		{ DrawImage ammoicon2, -44, -26, center, 8, 9; }
+
+				// Quantity
+				DrawNumber 4, DNUM, untranslated, ammo2, alignment(right), -2, -28;
+			}
+		}
+
+		// COUNTERS -------------------------------------
+		DrawImage "BARCTR", 0, 0;
+
+		InInventory RLAmmochainPerk // Marine powerups
+		{
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLBerserkPickupMarineGiver, 					vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLInfraredPickupMarineGiver, 					vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLBlurSpherePickupMarineGiver, 				vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLRadSuitIronPickupMarineGiver, 				vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLFIREBLUSphereFiringSpeedPickupMarineGiver,	vertical, 29, 1;
+
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLInvulnerabilitySpherePickupMarineGiver, 	vertical, 29, 1;
+
+		}
+		else
+		{
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLBerserkPickupGiver, 				vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLInfraredPickupGiver, 				vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLBlurSpherePickupGiver,				vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLRadSuitIronPickupGiver, 			vertical, 29, 1;
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLFIREBLUSphereFiringSpeedPickupGiver,vertical, 29, 1;
+
+			DrawBar "SNPWBRF", "SNPWBRE", PowerupTime RLInvulnerabilitySpherePickupGiver, 	vertical, 29, 1;
+		}
+		InInventory PowerRLBerserkResistance
+			DrawImage "PSTRA0", 33, 68, center, 19, 18;
+		InInventory PowerLightAmp
+			DrawImage "PVISA0", 33, 68, center, 19, 18;
+		InInventory PowerInvisibility
+			DrawImage "PINSA0", 33, 68, center, 19, 18;
+		InInventory PowerRLRadSuitResistance
+			DrawImage "SUITA0", 33, 70, center, 19, 18;
+		InInventory PowerInfiniteAmmo
+			DrawImage "FBLSA0", 33, 70, center, 19, 18;
+		InInventory PowerInvulnerable
+			DrawImage "PINVA0", 33, 70, center, 19, 18;
+
+		//============= Draw Weapon Counter =============
+		DrawImage "SIDEICO1", 6, 6, center, 8, 7;
+		InInventory RLWeaponLimit, 1
+		{
+			DrawNumber 1, DNUM, untranslated, RLWeaponLimit, alignment (right), 25, 3, 0, untranslated, 0, Gold, 6;
+		}
+
+		//============= Draw Modpack Counter =============
+		DrawImage "SIDEICO2", 6, 18, center, 8, 7;
+		InInventory RLScavengerPerk
+		{
+			DrawNumber 1, DNUM, untranslated, RLScavengerModLimit, 	alignment (right), 25, 14, 0, untranslated, 0, Gold, 8;
+		}
+		InInventory not RLScavengerPerk
+		{
+			DrawNumber 1, DNUM, untranslated, RLModLimit, 			alignment (right), 25, 14, 0, untranslated, 0, Gold, 4;
+		}
+
+		//============= Draw Armor Counter =============
+		DrawImage "SIDEICO3", 6, 29, center, 8, 7;
+		InInventory not RLBackpack
+		{
+			DrawNumber 1, DNUM, untranslated, RLArmorInInventory, alignment (right), 25, 25, 0, untranslated, 0, Gold, 2;
+		}
+		InInventory RLBackpack
+		{
+			DrawNumber 1, DNUM, untranslated, RLArmorInInventory, alignment (right), 25, 25, 0, untranslated, 0, Gold, 4;
+		}
+
+		//============= Draw Skull Counter =============
+		DrawImage "SIDEICO4", 6, 40, center, 8, 7;
+		InInventory RLBackpack
+		{
+			InInventory RLSkullLimit, 10
+			{
+				DrawNumber 2, DNUM, untranslated, RLSkullLimit, alignment (right), 25, 36, 0, untranslated, 0, Gold, 12;
+			}
+			InInventory not RLSkullLimit, 10
+			{
+				DrawNumber 1, DNUM, untranslated, RLSkullLimit, alignment (right), 25, 36, 0, untranslated, 0, Gold, 12;
+			}
+		}
+		InInventory not RLBackpack
+		{
+			DrawNumber 1, DNUM, untranslated, RLSkullLimit, 	alignment (right), 25, 36, 0, untranslated, 0, Gold, 6;
+		}
+
+		//============= Draw Phase Device Counter =============
+		DrawImage "SIDEICO5", 6, 50, center, 9, 8;
+		InInventory not RLBackpack
+		{
+			DrawNumber 1, DNUM, untranslated, RLPhaseDeviceLimit, alignment (right), 25, 47, 0, untranslated, 0, Gold, 4;
+		}
+		InInventory RLBackpack
+		{
+			DrawNumber 1, DNUM, untranslated, RLPhaseDeviceLimit, alignment (right), 25, 47, 0, untranslated, 0, Gold, 8;
+		}
+
+		//============= Draw Backpack Counter =============
+		InInventory RLBackpack, 1
+		{
+			InInventory not RLCombatBackpackToken, 1
+			{
+				InInventory not RLSpecialistBackpackToken, 1
+				{
+					InInventory not RLScroungerBackpackToken, 1
+					{
+						InInventory not RLDedicatedBackpackToken, 1
+						{
+							InInventory not RLNuclearBackpackToken, 1
+							{
+								DrawImage "BPK0ICO2", 10, 72, center, 12, 13; // ahahahahaha fuck everything why can it not compare more than two things
+							}
+						}
+					}
+				}
+			}
+		}
+		InInventory RLCombatBackpackToken, 1
+		{
+			DrawImage "BPK1ICO2", 10, 72, center, 12, 13;
+		}
+		InInventory RLSpecialistBackpackToken, 1
+		{
+			DrawImage "BPK2ICO2", 10, 72, center, 12, 13;
+		}
+		InInventory RLScroungerBackpackToken, 1
+		{
+			DrawImage "BPK3ICO2", 10, 72, center, 12, 13;
+		}
+		InInventory RLDedicatedBackpackToken, 1
+		{
+			DrawImage "BPK4ICO2", 10, 72, center, 12, 13;
+		}
+		InInventory RLNuclearBackpackToken, 1
+		{
+			DrawImage "BPK5ICO2", 10, 72, center, 12, 13;
+		}
+
+		//============= Draw Cooldown Bars =============
+		// Temporary cooldown bar for the shiny HUD until ryan finishes his combobulation
+		InInventory PowerRL5Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL5CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL10Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL10CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL15Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL15CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL20Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL20CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL30Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL30CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL45Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL45CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL60Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL60CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL90Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL90CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL120Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL120CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL120KateCooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL120KateCooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL180Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL180CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL300Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL300CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL600Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL600CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRL1800Cooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RL1800CooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+		InInventory PowerRLSentryCooldown
+		{
+			DrawBar "SNASBRF", "SNASBRE", PowerupTime("RLSentryCooldownGiver"), horizontal, reverse, interpolate(1), 41, -10;
+		}
+
+	// STANDARD BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLGenericBootsToken
+		DrawImage "BOOGICON", 18, -50, centerbottom;
+
+	InInventory RLSteelBootsToken
+		DrawImage "BOO1ICON", 18, -50, centerbottom;
+
+	InInventory RLProtectiveBootsToken
+		DrawImage "BOO2ICON", 18, -50, centerbottom;
+
+	InInventory RLPlasteelBootsToken
+		DrawImage "BOO3ICON", 18, -50, centerbottom;
+
+	// ASSEMBLED BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLAntigravSteelBootsToken
+		DrawImage "AGSBICON", 18, -50, centerbottom;
+
+	InInventory RLAntigravProtectiveBootsToken
+		DrawImage "AGGBICON", 18, -50, centerbottom;
+
+	InInventory RLAntigravPlasteelBootsToken
+		DrawImage "AGBBICON", 18, -50, centerbottom;
+
+	InInventory RLEnviromentalSteelBootsToken
+		DrawImage "ENV1ICON", 18, -50, centerbottom;
+
+	InInventory RLEnviromentalProtectiveBootsToken
+		DrawImage "ENV2ICON", 18, -50, centerbottom;
+
+	InInventory RLEnviromentalPlasteelBootsToken
+		DrawImage "ENV3ICON", 18, -50, centerbottom;
+
+	InInventory RLFireproofSteelBootsToken
+		DrawImage "FIR1ICON", 18, -50, centerbottom;
+
+	InInventory RLFireproofProtectiveBootsToken
+		DrawImage "FIR2ICON", 18, -50, centerbottom;
+
+	InInventory RLFireproofPlasteelBootsToken
+		DrawImage "FIR3ICON", 18, -50, centerbottom;
+
+	InInventory RLGrapplingSteelBootsToken
+		DrawImage "GRA1ICON", 18, -50, centerbottom;
+
+	InInventory RLGrapplingProtectiveBootsToken
+		DrawImage "GRA2ICON", 18, -50, centerbottom;
+
+	InInventory RLGrapplingPlasteelBootsToken
+		DrawImage "GRA3ICON", 18, -50, centerbottom;
+
+	InInventory RLCerberusBootsToken
+		DrawImage "CERBICON", 18, -50, centerbottom;
+
+	InInventory RLTacticalBootsToken
+		DrawImage "TACBICON", 18, -50, centerbottom;
+
+	// EXOTIC BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLAcidProofBootsToken
+		DrawImage "ACPBICON", 18, -50, centerbottom;
+
+	InInventory RLGothicBootsToken
+		DrawImage "GOTBICON", 18, -50, centerbottom;
+
+	InInventory RLPhaseshiftBootsToken
+		DrawImage "PSHBICON", 18, -50, centerbottom;
+
+	InInventory RLShockwaveBootsToken
+		DrawImage "SHKBICON", 18, -50, centerbottom;
+
+	// SUPERIOR BOOTS HUD DISPLAY ==========================================================================
+
+	// UNIQUE BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLEnviroBootsToken
+		DrawImage "ENVBICON", 18, -50, centerbottom;
+
+	InInventory RLFrontlineEngineerBootsToken
+		DrawImage "BLUBICON", 18, -50, centerbottom;
+
+	InInventory RLLavaBootsToken
+		DrawImage "LAVBICON", 18, -50, centerbottom;
+
+	InInventory RLLeonidasBootsToken
+		DrawImage "SPARICON", 18, -50, centerbottom;
+
+	InInventory RLNuclearPowerBootsToken
+		DrawImage "ENUKICO3", 18, -50, centerbottom;
+
+	InInventory RLNyarlaptotepsBootsToken
+		DrawImage "NYABICON", 18, -50, centerbottom;
+
+	InInventory RLRoystensCombatBootsToken
+		DrawImage "ROYBICON", 18, -50, centerbottom;
+
+	InInventory RLSoloOperativeBootsToken
+		DrawImage "SSOBICON", 18, -50, centerbottom;
+
+	InInventory RLTorgueBlastBootsToken
+		DrawImage "TORBICON", 18, -50, centerbottom;
+
+	InInventory RLTacticalAssemblerBootsToken
+		DrawImage "REDBICON", 18, -50, centerbottom;
+
+	// DEMONIC BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLDemonicBootsToken
+		DrawImage "DEMBICON", 18, -50, centerbottom;
+
+	// LEGENDARY BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLAngelicBootsToken
+		DrawImage "ANGBICON", 18, -50, centerbottom;
+
+
+	// STANDARD ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLGenericArmorToken
+		DrawImage "ARM0HUD", 18, -88, centerbottom;
+
+	InInventory RLGreenArmorToken
+		DrawImage "ARM1HUD", 18, -88, centerbottom;
+
+	InInventory RLBlueArmorToken
+		DrawImage "ARM2HUD", 18, -88, centerbottom;
+
+	InInventory RLRedArmorToken
+		DrawImage "HEVAHUD", 18, -88, centerbottom;
+
+	// ASSEMBLED ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLCerberusArmorToken
+		DrawImage "CERAHUD", 18, -88, centerbottom;
+
+	InInventory RLFireshieldArmorToken
+		DrawImage "FSHDHUD1", 18, -88, centerbottom;
+
+	InInventory RLTacticalArmorToken
+		DrawImage "TACAHUD", 18, -88, centerbottom;
+
+	InInventory RLTowerShieldArmorToken
+		DrawImage "TSHDHUD", 18, -88, centerbottom;
+
+	// ASSEMBLED COLOR ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLAblativeGreenArmorToken
+		DrawImage "ABL1HUD", 18, -88, centerbottom;
+
+	InInventory RLAblativeBlueArmorToken
+		DrawImage "ABL2HUD", 18, -88, centerbottom;
+
+	InInventory RLAblativeRedArmorToken
+		DrawImage "ABL3HUD", 18, -88, centerbottom;
+
+	InInventory RLBallisticGreenArmorToken
+		DrawImage "BLA1HUD", 18, -88, centerbottom;
+
+	InInventory RLBallisticBlueArmorToken
+		DrawImage "BLA2HUD", 18, -88, centerbottom;
+
+	InInventory RLBallisticRedArmorToken
+		DrawImage "BLA3HUD", 18, -88, centerbottom;
+
+	InInventory RLCybernanoGreenArmorToken
+		DrawImage "CYN1HUD1", 18, -88, centerbottom;
+
+	InInventory RLCybernanoBlueArmorToken
+		DrawImage "CYN2HUD1", 18, -88, centerbottom;
+
+	InInventory RLCybernanoRedArmorToken
+		DrawImage "CYN3HUD1", 18, -88, centerbottom;
+
+	InInventory RLFireproofGreenArmorToken
+		DrawImage "FPA1HUD", 18, -88, centerbottom;
+
+	InInventory RLFireproofBlueArmorToken
+		DrawImage "FPA2HUD", 18, -88, centerbottom;
+
+	InInventory RLFireproofRedArmorToken
+		DrawImage "FPA3HUD", 18, -88, centerbottom;
+
+	InInventory RLNanofiberGreenArmorToken
+		DrawImage "NFA1HUD", 18, -88, centerbottom;
+
+	InInventory RLNanofiberBlueArmorToken
+		DrawImage "NFA2HUD", 18, -88, centerbottom;
+
+	InInventory RLNanofiberRedArmorToken
+		DrawImage "NFA3HUD", 18, -88, centerbottom;
+
+	InInventory RLNanofiberSkinGreenArmorToken
+		DrawImage "NFS1HUD", 18, -88, centerbottom;
+
+	InInventory RLNanofiberSkinBlueArmorToken
+		DrawImage "NFS2HUD", 18, -88, centerbottom;
+
+	InInventory RLNanofiberSkinRedArmorToken
+		DrawImage "NFS3HUD", 18, -88, centerbottom;
+
+	InInventory RLPowerGreenArmorToken
+		DrawImage "PWR1HUD", 18, -88, centerbottom;
+
+	InInventory RLPowerBlueArmorToken
+		DrawImage "PWR2HUD", 18, -88, centerbottom;
+
+	InInventory RLPowerRedArmorToken
+		DrawImage "PWR3HUD", 18, -88, centerbottom;
+
+	// EXOTIC ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLBallisticShieldArmorToken
+		DrawImage "BSHDHUD1", 18, -88, centerbottom;
+
+	InInventory RLBallisticVestArmorToken
+		DrawImage "BALVHUD", 18, -88, centerbottom;
+
+	InInventory RLBulletProofVestArmorToken
+		DrawImage "BPFVHUD", 18, -88, centerbottom;
+
+	InInventory RLCyberwarriorArmorToken
+		DrawImage "CYWAHUD", 18, -88, centerbottom;
+
+	InInventory RLDuelistArmorToken
+		DrawImage "DUEAHUD", 18, -88, centerbottom;
+
+	InInventory RLEnergyShieldedVestArmorToken
+		DrawImage "ESVAHUD1", 18, -88, centerbottom;
+
+	InInventory RLEnergyShieldArmorToken
+		DrawImage "ESHDHUD1", 18, -88, centerbottom;
+
+	InInventory RLGothicArmorToken
+		DrawImage "GOTAHUD", 18, -88, centerbottom;
+
+	InInventory RLMedicalArmorToken
+		DrawImage "MED1HUD", 18, -88, centerbottom;
+
+	InInventory RLOnyxArmorToken
+		DrawImage "ONXAHUD", 18, -88, centerbottom;
+
+	InInventory RLOverchargeSystemArmorToken
+	{
+		InInventory PowerRL180Cooldown
+		{
+			InInventory PowerRLOverchargeSystemDamage
+			{
+				DrawImage "OVESHUD2", 18, -88;
+				DrawBar "OVESHUD3", "OVESHUD4", PowerupTime("RLOverchargeSystemDamageGiver"), horizontal, interpolate(1), 18, -88;
+			}
+
+			InInventory not PowerRLOverchargeSystemDamage
+			{
+				DrawImage "OVESHUD2", 18, -88;
+				DrawBar "OVESHUD4", "OVESHUD3", PowerupTime("RL180CooldownGiver"), horizontal, reverse | interpolate(1), 18, -88;
+			}
+		}
+
+		InInventory not PowerRL180Cooldown
+			DrawImage "OVESHUD", 18, -88;
+	}
+
+	InInventory RLPhaseshiftArmorToken
+		DrawImage "PSHAHUD", 18, -88, centerbottom;
+
+	InInventory RLPlasmaShieldArmorToken
+		DrawImage "PSHDHUD1", 18, -88, centerbottom;
+
+	InInventory RLRepulsionWaveSuitArmorToken
+		DrawImage "REPWHUD", 18, -88, centerbottom;
+
+	InInventory RLSurvivalMediArmorToken
+		DrawImage "SURVHUD", 18, -88, centerbottom;
+
+	// ONYX-MODDED ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLOModGreenArmorToken
+		DrawImage "ONYAAHUD", 18, -88, centerbottom;
+
+	InInventory RLOModBlueArmorToken
+		DrawImage "ONYABHUD", 18, -88, centerbottom;
+
+	InInventory RLOModRedArmorToken
+		DrawImage "ONYACHUD", 18, -88, centerbottom;
+
+	InInventory RLOModBallisticVestArmorToken
+		DrawImage "ONYADHUD", 18, -88, centerbottom;
+
+	InInventory RLOModBulletProofVestArmorToken
+		DrawImage "ONYAEHUD", 18, -88, centerbottom;
+
+	InInventory RLOModCyberwarriorArmorToken
+		DrawImage "ONYAFHUD", 18, -88, centerbottom;
+
+	InInventory RLOModDuelistArmorToken
+		DrawImage "ONYAGHUD", 18, -88, centerbottom;
+
+	InInventory RLOModEnergyShieldedVestArmorToken
+		DrawImage "ONYAHHUD", 18, -88, centerbottom;
+
+	InInventory RLOModGothicArmorToken
+		DrawImage "ONYAJHUD", 18, -88, centerbottom;
+
+	InInventory RLOModMedicalArmorToken
+		DrawImage "ONYAKHUD", 18, -88, centerbottom;
+
+	InInventory RLOModPhaseshiftArmorToken
+		DrawImage "ONYALHUD", 18, -88, centerbottom;
+
+	InInventory RLOModRepulsionWaveSuitArmorToken
+		DrawImage "ONYAMHUD", 18, -88, centerbottom;
+
+	InInventory RLOModSurvivalMediArmorToken
+		DrawImage "ONYANHU1", 18, -88, centerbottom;
+
+	// SUPERIOR ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLNuclearArmorToken
+		DrawImage "NUKAHUD", 18, -88, centerbottom;
+
+	InInventory RLRechargeableEnergyShieldArmorToken
+		DrawImage "RESHHUD", 18, -88, centerbottom;
+
+	// UNIQUE ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLBerserkerArmorToken
+		DrawImage "GOTAHUD", 18, -88, centerbottom;
+
+	InInventory RLBerserkPowersuitArmorToken
+	{
+		InInventory PowerStrength
+			DrawImage "BEPSHUD5", 18, -88, centerbottom;
+
+		InInventory not PowerStrength
+		{
+			InInventory not RLBerserkPowersuitBerserkCounter, 1
+				DrawImage "BEPSHUD", 18, -88, centerbottom;
+
+			InInventory RLBerserkPowersuitBerserkCounter, 1
+			{
+				InInventory not RLBerserkPowersuitBerserkCounter, 2
+					DrawImage "BEPSHUD2", 18, -88, centerbottom;
+
+				InInventory RLBerserkPowersuitBerserkCounter, 2
+				{
+					InInventory not RLBerserkPowersuitBerserkCounter, 3
+						DrawImage "BEPSHUD3", 18, -88, centerbottom;
+
+					InInventory RLBerserkPowersuitBerserkCounter, 3
+						DrawImage "BEPSHUD4", 18, -88, centerbottom;
+				}
+			}
+		}
+	}
+
+	InInventory RLBlazingPhoenixDeviceSuitArmorToken
+	{
+		InInventory not RLBlazingPhoenixDeviceSuitAnimation, 1
+			DrawImage "BPHDHUD", 18, -88;
+
+		InInventory RLBlazingPhoenixDeviceSuitAnimation, 1
+		{
+			InInventory not RLBlazingPhoenixDeviceSuitAnimation, 2
+				DrawImage "BPHDHUD2", 18, -88;
+
+			InInventory RLBlazingPhoenixDeviceSuitAnimation, 2
+			{
+				InInventory not RLBlazingPhoenixDeviceSuitAnimation, 3
+					DrawImage "BPHDHUD3", 18, -88;
+
+				InInventory RLBlazingPhoenixDeviceSuitAnimation, 3
+				{
+					InInventory not RLBlazingPhoenixDeviceSuitAnimation, 4
+						DrawImage "BPHDHUD4", 18, -88;
+
+					InInventory RLBlazingPhoenixDeviceSuitAnimation, 4
+					{
+						InInventory not RLBlazingPhoenixDeviceSuitAnimation, 5
+							DrawImage "BPHDHUD5", 18, -88;
+
+						InInventory RLBlazingPhoenixDeviceSuitAnimation, 5
+						{
+							InInventory not RLBlazingPhoenixDeviceSuitAnimation, 6
+								DrawImage "BPHDHUD6", 18, -88;
+							InInventory RLBlazingPhoenixDeviceSuitAnimation, 6
+								DrawImage "BPHDHUD7", 18, -88;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	InInventory RLCyberneticArmorToken
+	{
+		InInventory RLCyberneticArmorModdedToken
+		{
+			InInventory RLCyberneticArmorBulkToken
+				DrawImage "CYNAHUD2", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorPowerToken
+				DrawImage "CYNAHUD3", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorAgilityToken
+				DrawImage "CYNAHUD4", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorTechnicalToken
+				DrawImage "CYNAHUD5", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorSniperToken
+				DrawImage "CYNAHUD6", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorFirestormToken
+				DrawImage "CYNAHUD7", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorNanoToken
+				DrawImage "CYNAHUD8", 18, -88, centerbottom;
+
+			InInventory RLCyberneticArmorOnyxToken
+			DrawImage "CYNAHUD9", 18, -88, centerbottom;
+
+		}
+
+		InInventory not RLCyberneticArmorModdedToken
+			DrawImage "CYNAHUD", 18, -88, centerbottom;
+	}
+
+	InInventory RLEnergyDischargeHarnessArmorToken
+	{
+		InInventory not RLEnergyDischargeHarnessCounter, 1
+			DrawImage "EDHXHUD", 18, -88, centerbottom;
+
+		InInventory RLEnergyDischargeHarnessCounter, 1
+		{
+			InInventory not RLEnergyDischargeHarnessCounter, 2
+				DrawImage "EDHXHUD2", 18, -88, centerbottom;
+
+			InInventory RLEnergyDischargeHarnessCounter, 2
+			{
+				InInventory not RLEnergyDischargeHarnessCounter, 3
+					DrawImage "EDHXHUD3", 18, -88, centerbottom;
+
+				InInventory RLEnergyDischargeHarnessCounter, 3
+				{
+					InInventory not RLEnergyDischargeHarnessCounter, 4
+						DrawImage "EDHXHUD4", 18, -88, centerbottom;
+
+					InInventory RLEnergyDischargeHarnessCounter, 4
+					{
+						InInventory not RLEnergyDischargeHarnessCounter, 5
+							DrawImage "EDHXHUD5", 18, -88, centerbottom;
+
+						InInventory RLEnergyDischargeHarnessCounter, 5
+							DrawImage "EDHXHUD6", 18, -88, centerbottom;
+					}
+				}
+			}
+		}
+	}
+
+	InInventory RLFrontlineEngineerSuitArmorToken
+		DrawImage "BLUAHUD", 18, -88, centerbottom;
+
+	InInventory RLGeosGoldenGauntletArmorToken
+		DrawImage "GGGXHUD", 18, -88, centerbottom;
+
+	InInventory RLJetpackArmorToken
+	{
+		InInventory PowerRLJetpackFlight
+			DrawImage "JETPHUD4", 18, -88, centerbottom;
+
+		InInventory PowerRLJetpackFlightPermanent
+			DrawImage "JETPHUD4", 18, -88, centerbottom;
+
+		InInventory not PowerRLJetpackFlight, 1 || PowerRLJetpackFlightPermanent, 1
+			DrawImage "JETPHUD", 18, -88, centerbottom;
+
+	}
+
+	InInventory RLKateMatterstormHarnessArmorToken
+		DrawImage "K8MHHUD", 18, -88, centerbottom;
+
+	InInventory RLKyleTeslaboltArmorToken
+	{
+		InInventory RLKyleTeslaboltArmorCounter, 1
+			DrawImage "KTESHUD3", 18, -88, centerbottom;
+
+		InInventory not RLKyleTeslaboltArmorCounter, 1
+			DrawImage "KTESHUD", 18, -88, centerbottom;
+	}
+
+	InInventory RLLavaArmorToken
+		DrawImage "LAVUHUD1", 18, -88, centerbottom;
+
+	InInventory RLMaleksArmorToken
+	{
+		InInventory RLInquisitorsSetBonusActive
+			DrawImage "MALKHUD2", 18, -88, centerbottom;
+
+		InInventory not RLInquisitorsSetBonusActive
+			DrawImage "MALKHUD1", 18, -88, centerbottom;
+	}
+
+	InInventory RLMedicalPowerArmorToken
+		DrawImage "MED2HUD", 18, -88, centerbottom;
+
+	InInventory RLNanoAblativeArmorToken
+		DrawImage "NABLHUD", 18, -88, centerbottom;
+
+	InInventory RLNuclearPowerArmorToken
+	{
+		InInventory RLEnclaveSetBonusActive, 1
+			DrawImage "ENUKHUD2", 18, -88, centerbottom;
+
+		InInventory not RLEnclaveSetBonusActive, 1
+			DrawImage "ENUKHUD", 18, -88, centerbottom;
+	}
+
+	InInventory RLPrototypeAssaultShieldArmorToken
+	{
+		InInventory PowerRLPrototypeAssaultShieldProtection
+		{
+			DrawImage "PASSHUD", 18, -88, centerbottom;
+			DrawBar "PASSHUD2", "PASSHUD3", PowerupTime("RLPrototypeAssaultShieldProtectionGiver"), horizontal, interpolate(1), 19, -87; // x+1, y-1
+		}
+
+		InInventory not PowerRLPrototypeAssaultShieldProtection
+		{
+			InInventory not PowerRLPrototypeAssaultShieldNoCells
+				DrawImage "PASSHUD", 18, -88, centerbottom;
+
+			InInventory PowerRLPrototypeAssaultShieldNoCells
+				DrawImage "PASSHUD4", 18, -88, centerbottom;
+		}
+	}
+
+	InInventory RLRoystensCommandArmorToken
+		DrawImage "ROYAHUD", 18, -88, centerbottom;
+
+	InInventory RLRyanCordellPsychicAmplifierSuitArmorToken
+		DrawImage "RCPAHUD", 18, -88, centerbottom;
+
+	InInventory RLSoloOperativeSuitArmorToken
+		DrawImage "SSOSHUD", 18, -88, centerbottom;
+
+	InInventory RLShieldedArmorToken
+		DrawImage "SSHDHUD1", 18, -88, centerbottom;
+
+	InInventory RLTacticalAssemblerSuitArmorToken
+		DrawImage "REDAHUD", 18, -88, centerbottom;
+
+	InInventory RLTerminusEst13BattlesuitArmorToken
+	{
+		InInventory PowerRLTerminusAttack, 1
+			DrawImage "TEBSHUD3", 18, -88, centerbottom;
+
+		InInventory not PowerRLTerminusAttack, 1
+			DrawImage "TEBSHUD", 18, -88, centerbottom;
+	}
+
+	InInventory RLTorgueBlastplateArmorToken
+		DrawImage "TORAHUD", 18, -88, centerbottom;
+
+	InInventory RLWildWeaselPeacekeeperArmorToken
+		DrawImage "WWPKHUD", 18, -88, centerbottom;
+
+	InInventory RLXaserPowerArmorToken
+		DrawImage "XASPHUD", 18, -88, centerbottom;
+
+	InInventory RLZeroDiamondAssaultforceArmorToken
+	{
+		InInventory RLZeroDiamondAssaultforceArmorCounter, 1
+			DrawImage "0DAFHUD2", 18, -88, centerbottom;
+
+		InInventory not RLZeroDiamondAssaultforceArmorCounter, 1
+			DrawImage "0DAFHUD", 18, -88, centerbottom;
+	}
+
+	// DEMONIC ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLDemonicCarapaceArmorToken
+	{
+		InInventory PowerRLDemonicCarapaceAttack, 1
+			DrawImage "DEMAHUD2", 18, -88, centerbottom;
+
+		InInventory not PowerRLDemonicCarapaceAttack, 1
+			DrawImage "DEMAHUD", 18, -88, centerbottom;
+	}
+
+	InInventory RLNecroArmorToken
+		DrawImage "NECRHUD", 18, -88, centerbottom;
+
+	InInventory RLSoulshatterArmorToken
+	{
+		InInventory not RLSoulshatterArmorAnimation, 1
+			DrawImage "SOLSHUD", 18, -88;
+
+		InInventory RLSoulshatterArmorAnimation, 1
+		{
+			InInventory not RLSoulshatterArmorAnimation, 2
+				DrawImage "SOLSHUD2", 18, -88;
+
+			InInventory RLSoulshatterArmorAnimation, 2
+			{
+				InInventory not RLSoulshatterArmorAnimation, 3
+					DrawImage "SOLSHUD3", 18, -88;
+
+				InInventory RLSoulshatterArmorAnimation, 3
+				{
+					InInventory not RLSoulshatterArmorAnimation, 4
+						DrawImage "SOLSHUD4", 18, -88;
+
+					InInventory RLSoulshatterArmorAnimation, 4
+						DrawImage "SOLSHUD5", 18, -88;
+				}
+			}
+		}
+	}
+
+	// LEGENDARY ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLAngelicArmorToken
+		DrawImage "ANGAHUD", 18, -88, centerbottom;
+
+	InInventory RLChronotrooperArmorToken
+		DrawImage "CHROHUD", 18, -88, centerbottom;
+
+	InInventory RLReactiveShieldSystemArmorToken
+	{
+		InInventory not PowerRLReactiveShieldSystemActiveToken
+			DrawImage "RSSDHUD", 18, -88, centerbottom;
+
+		InInventory PowerRLReactiveShieldSystemActiveToken
+		{
+			InInventory PowerRLReactiveShieldSystemMelee
+				DrawImage "RSSDHUD2", 18, -88, centerbottom;
+
+			InInventory PowerRLReactiveShieldSystemBullet
+				DrawImage "RSSDHUD3", 18, -88, centerbottom;
+
+			InInventory PowerRLReactiveShieldSystemFire
+				DrawImage "RSSDHUD4", 18, -88, centerbottom;
+
+			InInventory PowerRLReactiveShieldSystemPlasma
+				DrawImage "RSSDHUD5", 18, -88, centerbottom;
+		}
+	}
+
+	InInventory RLTheBeeArmorToken
+		DrawImage "BEESHUD", 18, -88, centerbottom;
+	}
+	// fug dis
+	// no offense though yholl <3
+	InInventory RLFullscreenOriginalHUDType // Check for playing normally
+    {
+		//health
+		DrawMugShot 5, 0, -34;
+		drawnumber 5, BIGFONT, red, health, drawshadow, Interpolate(4096), 64, -18;
+
+		//armor
+		InInventory not RLIndestructibleArmorWorn
+		{
+			drawnumber 5, BIGFONT, green, armor, drawshadow, whennotzero, Interpolate(4096), 64, -32, orange, 25, green, 75;
+		}
+
+		gamemode deathmatch
+		{
+			drawnumber 2, HUDFONT_DOOM, untranslated, frags, drawshadow, -3, 1;
+		}
+		gamemode singleplayer, cooperative, teamgame
+		{
+			drawkeybar 6, vertical, reverserows, auto, -10, 2, 0, 3, auto;
+		}
+
+		Drawimage weaponicon, -160, 42, centerbottom;
+
+		InInventory RLTrackModLimit, 0
+			DrawNumber 1, SMALLFONT, White, "RLTrackModLimit", 			-200, 20;
+
+		InInventory RLTrackBulkMod, 0
+			DrawNumber 1, SMALLFONT, Blue, "RLTrackBulkMod", 			-190, 45;
+
+		InInventory RLTrackPowerMod, 0
+			DrawNumber 1, SMALLFONT, Red, "RLTrackPowerMod", 			-180, 45;
+
+		InInventory RLTrackAgilityMod, 0
+			DrawNumber 1, SMALLFONT, Green, "RLTrackAgilityMod",		-170, 45;
+
+		InInventory RLTrackTechnicalMod, 0
+			DrawNumber 1, SMALLFONT, Yellow, "RLTrackTechnicalMod",		-160, 45;
+
+		InInventory RLTrackSniperMod, 0
+			DrawNumber 1, SMALLFONT, Purple, "RLTrackSniperMod", 		-150, 45;
+
+		InInventory RLTrackFirestormMod, 0
+			DrawNumber 1, SMALLFONT, Orange, "RLTrackFirestormMod", 	-140, 45;
+
+		InInventory RLTrackNanoMod, 0
+			DrawNumber 1, SMALLFONT, White, "RLTrackNanoMod", 			-130, 45;
+
+		InInventory RLTrackDemonArtifacts, 0
+			DrawNumber 1, SMALLFONT, DarkRed, "RLTrackDemonArtifacts", 	-120, 45;
+
+		//ammo
+		InInventory not RLMultiAmmoWeapon
+		{
+			drawimage ammoicon1, -14, -4, centerbottom;
+			drawnumber 4, HUDFONT_DOOM, untranslated, ammo1, drawshadow, -25, -20;
+		}
+
+		InInventory RLMultiAmmoWeapon
+		{
+			InInventory RLAntiFreakJackalSelected
+			{
+				InInventory RLAntiFreakJackalDemonArtifacts
+				{
+					drawnumber 3, HUDFONT_DOOM, untranslated, "RLAntiFreakJackalClip", drawshadow, -78, -20;
+					drawnumber 3, HUDFONT_DOOM, untranslated, "RLHellsingARMSCasullClip", drawshadow, -25, -20;
+				}
+				InInventory not RLAntiFreakJackalDemonArtifacts
+				{
+					drawnumber 3, HUDFONT_DOOM, untranslated, "RLAntiFreakJackalClip", drawshadow, -25, -20;
+				}
+			}
+			InInventory RLMarathonShotgunsSelected
+			{
+				InInventory RLMarathonShotgunsDemonArtifacts
+				{
+					drawnumber 1, HUDFONT_DOOM, untranslated, "RLMarathonShotgunsClip2", drawshadow, -25, -20;
+					drawnumber 1, HUDFONT_DOOM, untranslated, "RLMarathonShotgunsClip1", drawshadow, -78, -20;
+				}
+				InInventory not RLMarathonShotgunsDemonArtifacts
+				{
+					drawnumber 1, HUDFONT_DOOM, untranslated, "RLMarathonShotgunsClip1", drawshadow, -25, -20;
+				}
+			}
+			InInventory RLStormUziSelected
+			{
+				drawnumber 2, HUDFONT_DOOM, untranslated, "RLStormUziClip2", drawshadow, -25, -20;
+				drawnumber 2, HUDFONT_DOOM, untranslated, "RLStormUziClip", drawshadow, -78, -20;
+			}
+			InInventory RLLonghornSelected
+			{
+				InInventory RLLonghornNanoMod
+				{
+					drawnumber 3, HUDFONT_DOOM, untranslated, "RLLonghornClip", drawshadow, -78, -20;
+					drawnumber 3, HUDFONT_DOOM, untranslated, "RLLonghornClip2", drawshadow, -25, -20;
+				}
+				InInventory not RLLonghornNanoMod
+				{
+					drawnumber 3, HUDFONT_DOOM, untranslated, "RLLonghornClip", drawshadow, -25, -20;
+				}
+			}
+		}
+
+		//Extra ammo counters for special snowflake guns
+		InInventory RLMarathonAssaultRifleSelected
+		{
+			drawnumber 1, HUDFONT_DOOM, untranslated, "RLMarathonAssaultRifleGrenades", drawshadow, -78, -20;
+			drawimage ammoicon1, -14, -4, centerbottom;
+			drawnumber 4, HUDFONT_DOOM, untranslated, ammo1, drawshadow, -25, -20;
+		}
+		InInventory RLWidowmakerSMGSelected
+		{
+			drawimage ammoicon1, -14, -4, centerbottom;
+			drawnumber 4, HUDFONT_DOOM, untranslated, ammo1, drawshadow, -25, -20;
+			InInventory RLWidowmakerSMGFirestormAltActive
+			{
+				drawimage "ROCKA0", -14, -40, centerbottom;
+				drawnumber 3, HUDFONT_DOOM, untranslated, "RocketAmmo", drawshadow, -25, -56;
+			}
+			InInventory RLWidowmakerSMGNanoAltActive
+			{
+				drawimage "CELLA0", -14, -40, centerbottom;
+				drawnumber 3, HUDFONT_DOOM, untranslated, "Cell", drawshadow, -25, -56;
+			}
+		}
+		InInventory RLGaussRifleSelected
+		{
+			drawnumber 1, HUDFONT_DOOM, untranslated, "RLGaussRifleClip", drawshadow, -78, -20;
+			drawimage ammoicon1, -14, -4, centerbottom;
+			drawnumber 4, HUDFONT_DOOM, untranslated, ammo1, drawshadow, -25, -20;
+		}
+		usesammo
+		{
+			//secondary ammo and inventory
+			usessecondaryammo
+			{
+				drawimage ammoicon2, -14, -22, centerbottom;
+				drawnumber 4, HUDFONT_DOOM, untranslated, ammo2, drawshadow, -25, -38;
+				inventorybarnotvisible
+				{
+					drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, DRLAINVFONT, -14, -57, -26, -74, untranslated;
+					// drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, HUDFONT_DOOM, -14, -39, -26, -56, untranslated;
+				}
+			}
+			//no secondary ammo
+			usessecondaryammo not
+			{
+				inventorybarnotvisible
+				{
+					drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, DRLAINVFONT, -14, -57, -26, -74, untranslated;
+					// drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, HUDFONT_DOOM, -14, -21, -26, -38, untranslated;
+				}
+			}
+		}
+
+		// no ammo but inventory
+		usesammo not
+		{
+			inventorybarnotvisible
+			{
+				drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, DRLAINVFONT, -14, -3, -26, -20, untranslated;
+			}
+		}
+
+		//----STAMINA BAR--------------------------------------------------------------------------------------
+
+		InInventory not RLStamina, 100
+		{
+			drawimage "STAMBACK", -12, -230;
+			DrawBar "STAMBAR", "STAMBAB", Ammo("RLStamina"), vertical, interpolate(4096), -9, -226;
+		}
+
+		InInventory RLStamina, 100
+		{
+			drawimage "STAMBARF", -12, -230;
+		}
+
+		//---COOLDOWN BARS-------------------------------------------------------------------------------------
+
+		InInventory PowerRL5Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL5CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL10Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL10CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL15Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL15CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL20Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL20CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL30Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL30CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL45Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL45CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL60Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL60CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL90Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL90CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL120Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL120CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL120KateCooldown
+		{
+			DrawBar "COOLKATE", "COOLDOWN", PowerupTime("RL120KateCooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL180Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL180CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL300Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL300CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL600Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL600CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRL1800Cooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL1800CooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+		InInventory PowerRLSentryCooldown
+		{
+			DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RLSentryCooldownGiver"), horizontal, interpolate(1), 18, -38;
+		}
+
+		//-----WEAPONS-----------------------------------------------------------------------------------------------------
+
+		//============= Draw Weapon Counter =============
+		InInventory RLWeaponLimit, 1
+		{
+			Drawimage "SIDEICO1", -24, 48, centerbottom;
+			DrawNumber 1, SMALLFONT, White, RLWeaponLimit, alignment (right), -21, 40, 0, Gray, 0, Gold, 6;
+		}
+
+		//============= Draw Modpack Counter =============
+		InInventory RLScavengerPerk
+		{
+			InInventory RLScavengerModLimit, 1
+			{
+				Drawimage "SIDEICO2", -25, 70, centerbottom;
+				DrawNumber 1, SMALLFONT, White, RLScavengerModLimit, alignment (right), -21, 60, 0, Gray, 0, Gold, 8;
+			}
+		}
+		InInventory not RLScavengerPerk
+		{
+			InInventory RLModLimit, 1
+			{
+			Drawimage "SIDEICO2", -25, 70, centerbottom;
+			DrawNumber 1, SMALLFONT, White, RLModLimit, alignment (right), -21, 60, 0, Gray, 0, Gold, 4;
+			}
+		}
+
+		//============= Draw Armor Counter =============
+		InInventory RLArmorInInventory, 1
+		{
+			Drawimage "SIDEICO3", -25, 90, centerbottom;
+			InInventory RLBackpack
+			{
+				DrawNumber 1, SMALLFONT, White, RLArmorInInventory, alignment (right), -21, 80, 0, Gray, 0, Gold, 4;
+			}
+			InInventory not RLBackpack
+			{
+				DrawNumber 1, SMALLFONT, White, RLArmorInInventory, alignment (right), -21, 80, 0, Gray, 0, Gold, 2;
+			}
+		}
+
+		//============= Draw Skull Counter =============
+		InInventory RLSkullLimit, 1
+		{
+			Drawimage "SIDEICO4", -25, 110, centerbottom;
+			InInventory RLBackpack
+			{
+				InInventory RLSkullLimit, 10
+				{
+					DrawNumber 2, SMALLFONT, White, RLSkullLimit, alignment (right), -18, 100, 0, Gray, 0, Gold, 12;
+				}
+				InInventory not RLSkullLimit, 10
+				{
+					DrawNumber 1, SMALLFONT, White, RLSkullLimit, alignment (right), -21, 100, 0, Gray, 0, Gold, 12;
+				}
+			}
+			InInventory not RLBackpack
+			{
+				DrawNumber 1, SMALLFONT, White, RLSkullLimit, alignment (right), -21, 100, 0, Gray, 0, Gold, 6;
+			}
+		}
+
+		//============= Draw Phase Device Counter =============
+		InInventory RLPhaseDeviceLimit, 1
+		{
+			Drawimage "SIDEICO5", -25, 130, centerbottom;
+			InInventory RLBackpack
+			{
+				DrawNumber 1, SMALLFONT, White, RLPhaseDeviceLimit, alignment (right), -21, 120, 0, Gray, 0, Gold, 8;
+			}
+			InInventory not RLBackpack
+			{
+				DrawNumber 1, SMALLFONT, White, RLPhaseDeviceLimit, alignment (right), -21, 120, 0, Gray, 0, Gold, 4;
+			}
+		}
+
+		//============= Draw Backpack Type =============
+		InInventory RLBackpack, 1
+		{
+			InInventory not RLCombatBackpackToken, 1
+			{
+				InInventory not RLSpecialistBackpackToken, 1
+				{
+					InInventory not RLScroungerBackpackToken, 1
+					{
+						InInventory not RLDedicatedBackpackToken, 1
+						{
+							InInventory not RLNuclearBackpackToken, 1
+							{
+								Drawimage "BPK0ICO2", -25, 150, centerbottom; // ahahahahaha fuck everything why can it not compare more than two things
+							}
+						}
+					}
+				}
+			}
+		}
+		InInventory RLCombatBackpackToken, 1
+		{
+			Drawimage "BPK1ICO2", -25, 150, centerbottom;
+		}
+		InInventory RLSpecialistBackpackToken, 1
+		{
+			Drawimage "BPK2ICO2", -25, 150, centerbottom;
+		}
+		InInventory RLScroungerBackpackToken, 1
+		{
+			Drawimage "BPK3ICO2", -25, 150, centerbottom;
+		}
+		InInventory RLDedicatedBackpackToken, 1
+		{
+			Drawimage "BPK4ICO2", -25, 150, centerbottom;
+		}
+		InInventory RLNuclearBackpackToken, 1
+		{
+			Drawimage "BPK5ICO2", -25, 150, centerbottom;
+		}
+
+		//---WEAPON TAGS---------------------------------------------------------------------------------------
+
+		InInventory RLStandardWeaponToken
+		{
+			InInventory not RLFistSelected
+			{
+				DrawString SMALLFONT, White, WeaponTag, -160, 10, 1, alignment (center);
+			}
+		}
+		InInventory RLAssembledWeaponToken
+		{
+			DrawString SMALLFONT, Cyan, WeaponTag, -160, 10, 1, alignment (center);
+		}
+		InInventory RLSuperiorAssembledWeaponToken
+		{
+			DrawString SMALLFONT, Cyan, WeaponTag, -160, 10, 1, alignment (center);
+		}
+		InInventory RLExoticWeaponToken
+		{
+			DrawString SMALLFONT, Purple, WeaponTag, -160, 10, 1, alignment (center);
+		}
+		InInventory RLSuperiorWeaponToken
+		{
+			DrawString SMALLFONT, Orange, WeaponTag, -160, 10, 1, alignment (center);
+		}
+		InInventory RLUniqueWeaponToken
+		{
+			DrawString SMALLFONT, Green, WeaponTag, -160, 10, 1, alignment (center);
+		}
+		InInventory RLDemonicWeaponToken
+		{
+			DrawString SMALLFONT, Red, WeaponTag, -160, 10, 1, alignment (center);
+		}
+		InInventory RLLegendaryWeaponToken
+		{
+			DrawString SMALLFONT, Yellow, WeaponTag, -160, 10, 1, alignment (center);
+		}
+
+		InInventory RLWeaponDrop || RLScavengerDrop
+		{
+			Drawimage "DROPICON", -110, 42, centerbottom;
+		}
+
+	// STANDARD ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLGenericArmorToken
+		DrawImage "ARM0HUD", 18, -38, centerbottom;
+
+	InInventory RLGreenArmorToken
+		DrawImage "ARM1HUD", 18, -38, centerbottom;
+
+	InInventory RLBlueArmorToken
+		DrawImage "ARM2HUD", 18, -38, centerbottom;
+
+	InInventory RLRedArmorToken
+		DrawImage "HEVAHUD", 18, -38, centerbottom;
+
+	// ASSEMBLED ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLCerberusArmorToken
+		DrawImage "CERAHUD", 18, -38, centerbottom;
+
+	InInventory RLFireshieldArmorToken
+		DrawImage "FSHDHUD1", 18, -38, centerbottom;
+
+	InInventory RLTacticalArmorToken
+		DrawImage "TACAHUD", 18, -38, centerbottom;
+
+	InInventory RLTowerShieldArmorToken
+		DrawImage "TSHDHUD", 18, -38, centerbottom;
+
+	// ASSEMBLED COLOR ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLAblativeGreenArmorToken
+		DrawImage "ABL1HUD", 18, -38, centerbottom;
+
+	InInventory RLAblativeBlueArmorToken
+		DrawImage "ABL2HUD", 18, -38, centerbottom;
+
+	InInventory RLAblativeRedArmorToken
+		DrawImage "ABL3HUD", 18, -38, centerbottom;
+
+	InInventory RLBallisticGreenArmorToken
+		DrawImage "BLA1HUD", 18, -38, centerbottom;
+
+	InInventory RLBallisticBlueArmorToken
+		DrawImage "BLA2HUD", 18, -38, centerbottom;
+
+	InInventory RLBallisticRedArmorToken
+		DrawImage "BLA3HUD", 18, -38, centerbottom;
+
+	InInventory RLCybernanoGreenArmorToken
+		DrawImage "CYN1HUD1", 18, -38, centerbottom;
+
+	InInventory RLCybernanoBlueArmorToken
+		DrawImage "CYN2HUD1", 18, -38, centerbottom;
+
+	InInventory RLCybernanoRedArmorToken
+		DrawImage "CYN3HUD1", 18, -38, centerbottom;
+
+	InInventory RLFireproofGreenArmorToken
+		DrawImage "FPA1HUD", 18, -38, centerbottom;
+
+	InInventory RLFireproofBlueArmorToken
+		DrawImage "FPA2HUD", 18, -38, centerbottom;
+
+	InInventory RLFireproofRedArmorToken
+		DrawImage "FPA3HUD", 18, -38, centerbottom;
+
+	InInventory RLNanofiberGreenArmorToken
+		DrawImage "NFA1HUD", 18, -38, centerbottom;
+
+	InInventory RLNanofiberBlueArmorToken
+		DrawImage "NFA2HUD", 18, -38, centerbottom;
+
+	InInventory RLNanofiberRedArmorToken
+		DrawImage "NFA3HUD", 18, -38, centerbottom;
+
+	InInventory RLNanofiberSkinGreenArmorToken
+		DrawImage "NFS1HUD", 18, -38, centerbottom;
+
+	InInventory RLNanofiberSkinBlueArmorToken
+		DrawImage "NFS2HUD", 18, -38, centerbottom;
+
+	InInventory RLNanofiberSkinRedArmorToken
+		DrawImage "NFS3HUD", 18, -38, centerbottom;
+
+	InInventory RLPowerGreenArmorToken
+		DrawImage "PWR1HUD", 18, -38, centerbottom;
+
+	InInventory RLPowerBlueArmorToken
+		DrawImage "PWR2HUD", 18, -38, centerbottom;
+
+	InInventory RLPowerRedArmorToken
+		DrawImage "PWR3HUD", 18, -38, centerbottom;
+
+	// EXOTIC ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLBallisticShieldArmorToken
+		DrawImage "BSHDHUD1", 18, -38, centerbottom;
+
+	InInventory RLBallisticVestArmorToken
+		DrawImage "BALVHUD", 18, -38, centerbottom;
+
+	InInventory RLBulletProofVestArmorToken
+		DrawImage "BPFVHUD", 18, -38, centerbottom;
+
+	InInventory RLCyberwarriorArmorToken
+		DrawImage "CYWAHUD", 18, -38, centerbottom;
+
+	InInventory RLDuelistArmorToken
+		DrawImage "DUEAHUD", 18, -38, centerbottom;
+
+	InInventory RLEnergyShieldedVestArmorToken
+		DrawImage "ESVAHUD1", 18, -38, centerbottom;
+
+	InInventory RLEnergyShieldArmorToken
+		DrawImage "ESHDHUD1", 18, -38, centerbottom;
+
+	InInventory RLGothicArmorToken
+		DrawImage "GOTAHUD", 18, -38, centerbottom;
+
+	InInventory RLMedicalArmorToken
+		DrawImage "MED1HUD", 18, -38, centerbottom;
+
+	InInventory RLOnyxArmorToken
+		DrawImage "ONXAHUD", 18, -38, centerbottom;
+
+	InInventory RLOverchargeSystemArmorToken
+	{
+		InInventory PowerRL180Cooldown
+		{
+			InInventory PowerRLOverchargeSystemDamage
+			{
+				DrawImage "OVESHUD2", 18, -38;
+				DrawBar "OVESHUD3", "OVESHUD4", PowerupTime("RLOverchargeSystemDamageGiver"), horizontal, interpolate(1), 18, -38;
+			}
+
+			InInventory not PowerRLOverchargeSystemDamage
+			{
+				DrawImage "OVESHUD2", 18, -38;
+				DrawBar "OVESHUD4", "OVESHUD3", PowerupTime("RL180CooldownGiver"), horizontal, reverse | interpolate(1), 18, -38;
+			}
+		}
+
+		InInventory not PowerRL180Cooldown
+			DrawImage "OVESHUD", 18, -38;
+	}
+
+	InInventory RLPhaseshiftArmorToken
+		DrawImage "PSHAHUD", 18, -38, centerbottom;
+
+	InInventory RLPlasmaShieldArmorToken
+		DrawImage "PSHDHUD1", 18, -38, centerbottom;
+
+	InInventory RLRepulsionWaveSuitArmorToken
+		DrawImage "REPWHUD", 18, -38, centerbottom;
+
+	InInventory RLSurvivalMediArmorToken
+		DrawImage "SURVHUD", 18, -38, centerbottom;
+
+	// ONYX-MODDED ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLOModGreenArmorToken
+		DrawImage "ONYAAHUD", 18, -38, centerbottom;
+
+	InInventory RLOModBlueArmorToken
+		DrawImage "ONYABHUD", 18, -38, centerbottom;
+
+	InInventory RLOModRedArmorToken
+		DrawImage "ONYACHUD", 18, -38, centerbottom;
+
+	InInventory RLOModBallisticVestArmorToken
+		DrawImage "ONYADHUD", 18, -38, centerbottom;
+
+	InInventory RLOModBulletProofVestArmorToken
+		DrawImage "ONYAEHUD", 18, -38, centerbottom;
+
+	InInventory RLOModCyberwarriorArmorToken
+		DrawImage "ONYAFHUD", 18, -38, centerbottom;
+
+	InInventory RLOModDuelistArmorToken
+		DrawImage "ONYAGHUD", 18, -38, centerbottom;
+
+	InInventory RLOModEnergyShieldedVestArmorToken
+		DrawImage "ONYAHHUD", 18, -38, centerbottom;
+
+	InInventory RLOModGothicArmorToken
+		DrawImage "ONYAJHUD", 18, -38, centerbottom;
+
+	InInventory RLOModMedicalArmorToken
+		DrawImage "ONYAKHUD", 18, -38, centerbottom;
+
+	InInventory RLOModPhaseshiftArmorToken
+		DrawImage "ONYALHUD", 18, -38, centerbottom;
+
+	InInventory RLOModRepulsionWaveSuitArmorToken
+		DrawImage "ONYAMHUD", 18, -38, centerbottom;
+
+	InInventory RLOModSurvivalMediArmorToken
+		DrawImage "ONYANHU1", 18, -38, centerbottom;
+
+	// SUPERIOR ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLNuclearArmorToken
+		DrawImage "NUKAHUD", 18, -38, centerbottom;
+
+	InInventory RLRechargeableEnergyShieldArmorToken
+		DrawImage "RESHHUD", 18, -38, centerbottom;
+
+	// UNIQUE ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLBerserkerArmorToken
+		DrawImage "GOTAHUD", 18, -38, centerbottom;
+
+	InInventory RLBerserkPowersuitArmorToken
+	{
+		InInventory PowerStrength
+			DrawImage "BEPSHUD5", 18, -38, centerbottom;
+
+		InInventory not PowerStrength
+		{
+			InInventory not RLBerserkPowersuitBerserkCounter, 1
+				DrawImage "BEPSHUD", 18, -38, centerbottom;
+
+			InInventory RLBerserkPowersuitBerserkCounter, 1
+			{
+				InInventory not RLBerserkPowersuitBerserkCounter, 2
+					DrawImage "BEPSHUD2", 18, -38, centerbottom;
+
+				InInventory RLBerserkPowersuitBerserkCounter, 2
+				{
+					InInventory not RLBerserkPowersuitBerserkCounter, 3
+						DrawImage "BEPSHUD3", 18, -38, centerbottom;
+
+					InInventory RLBerserkPowersuitBerserkCounter, 3
+						DrawImage "BEPSHUD4", 18, -38, centerbottom;
+				}
+			}
+		}
+	}
+
+	InInventory RLBlazingPhoenixDeviceSuitArmorToken
+	{
+		InInventory not RLBlazingPhoenixDeviceSuitAnimation, 1
+			DrawImage "BPHDHUD", 18, -38;
+
+		InInventory RLBlazingPhoenixDeviceSuitAnimation, 1
+		{
+			InInventory not RLBlazingPhoenixDeviceSuitAnimation, 2
+				DrawImage "BPHDHUD2", 18, -38;
+
+			InInventory RLBlazingPhoenixDeviceSuitAnimation, 2
+			{
+				InInventory not RLBlazingPhoenixDeviceSuitAnimation, 3
+					DrawImage "BPHDHUD3", 18, -38;
+
+				InInventory RLBlazingPhoenixDeviceSuitAnimation, 3
+				{
+					InInventory not RLBlazingPhoenixDeviceSuitAnimation, 4
+						DrawImage "BPHDHUD4", 18, -38;
+
+					InInventory RLBlazingPhoenixDeviceSuitAnimation, 4
+					{
+						InInventory not RLBlazingPhoenixDeviceSuitAnimation, 5
+							DrawImage "BPHDHUD5", 18, -38;
+
+						InInventory RLBlazingPhoenixDeviceSuitAnimation, 5
+						{
+							InInventory not RLBlazingPhoenixDeviceSuitAnimation, 6
+								DrawImage "BPHDHUD6", 18, -38;
+							InInventory RLBlazingPhoenixDeviceSuitAnimation, 6
+								DrawImage "BPHDHUD7", 18, -38;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	InInventory RLCyberneticArmorToken
+	{
+		InInventory RLCyberneticArmorModdedToken
+		{
+			InInventory RLCyberneticArmorBulkToken
+				DrawImage "CYNAHUD2", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorPowerToken
+				DrawImage "CYNAHUD3", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorAgilityToken
+				DrawImage "CYNAHUD4", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorTechnicalToken
+				DrawImage "CYNAHUD5", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorSniperToken
+				DrawImage "CYNAHUD6", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorFirestormToken
+				DrawImage "CYNAHUD7", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorNanoToken
+				DrawImage "CYNAHUD8", 18, -38, centerbottom;
+
+			InInventory RLCyberneticArmorOnyxToken
+			DrawImage "CYNAHUD9", 18, -38, centerbottom;
+
+		}
+
+		InInventory not RLCyberneticArmorModdedToken
+			DrawImage "CYNAHUD", 18, -38, centerbottom;
+	}
+
+	InInventory RLEnergyDischargeHarnessArmorToken
+	{
+		InInventory not RLEnergyDischargeHarnessCounter, 1
+			DrawImage "EDHXHUD", 18, -38, centerbottom;
+
+		InInventory RLEnergyDischargeHarnessCounter, 1
+		{
+			InInventory not RLEnergyDischargeHarnessCounter, 2
+				DrawImage "EDHXHUD2", 18, -38, centerbottom;
+
+			InInventory RLEnergyDischargeHarnessCounter, 2
+			{
+				InInventory not RLEnergyDischargeHarnessCounter, 3
+					DrawImage "EDHXHUD3", 18, -38, centerbottom;
+
+				InInventory RLEnergyDischargeHarnessCounter, 3
+				{
+					InInventory not RLEnergyDischargeHarnessCounter, 4
+						DrawImage "EDHXHUD4", 18, -38, centerbottom;
+
+					InInventory RLEnergyDischargeHarnessCounter, 4
+					{
+						InInventory not RLEnergyDischargeHarnessCounter, 5
+							DrawImage "EDHXHUD5", 18, -38, centerbottom;
+
+						InInventory RLEnergyDischargeHarnessCounter, 5
+							DrawImage "EDHXHUD6", 18, -38, centerbottom;
+					}
+				}
+			}
+		}
+	}
+
+	InInventory RLFrontlineEngineerSuitArmorToken
+		DrawImage "BLUAHUD", 18, -38, centerbottom;
+
+	InInventory RLGeosGoldenGauntletArmorToken
+		DrawImage "GGGXHUD", 18, -38, centerbottom;
+
+	InInventory RLJetpackArmorToken
+	{
+		InInventory PowerRLJetpackFlight
+			DrawImage "JETPHUD4", 18, -38, centerbottom;
+
+		InInventory PowerRLJetpackFlightPermanent
+			DrawImage "JETPHUD4", 18, -38, centerbottom;
+
+		InInventory not PowerRLJetpackFlight, 1 || PowerRLJetpackFlightPermanent, 1
+			DrawImage "JETPHUD", 18, -38, centerbottom;
+
+	}
+
+	InInventory RLKateMatterstormHarnessArmorToken
+		DrawImage "K8MHHUD", 18, -38, centerbottom;
+
+	InInventory RLKyleTeslaboltArmorToken
+	{
+		InInventory RLKyleTeslaboltArmorCounter, 1
+			DrawImage "KTESHUD3", 18, -38, centerbottom;
+
+		InInventory not RLKyleTeslaboltArmorCounter, 1
+			DrawImage "KTESHUD", 18, -38, centerbottom;
+	}
+
+	InInventory RLLavaArmorToken
+		DrawImage "LAVUHUD1", 18, -38, centerbottom;
+
+	InInventory RLMaleksArmorToken
+	{
+		InInventory RLInquisitorsSetBonusActive
+			DrawImage "MALKHUD2", 18, -38, centerbottom;
+
+		InInventory not RLInquisitorsSetBonusActive
+			DrawImage "MALKHUD1", 18, -38, centerbottom;
+	}
+
+	InInventory RLMedicalPowerArmorToken
+		DrawImage "MED2HUD", 18, -38, centerbottom;
+
+	InInventory RLNanoAblativeArmorToken
+		DrawImage "NABLHUD", 18, -38, centerbottom;
+
+	InInventory RLNuclearPowerArmorToken
+	{
+		InInventory RLEnclaveSetBonusActive, 1
+			DrawImage "ENUKHUD2", 18, -38, centerbottom;
+
+		InInventory not RLEnclaveSetBonusActive, 1
+			DrawImage "ENUKHUD", 18, -38, centerbottom;
+	}
+
+	InInventory RLPrototypeAssaultShieldArmorToken
+	{
+		InInventory PowerRLPrototypeAssaultShieldProtection
+		{
+			DrawImage "PASSHUD", 18, -38, centerbottom;
+			DrawBar "PASSHUD2", "PASSHUD3", PowerupTime("RLPrototypeAssaultShieldProtectionGiver"), horizontal, interpolate(1), 19, -37; // x+1, y-1
+		}
+
+		InInventory not PowerRLPrototypeAssaultShieldProtection
+		{
+			InInventory not PowerRLPrototypeAssaultShieldNoCells
+				DrawImage "PASSHUD", 18, -38, centerbottom;
+
+			InInventory PowerRLPrototypeAssaultShieldNoCells
+				DrawImage "PASSHUD4", 18, -38, centerbottom;
+		}
+	}
+
+	InInventory RLRoystensCommandArmorToken
+		DrawImage "ROYAHUD", 18, -38, centerbottom;
+
+	InInventory RLRyanCordellPsychicAmplifierSuitArmorToken
+		DrawImage "RCPAHUD", 18, -38, centerbottom;
+
+	InInventory RLSoloOperativeSuitArmorToken
+		DrawImage "SSOSHUD", 18, -38, centerbottom;
+
+	InInventory RLShieldedArmorToken
+		DrawImage "SSHDHUD1", 18, -38, centerbottom;
+
+	InInventory RLTacticalAssemblerSuitArmorToken
+		DrawImage "REDAHUD", 18, -38, centerbottom;
+
+	InInventory RLTerminusEst13BattlesuitArmorToken
+	{
+		InInventory PowerRLTerminusAttack, 1
+			DrawImage "TEBSHUD3", 18, -38, centerbottom;
+
+		InInventory not PowerRLTerminusAttack, 1
+			DrawImage "TEBSHUD", 18, -38, centerbottom;
+	}
+
+	InInventory RLTorgueBlastplateArmorToken
+		DrawImage "TORAHUD", 18, -38, centerbottom;
+
+	InInventory RLWildWeaselPeacekeeperArmorToken
+		DrawImage "WWPKHUD", 18, -38, centerbottom;
+
+	InInventory RLXaserPowerArmorToken
+		DrawImage "XASPHUD", 18, -38, centerbottom;
+
+	InInventory RLZeroDiamondAssaultforceArmorToken
+	{
+		InInventory RLZeroDiamondAssaultforceArmorCounter, 1
+			DrawImage "0DAFHUD2", 18, -38, centerbottom;
+
+		InInventory not RLZeroDiamondAssaultforceArmorCounter, 1
+			DrawImage "0DAFHUD", 18, -38, centerbottom;
+	}
+
+	// DEMONIC ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLDemonicCarapaceArmorToken
+	{
+		InInventory PowerRLDemonicCarapaceAttack, 1
+			DrawImage "DEMAHUD2", 18, -38, centerbottom;
+
+		InInventory not PowerRLDemonicCarapaceAttack, 1
+			DrawImage "DEMAHUD", 18, -38, centerbottom;
+	}
+
+	InInventory RLNecroArmorToken
+		DrawImage "NECRHUD", 18, -38, centerbottom;
+
+	InInventory RLSoulshatterArmorToken
+	{
+		InInventory not RLSoulshatterArmorAnimation, 1
+			DrawImage "SOLSHUD", 18, -38;
+
+		InInventory RLSoulshatterArmorAnimation, 1
+		{
+			InInventory not RLSoulshatterArmorAnimation, 2
+				DrawImage "SOLSHUD2", 18, -38;
+
+			InInventory RLSoulshatterArmorAnimation, 2
+			{
+				InInventory not RLSoulshatterArmorAnimation, 3
+					DrawImage "SOLSHUD3", 18, -38;
+
+				InInventory RLSoulshatterArmorAnimation, 3
+				{
+					InInventory not RLSoulshatterArmorAnimation, 4
+						DrawImage "SOLSHUD4", 18, -38;
+
+					InInventory RLSoulshatterArmorAnimation, 4
+						DrawImage "SOLSHUD5", 18, -38;
+				}
+			}
+		}
+	}
+
+	// LEGENDARY ARMOR HUD DISPLAY ==========================================================================
+	InInventory RLAngelicArmorToken
+		DrawImage "ANGAHUD", 18, -38, centerbottom;
+
+	InInventory RLChronotrooperArmorToken
+		DrawImage "CHROHUD", 18, -38, centerbottom;
+
+	InInventory RLReactiveShieldSystemArmorToken
+	{
+		InInventory not PowerRLReactiveShieldSystemActiveToken
+			DrawImage "RSSDHUD", 18, -38, centerbottom;
+
+		InInventory PowerRLReactiveShieldSystemActiveToken
+		{
+			InInventory PowerRLReactiveShieldSystemMelee
+				DrawImage "RSSDHUD2", 18, -38, centerbottom;
+
+			InInventory PowerRLReactiveShieldSystemBullet
+				DrawImage "RSSDHUD3", 18, -38, centerbottom;
+
+			InInventory PowerRLReactiveShieldSystemFire
+				DrawImage "RSSDHUD4", 18, -38, centerbottom;
+
+			InInventory PowerRLReactiveShieldSystemPlasma
+				DrawImage "RSSDHUD5", 18, -38, centerbottom;
+		}
+	}
+
+	InInventory RLTheBeeArmorToken
+		DrawImage "BEESHUD", 18, -38, centerbottom;
+
+	// STANDARD BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLGenericBootsToken
+		DrawImage "BOOGICON", 50, -38, centerbottom;
+
+	InInventory RLSteelBootsToken
+		DrawImage "BOO1ICON", 50, -38, centerbottom;
+
+	InInventory RLProtectiveBootsToken
+		DrawImage "BOO2ICON", 50, -38, centerbottom;
+
+	InInventory RLPlasteelBootsToken
+		DrawImage "BOO3ICON", 50, -38, centerbottom;
+
+	// ASSEMBLED BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLAntigravSteelBootsToken
+		DrawImage "AGSBICON", 50, -38, centerbottom;
+
+	InInventory RLAntigravProtectiveBootsToken
+		DrawImage "AGGBICON", 50, -38, centerbottom;
+
+	InInventory RLAntigravPlasteelBootsToken
+		DrawImage "AGBBICON", 50, -38, centerbottom;
+
+	InInventory RLEnviromentalSteelBootsToken
+		DrawImage "ENV1ICON", 50, -38, centerbottom;
+
+	InInventory RLEnviromentalProtectiveBootsToken
+		DrawImage "ENV2ICON", 50, -38, centerbottom;
+
+	InInventory RLEnviromentalPlasteelBootsToken
+		DrawImage "ENV3ICON", 50, -38, centerbottom;
+
+	InInventory RLFireproofSteelBootsToken
+		DrawImage "FIR1ICON", 50, -38, centerbottom;
+
+	InInventory RLFireproofProtectiveBootsToken
+		DrawImage "FIR2ICON", 50, -38, centerbottom;
+
+	InInventory RLFireproofPlasteelBootsToken
+		DrawImage "FIR3ICON", 50, -38, centerbottom;
+
+	InInventory RLGrapplingSteelBootsToken
+		DrawImage "GRA1ICON", 50, -38, centerbottom;
+
+	InInventory RLGrapplingProtectiveBootsToken
+		DrawImage "GRA2ICON", 50, -38, centerbottom;
+
+	InInventory RLGrapplingPlasteelBootsToken
+		DrawImage "GRA3ICON", 50, -38, centerbottom;
+
+	InInventory RLCerberusBootsToken
+		DrawImage "CERBICON", 50, -38, centerbottom;
+
+	InInventory RLTacticalBootsToken
+		DrawImage "TACBICON", 50, -38, centerbottom;
+
+	// EXOTIC BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLAcidProofBootsToken
+		DrawImage "ACPBICON", 50, -38, centerbottom;
+
+	InInventory RLGothicBootsToken
+		DrawImage "GOTBICON", 50, -38, centerbottom;
+
+	InInventory RLPhaseshiftBootsToken
+		DrawImage "PSHBICON", 50, -38, centerbottom;
+
+	InInventory RLShockwaveBootsToken
+		DrawImage "SHKBICON", 50, -38, centerbottom;
+
+	// SUPERIOR BOOTS HUD DISPLAY ==========================================================================
+
+	// UNIQUE BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLEnviroBootsToken
+		DrawImage "ENVBICON", 50, -38, centerbottom;
+
+	InInventory RLFrontlineEngineerBootsToken
+		DrawImage "BLUBICON", 50, -38, centerbottom;
+
+	InInventory RLLavaBootsToken
+		DrawImage "LAVBICON", 50, -38, centerbottom;
+
+	InInventory RLLeonidasBootsToken
+		DrawImage "SPARICON", 50, -38, centerbottom;
+
+	InInventory RLNuclearPowerBootsToken
+		DrawImage "ENUKICO3", 50, -38, centerbottom;
+
+	InInventory RLNyarlaptotepsBootsToken
+		DrawImage "NYABICON", 50, -38, centerbottom;
+
+	InInventory RLRoystensCombatBootsToken
+		DrawImage "ROYBICON", 50, -38, centerbottom;
+
+	InInventory RLSoloOperativeBootsToken
+		DrawImage "SSOBICON", 50, -38, centerbottom;
+
+	InInventory RLTorgueBlastBootsToken
+		DrawImage "TORBICON", 50, -38, centerbottom;
+
+	InInventory RLTacticalAssemblerBootsToken
+		DrawImage "REDBICON", 50, -38, centerbottom;
+
+	// DEMONIC BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLDemonicBootsToken
+		DrawImage "DEMBICON", 50, -38, centerbottom;
+
+	// LEGENDARY BOOTS HUD DISPLAY ==========================================================================
+	InInventory RLAngelicBootsToken
+		DrawImage "ANGBICON", 50, -38, centerbottom;
+	}
+
+        InInventory RLFullscreenDookHUDType
+		{
+			// barz
+			DrawImage "DOOKWIDE", 0+center, -15, center;
+
+			// healtz
+			DrawNumber 3, BNUM, untranslated, health, fillzeros, Interpolate(250), -118+center, -15;
+
+			// armorz
+			InInventory not RLIndestructibleArmorWorn
+				DrawNumber 3, BNUM, untranslated, armor, whennotzero, Interpolate(250),-86+center, -15, orange, 25, green, 75;
+			else
+				DrawImage "BNUMINF", -96+center, -10, center;
+
+			InInventory PowerRL5Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL5CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL10Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL10CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL15Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL15CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL20Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL20CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL30Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL30CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL45Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL45CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL60Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL60CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL120Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL120CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL120KateCooldown
+				DrawBar "COOLKATE", "COOLDOWN", PowerupTime("RL120KateCooldownGiver"),	horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL180Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL180CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL300Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL300CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL600Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL600CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRL1800Cooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RL1800CooldownGiver"),		horizontal, interpolate(1),	-96+center, -5;
+			InInventory PowerRLSentryCooldown
+				DrawBar "COOLMAIN", "COOLDOWN", PowerupTime("RLSentryCooldownGiver"),	horizontal, interpolate(1),	-96+center, -5;
+
+			InInventory RLWeaponDrop || RLScavengerDrop
+			{
+				Drawimage "DKDROP", -128+center, -30, centerbottom;
+			}
+			// inventoryz
+			DrawSelectedInventory alwaysshowcounter, itemflash, centerbottom, DNUM, 84+center, -5, 106+center, -13, untranslated;
+
+			// weponz
+			DrawImage weaponicon, -50+center, -10, center, 40, 16, forcescale;
+
+			// trackerz
+            InInventory RLStandardWeaponToken || RLExoticWeaponToken
+            {
+                DrawNumber 1, DNUM, white, "RLTrackModLimit", -20+center, -15, 0, white, 3, gold, 4;
+            }
+            InInventory RLSuperiorWeaponToken || RLBasicAssemblyTypeWeapon
+            {
+                DrawNumber 1, DNUM, white, "RLTrackModLimit", -20+center, -15, 0, white, 0, gold, 2;
+            }
+            InInventory RLUniqueWeaponToken || RLDemonicWeaponToken
+            {
+                IsSelected NOT RLDuke2Rifle, RLChameleonRifle
+                {
+                    IsSelected NOT RLWidowmakerSMG
+                    {
+                        DrawNumber 1, DNUM, white,		"RLTrackModLimit", 	   -20+center, -15, 0, white, 0, gold, 1;
+                    }
+                }
+            }
+            InInventory RLLegendaryWeaponToken || RLAdvancedAssemblyTypeWeapon
+            {
+                IsSelected NOT RLDuke2Rifle, RLChameleonRifle
+                {
+                    IsSelected NOT RLWidowmakerSMG
+                    {
+                        DrawNumber 1, DNUM, white,		"RLTrackModLimit", 	   -20+center, -15, 0, white, 0, gold, 1;
+                    }
+                }
+            }
+            IsSelected RLDuke2Rifle, RLChameleonRifle
+            {
+                DrawNumber 1, DNUM, white, "RLTrackModLimit", -20+center, -15, 0, white, 0, gold, 3;
+            }
+            IsSelected RLWidowmakerSMG
+            {
+                DrawNumber 1, DNUM, white, "RLTrackModLimit", -20+center, -15, 0, white, 0, gold, 3;
+            }
+            InInventory RLMasterAssemblyTypeWeapon || RLSuperiorAssembledWeaponToken
+            {
+                DrawNumber 1, DNUM, gold,  "RLTrackModLimit", -20+center, -15, 0;
+            }
+			
+			IsSelected RLUnmaker
+			{
+				DrawNumber 1, DNUM, gold, "RLTrackModLimit", -47, -14, 0;
+			}
+
+			DrawNumber 1, DNUM, lightblue,	"RLTrackBulkMod", 		-14+center, -19;
+			DrawNumber 1, DNUM, red,		"RLTrackPowerMod", 		-9 +center, -19;
+			DrawNumber 1, DNUM, green,		"RLTrackAgilityMod", 	-4 +center, -19;
+			DrawNumber 1, DNUM, yellow,		"RLTrackTechnicalMod",	 1 +center, -19;
+
+			DrawNumber 1, DNUM, purple, 	"RLTrackSniperMod", 	-14+center, -11;
+			DrawNumber 1, DNUM, orange, 	"RLTrackFirestormMod", 	-9 +center, -11;
+			DrawNumber 1, DNUM, white,		"RLTrackNanoMod", 		-4 +center, -11;
+			DrawNumber 1, DNUM, darkred,	"RLTrackDemonArtifacts", 1 +center, -11;
+
+			// keyz
+			//drawkeybar SIZE,	VERT,		FLAGS-------		ICONSIZE,	X---------,	Y,		KOFF,	ROWSIZE,	ROWICONSIZE
+			drawkeybar		6,	horizontal,	reverserows,		8,			116+center,	-11,	0,		3,			7;
+
+			// time to criz
+			IsSelected not RLNuclearOnslaught
+			{
+				InInventory not RLMultiAmmoWeapon
+				{
+					InInventory RLInfiniteAmmoWeapon || RLNuclearAmmoWeapon
+                    {
+						DrawImage "SNMAG", 40+center, -6, center, 8, 9;
+						DrawImage "DNUMINF", 48+center, -6, center;
+                    }
+					InInventory RLRechargingAmmoWeapon
+                    {
+						DrawImage "SNMAG", 40+center, -6, center, 8, 9;
+						DrawImage "DNUMINF", 48+center, -6, center;
+                    }
+
+					IsSelected RLBulletstormRifle, RLBulletstormChaingun
+					{
+						DrawImage "AMMOA0", 40+center, -15, center, 8, 9;
+						DrawNumber 4, DNUM, untranslated, ammo1, alignment(left), 43+center, -18;
+					}
+					else
+					{
+						DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+						DrawNumber 4, DNUM, untranslated, ammo1, alignment(left), 43+center, -18;
+					}
+				}
+				// Ammo box
+				usesammo
+				{
+					// Reserve ammo
+					usessecondaryammo
+					{
+						// Reserve ammo icon
+						WeaponAmmo "Clip"		{ DrawImage ammoicon2, 18+center, -16, center, 7, 8; }
+						WeaponAmmo "Shell"		{ DrawImage ammoicon2, 18+center, -16, center, 8, 9; }
+						WeaponAmmo "RocketAmmo"	{ DrawImage ammoicon2, 18+center, -16, center, 8, 9; }
+						WeaponAmmo "Cell"		{ DrawImage ammoicon2, 18+center, -16, center, 8, 9; }
+
+						// Quantity
+						DrawNumber 4, DNUM, untranslated, ammo2, fillzeros, alignment(left), 7+center, -10;
+					}
+				}
+				// special weponz
+				InInventory RLMultiAmmoWeapon
+				{
+					InInventory RLAntiFreakJackalSelected
+					{
+						InInventory RLAntiFreakJackalDemonArtifacts
+						{
+							DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+							DrawNumber 3, DNUM, untranslated, "RLAntiFreakJackalClip", alignment(left), 	43+center, -18;
+
+							DrawImage "SNMAG", 40+center, -7, center, 8, 9;
+							DrawNumber 3, DNUM, untranslated, "RLHellsingARMSCasullClip", alignment(left),	43+center, -10;
+						}
+						InInventory not RLAntiFreakJackalDemonArtifacts
+						{
+							DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+							DrawNumber 3, DNUM, untranslated, "RLAntiFreakJackalClip", alignment(left),		43+center, -18;
+						}
+					}
+					InInventory RLMarathonShotgunsSelected
+					{
+						InInventory RLMarathonShotgunsDemonArtifacts
+						{
+							DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+							DrawNumber 1, DNUM, untranslated, "RLMarathonShotgunsClip1", alignment(left),	43+center, -18;
+
+							DrawImage "SNMAG", 40+center, -7, center, 8, 9;
+							DrawNumber 1, DNUM, untranslated, "RLMarathonShotgunsClip2", alignment(left),	43+center, -10;
+						}
+						InInventory not RLMarathonShotgunsDemonArtifacts
+						{
+							DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+							DrawNumber 1, DNUM, untranslated, "RLMarathonShotgunsClip1", alignment(left),	43+center, -18;
+						}
+					}
+					InInventory RLStormUziSelected
+					{
+						DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+						DrawNumber 2, DNUM, untranslated, "RLStormUziClip", alignment(left),				43+center, -18;
+
+						DrawImage "SNMAG", 40+center, -7, center, 8, 9;
+						DrawNumber 2, DNUM, untranslated, "RLStormUziClip2", alignment(left),				43+center, -10;
+					}
+					InInventory RLLonghornSelected
+					{
+						InInventory RLLonghornNanoMod
+						{
+							DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+							DrawNumber 3, DNUM, untranslated, "RLLonghornClip", alignment(left), 	43+center, -18;
+
+							DrawImage "SNMAG", 40+center, -7, center, 8, 9;
+							DrawNumber 3, DNUM, untranslated, "RLLonghornClip2", alignment(left),	43+center, -10;
+						}
+						InInventory not RLLonghornNanoMod
+						{
+							DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+							DrawNumber 3, DNUM, untranslated, "RLLonghornClip", alignment(left),		43+center, -18;
+						}
+					}
+				}
+
+				// snowflake gunz
+				InInventory RLMarathonAssaultRifleSelected
+				{
+					// Mag
+					DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+					DrawNumber 4, DNUM, untranslated, ammo1, alignment(left),								43+center, -18;
+					// Extra
+					DrawImage "ROCKA0", 40+center, -7, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLMarathonAssaultRifleGrenades", alignment(left), 	43+center, -10;
+				}
+				InInventory RLWidowmakerSMGSelected
+				{
+					InInventory RLWidowmakerSMGFirestormAltActive
+					{
+						// Mag
+						DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+						DrawNumber 4, DNUM, untranslated, ammo1, alignment(left),							43+center, -18;
+						// Extra
+						DrawImage "ROCKA0", 40+center, -7, center, 8, 9;
+						DrawNumber 3, DNUM, untranslated, "RocketAmmo", alignment(left),					43+center, -10;
+					}
+					InInventory RLWidowmakerSMGNanoAltActive
+					{
+						// Mag
+						DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+						DrawNumber 4, DNUM, untranslated, ammo1, alignment(left),							43+center, -18;
+						// Extra
+						DrawImage "CELLA0", 40+center, -7, center, 8, 9;
+						DrawNumber 3, DNUM, untranslated, "Cell", alignment(left),							43+center, -10;
+					}
+					InInventory NOT RLWidowMakerSMGFirestormAltActive, 1 || RLWidowmakerSMGNanoAltActive, 1
+					{
+						// Mag
+						DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+						DrawNumber 4, DNUM, untranslated, ammo1, alignment(left),							43+center, -18;
+					}
+				}
+				InInventory RLGaussRifleSelected
+				{
+					// Actual ammo
+					DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+					DrawNumber 1, DNUM, untranslated, "RLGaussRifleClip", alignment(left),					43+center, -18;
+
+					// Charge meter
+					DrawImage ammoicon1, 40+center, -7, center, 8, 9;
+					DrawNumber 4, DNUM, untranslated, ammo1, alignment(left),								43+center, -10;
+
+				}
+			}
+			else // FAKIN YHOLL N' FRIENDZ (the tv show)
+			{
+				DrawImage "SNMAG", 40+center, -15, center, 8, 9;
+				DrawNumber 4, DNUM, untranslated, ammo1, alignment(left), 43+center, -18;
+				DrawImage "SNMAG", 40+center, -7, center, 8, 9;
+				DrawNumber 4, DNUM, untranslated, ammo2, alignment(left), 43+center, -10;
+
+				DrawImage "CELLA0", 18+center, -16, center, 8, 9;
+				DrawImage "DNUMINF", 18+center, -7, center, 8, 9;
+			}
+		}
+}
+
+/////////////////////////////////////////////////////////
+//INCLUDES ARE AWESOME AND YOU SHOULD LOVE THEM ALWAYS
+/////////////////////////////////////////////////////////
+
+#include "mugshots.txt"			//	Mugshot states
+#include "statusbar.txt"		//	Fullscreen Statusbar
+#include "automap.txt"			//	Automap HUD
+/*
+#include "HUD_ARMR"//	Armor HUD Page
+#include "HUD_ASSE"//	Assembly HUD Page
+#include "HUD_WEAP"//	Weapon HUD Page
+*/
+
+statusbar inventoryfullscreen, forcescaled // ZDoom HUD overlay.
+{
+//    drawinventorybar Doom, translucent, 7, INDEXFONT, 50, 170;
+    DrawInventoryBar Doom, 7, DRLAINVFONT, 54, 170, 72, 190, PDAGreen;
+}

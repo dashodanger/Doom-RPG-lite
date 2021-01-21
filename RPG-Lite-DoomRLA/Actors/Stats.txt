@@ -1,0 +1,190 @@
+Actor StatVit : Inventory
+{          
+  Inventory.PickupMessage "Vitality Increased"
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor StatATK : Inventory
+{          
+  Inventory.PickupMessage "Attack Increased"
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor StatINT : Inventory
+{          
+  Inventory.PickupMessage "Inteligence Increased"
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor StatSTR : Inventory
+{          
+  Inventory.PickupMessage "Strength Increased"
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor StatDEF : Inventory
+{          
+  Inventory.PickupMessage "Defense Increased"
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor QExperience : Inventory
+{          
+  Inventory.PickupMessage "Gained Experience"
+  Inventory.Amount 1
+  Inventory.MaxAmount 999999
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor QPlayerLevel : Inventory
+{          
+  Inventory.PickupMessage "Gained a Level!"
+  Inventory.Amount 1
+  Inventory.MaxAmount 999
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+	Pickup:
+    TNT1 A 0 //ACS_NamedExecuteAlways("UpdateStats")
+	stop
+  }
+}
+
+Actor QMana : Ammo
+{
+  Inventory.Amount 1
+  Inventory.MaxAmount 20
+}
+
+Actor QStatPoints : Inventory
+{          
+  Inventory.Amount 1
+  Inventory.MaxAmount 999
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor QSkillPoints : Inventory
+{          
+  Inventory.Amount 1
+  Inventory.MaxAmount 999
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor MyMaxHealth : Inventory
+{          
+  Inventory.Amount 1
+  Inventory.MaxAmount 99999
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+}
+
+Actor StatWIS : Inventory
+{          
+  Inventory.PickupMessage ""
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A -1 
+    loop
+  }
+}
+
+Actor WisSKGiven : Inventory
+{          
+  Inventory.Amount 1
+  Inventory.MaxAmount 500
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+}
+
+Actor WisSKToken : Inventory
+{          
+  Inventory.Amount 1
+  Inventory.MaxAmount 100
+  +INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+}

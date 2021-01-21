@@ -1,0 +1,5 @@
+#include "Actors/Stats.txt"
+#include "Actors/Skills.txt"
+#include "Actors/Spells.txt"
+#include "Actors/Items.txt"
+#include "Actors/Function.txt"

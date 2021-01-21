@@ -1,0 +1,340 @@
+#library "MRPGMain"
+#include "zcommon.acs"
+
+#define atkbase 0.01
+#define defbase 0.005
+#define spdbase 0.0625
+#define PLAYER_TID_START 1000
+
+str StatArray[4] =
+{
+	"StatVIT",
+	"StatATK",
+	"StatINT",
+	"StatDEF"
+};
+
+Int Player_TID = 1000;
+
+Script "UpdateStats" (void)
+{
+	if(!(ClassifyActor(0) & ACTOR_PLAYER))
+	{ 
+		Terminate; 
+	}
+  
+	int MyVit = CheckInventory("StatVIT") * 5,
+	MyInt = CheckInventory("StatINT") * 5,
+	MyMass = CheckInventory("StatDEF") * 5,
+	Damagereduction = defbase * CheckInventory("StatDEF"),
+	DamageBoost = atkbase * CheckInventory("StatATK"),
+	MySpeed = spdbase * CheckInventory("SkillSpeed"),
+	MyWis = CheckInventory("StatWis"),
+	WisXSkill = CheckInventory("WisSKGiven");
+	Float AtkTilt = GetCvar("MRPG_ATKTilt"),
+	DefTilt = GetCvar("MRPG_DEFTilt");
+  
+	SetActorProperty(Player_TID, APROP_Stamina, MyVit);
+	SetActorProperty(Player_TID, APROP_DamageMultiplier, AtkTilt + DamageBoost);
+	SetActorProperty(Player_TID, APROP_DamageFactor, DefTilt - Damagereduction);
+	SetActorProperty(Player_TID, APROP_Mass, (100 + MyMass));
+	if (CheckInventory("RLSharpshooterPerk") > 0)
+	{
+    SetActorProperty(Player_TID, APROP_Speed, 1.25 + MySpeed);
+	}
+	else
+	SetActorProperty(Player_TID, APROP_Speed, 1.0 + MySpeed);
+	
+	if(getactorproperty(Player_TID,APROP_DamageFactor) < 0.505)
+	{
+		SetActorProperty(Player_TID, APROP_DamageFactor, 0.5);
+	}
+	if(getactorproperty(Player_TID,APROP_DamageMultiplier) > 1.99)
+	{
+		SetActorProperty(Player_TID, APROP_DamageMultiplier, 2.0);
+	}
+	if(MyWis > WisXSkill)
+	{
+		GiveInventory("WisSKGiven",1);
+    Giveinventory("WisSKToken",1);
+    ACS_NamedExecuteAlways("WisSkillPoints",0);
+	}
+	if(CheckInventory("StatINT") < 100)
+	{
+    SetAmmoCapacity("QMana", 50 + MyInt); 
+    }
+  else 
+  {
+    SetAmmoCapacity("QMana", 100 + MyInt); 
+    }
+}
+
+script "WisSkillPoints" (void)
+{
+  if(CheckInventory("WisSKToken") >= 2)
+    {
+			Takeinventory("WisSKToken",2);
+      GiveInventory("QSkillpoints",1);
+      restart;
+      }
+      else 
+      { 
+      Terminate; 
+      }
+}
+
+script "MRPGEnter" ENTER
+{
+	delay(2);
+  if (ActivatorTID() == 0 )
+  {
+	Thing_ChangeTID(0,PLAYER_TID_START+PlayerNumber());
+	Player_TID = PLAYER_TID_START+PlayerNumber();
+	}
+	else
+	{
+	Player_TID = ActivatorTID();
+	}
+	if((CheckInventory("QPlayerlevel") <= 0) && GetCvar("MRPG_LEVELONEPOINTS"))
+	{
+		GiveInventory("QPlayerlevel",1);
+    Giveinventory("Nullspell",1);
+    Giveinventory("QStatpoints",(GetCvar("MRPG_StatsPerLevel")));
+    Giveinventory("QSkillpoints",(GetCvar("MRPG_SkillsPerLevel")));
+	}
+	if((CheckInventory("QPlayerlevel") <= 0) && !GetCvar("MRPG_LEVELONEPOINTS"))
+	{
+		GiveInventory("QPlayerlevel",1);
+    Giveinventory("Nullspell",1);
+	}
+	ACS_NamedExecuteAlways("UpdateStats",0);
+	ACS_NamedExecuteAlways("ConstSkillActivator",0);
+	ACS_NamedExecuteAlways("SkillActivator",0);
+	ACS_NamedExecuteAlways("ScriptedHudDisplay",0);
+	ACS_NamedExecuteAlways("RPGXPSecrets",0);
+	ACS_NamedExecuteAlways("LevelUpCheck",0);
+	
+	delay(1);
+	
+	Giveinventory("QMana",GetAmmoCapacity("Qmana"));
+	if(GetCvar("MRPG_PlayerSpecies"))
+	{
+  setactorproperty (player_tid, APROP_SPECIES, "Player");
+  setactorflag (player_tid, "THRUSPECIES", true);
+  setactorflag (player_tid, "DONTHARMSPECIES", true);
+  }
+}
+
+script "MRPGRespawn" RESPAWN
+{
+  if (ActivatorTID() == 0 )
+  {
+	Thing_ChangeTID(0,PLAYER_TID_START+PlayerNumber());
+	}
+	Thing_ChangeTID(PLAYER_TID_START+PlayerNumber(),0);
+	Thing_ChangeTID(0,PLAYER_TID_START+PlayerNumber());
+	delay(1);
+	player_tid = PLAYER_TID_START+PlayerNumber();
+	ACS_NamedExecuteAlways("UpdateStats",0);
+	SetActorProperty(0, APROP_HEALTH,(100 + GetActorProperty(0,APROP_STAMINA)));
+}
+
+script "SpellCooldownStrifeFix" RETURN
+{
+	If(Checkinventory("SpellActive") > 0)
+	{
+			Takeinventory("SpellActive",1);
+	}
+}
+
+Script "Levelupcheck" (int EXPA)
+{
+	if(!(ClassifyActor(0) & ACTOR_PLAYER))
+	{ 
+		Terminate; 
+	}
+	Delay(1);
+	
+	int Lvl = CheckInventory("QPlayerlevel");
+	int EXPBase = GetCvar("MRPG_EXPBase");
+	int Statincrease = GetCvar("MRPG_statsperlevel");
+	int RandStat;
+	int Skillincrease = GetCvar("MRPG_skillsperlevel");
+	int Nextlevel = (EXPBASE * Lvl) + 1;
+	int MaxLevel = GetCvar("MRPG_LevelCap");
+
+	GiveInventory("QExperience", EXPA);
+	
+	int ii = ( 0 + PlayerNumber());
+	SetUserCVar(ii,"MRPG_XPNEXT",(Nextlevel -1));
+ 
+	While(CheckInventory("QExperience") >= Nextlevel && LVL <= Maxlevel)
+	{
+		GiveInventory("QPlayerlevel", 1);
+		TakeInventory("QExperience",Nextlevel);
+		ACS_NamedExecuteAlways("UpdateStats",0);
+		
+		setfont("SMALLFONT");
+		sethudsize (640,400, 1);
+		Hudmessage(s:"You have gained a level!";HUDMSG_PLAIN,57310,CR_UNTRANSLATED, 340.0, 150.0,5.0,1.0);
+		Playsound(0,"misc/p_pkup");
+		GiveInventory("QSkillPoints",Skillincrease);
+		
+		Lvl = CheckInventory("QPlayerlevel");
+		Nextlevel = (EXPBASE * Lvl) + 1;
+		
+		if(GetUserCVar(PlayerNumber(),"MRPG_RandomStats")==false)
+		{	
+			GiveInventory("QStatPoints",Statincrease);
+		}
+		Else
+		{
+			for(int sid = 0; sid < Statincrease; sid++)
+			{
+				int StatCounter;
+				Randstat = random(0,3);
+				while(CheckInventory(StatArray[Randstat]) >= 500 && StatCounter < 3)
+					{
+						randstat ++; 
+						StatCounter ++;
+						if(randstat > 3)
+						{
+							Randstat = 1;
+						}
+					}
+				
+				GiveInventory(StatArray[Randstat], 1);
+			}
+		}
+	}
+}
+
+script "MonsterInitializer" Open
+{
+	SpawnForced("Monsterinitgiver",0,0,0);
+}
+
+script "MonsterLoop" (Void)
+{
+	//Monster initialization
+	Delay(5);
+	if(ActivatorTID() == 0)
+		{
+			Thing_ChangeTID(0,UniqueTID());
+		}
+	
+	int MonEXP = getactorproperty(0, APROP_SpawnHealth) / 20;
+	GiveInventory("MyMaxHealth", GetActorProperty(0,APROP_Health));
+		    
+	//Living loop
+	While (getactorproperty(0, APROP_Health) > 0)
+	{
+		Delay(10);
+	}
+	//Death
+	DropItem(0,"SpellSpawner",1,15);
+	
+	if(CheckActorInventory(Player_TID, "SKRefuel") >= 1)
+	{
+		DropItem(0,"SpellSpawner",1,(5 * CheckActorInventory(Player_TID, "SKRefuel")));
+		DropItem(0,"SiphonManaDrop",1,(1 * CheckActorInventory(Player_TID, "SKRefuel")));
+	}
+	
+	if(MonEXP < GetCvar("RPGLXPLumpCap"))
+	{
+		GiveActorInventory(Player_TID,"QExperience",MonEXP);
+	}
+	if(MonEXP >= GetCvar("RPGLXPLumpCap"))
+	{
+		GiveActorInventory(Player_TID,"QExperience",GetCvar("RPGLXPLumpCap"));
+	}
+	
+	SetActivatorToTarget(0);
+	ACS_NamedExecuteAlways("Levelupcheck",0,0);
+	GiveActorinventory(0,"QMana",random(1,10));	
+	if(CheckActorInventory(Player_TID, "SKRefuel") >= 1)
+	{
+		GiveActorinventory(0,"QMana",(2 * CheckActorInventory(Player_TID, "SKRefuel")));
+	}
+	
+	if(CheckInventory("SKVampirisim") >= 1)
+	{
+		GiveInventory("Health",(Random(1,CheckInventory("SKVampirisim"))));
+	}
+}
+
+script "FriendlySummon" (int Duration)
+{
+		if(ActivatorTID() == 0)
+		{
+			Thing_ChangeTID(0,UniqueTID());
+		}
+	
+	GiveInventory("MyMaxHealth", GetActorProperty(0,APROP_Health));
+	Delay(35*Duration);
+	DamageThing(0);
+}
+
+script "RPGXPSecrets" (void)
+{
+   int XpSecretsTotal = (GetLevelInfo (LEVELINFO_TOTAL_SECRETS)),
+   XpSecretsFound = (GetLevelInfo (LEVELINFO_FOUND_SECRETS));
+      
+   if(CheckActorInventory(Player_TID,"allsecretsprize") == 1)
+   {
+   terminate;
+   }
+   
+   if(XpSecretsTotal == 0)
+   {
+   GiveActorInventory(Player_TID,"allsecretsprize",1);
+   terminate;
+   }
+   
+	While (XpSecretsFound == (GetLevelInfo (LEVELINFO_FOUND_SECRETS)))
+	{
+   Delay(120);
+	}
+   
+   if(XpSecretsFound < (GetLevelInfo (LEVELINFO_FOUND_SECRETS)))
+   {
+    XpSecretsFound++;
+    GiveActorInventory(Player_TID,"QExperience",10);
+    ACS_NamedExecuteAlways("levelupcheck",0);
+    }
+   
+   if((XpSecretsFound == XpSecretsTotal) && (CheckActorInventory(Player_TID,"allsecretsprize") == 0))
+   {
+      GiveActorInventory(Player_TID, "allsecretsprize",1);
+      GiveActorInventory(Player_TID,"QExperience",(XpSecretsTotal * 5));
+      ACS_NamedExecuteAlways("levelupcheck",0);
+      terminate;
+    }
+    
+   Delay(120);
+   Restart;
+ }
+ 
+script "RPGSetPlayerSpecies" (void)
+{
+  setactorproperty (player_tid, APROP_SPECIES, "Player");
+  setactorflag (player_tid, "THRUSPECIES", true);
+  setactorflag (player_tid, "DONTHARMSPECIES", true);
+}
+
+script "GiveAllSpells" (void)
+{
+   GiveActorInventory(Player_TID,"SPHeal",1);
+   GiveActorInventory(Player_TID,"SPArmour",1);
+   GiveActorInventory(Player_TID,"SPRage",1);
+   GiveActorInventory(Player_TID,"SPSpeed",1);
+   GiveActorInventory(Player_TID,"SPTimeStop",1);
+   GiveActorInventory(Player_TID,"SPRadiation",1);
+   GiveActorInventory(Player_TID,"SPVision",1);
+   GiveActorInventory(Player_TID,"SPInvis",1);
+   GiveActorInventory(Player_TID,"SpGuardian",1);
+   GiveActorInventory(Player_TID,"SPLesserGuardian",1);
+   GiveActorInventory(Player_TID,"SpAmmoSynth",1);
+   GiveActorInventory(Player_TID,"SPProtectWard",1);
+   TakeActorInventory(Player_TID,"nullspell",1);
+}

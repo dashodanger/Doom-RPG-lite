@@ -1,0 +1,79 @@
+
+height 0;
+Resolution 640,400;
+InterpolateHealth true;
+
+statusbar fullscreen, fullscreenoffsets
+{
+	//drawimage "HUDLONG3", 2, -67;
+	
+	//Mugshot
+	DrawMugShot 4, 0,-36;
+	
+	//health
+    DrawBar "HUDBHPSM", "HUDBSM",health,horizontal,32,-38;
+	drawnumber 4, SMALLFONT, White, health, drawshadow,alignment(left) ,34, -34;
+
+    //Mana
+    DrawBar "HUDBMPSM", "HUDBSM",ammo("Mana"),horizontal,32,-26;
+	drawnumber 3, SMALLFONT, White,ammo("Mana"), drawshadow,alignment(left) ,34, -22;
+	
+	//armor
+    DrawBar "HUDBAPSM", "HUDBSM",armor,horizontal,32,-14;
+	drawnumber 3, SMALLFONT, White, armor, drawshadow,alignment(left) ,34, -10;
+
+
+    usesSecondaryammo not
+	{
+		DrawString SMALLFONT, Untranslated, Weapontag, -16, -32;
+		DrawBar "HUDVAMSM", "HUDVSM", ammo1,Vertical,-14,-124;
+		drawnumber 4, BIGFONT, Untranslated, ammo1, drawshadow, alignment(right), -18, -20;
+	}
+	//secondary ammo
+    usessecondaryammo
+    {
+        DrawString SMALLFONT, Untranslated, Weapontag, -28, -44;
+        DrawBar "HUDVAMSM", "HUDVSM", ammo2,Vertical,-14,-124;
+		drawnumber 4, BIGFONT, Untranslated, ammo2, drawshadow,alignment(right), -28, -20;
+		DrawBar "HUDVAMSM", "HUDVSM", ammo1,Vertical,-26,-124;
+		drawnumber 4, BIGFONT, Untranslated, ammo1, drawshadow, alignment(right), -28, -36;
+
+    }
+
+    //inventory
+	DrawSelectedInventory SMALLFONT, 158, -36;  
+
+    //Essence
+    DrawNumber 6, SMALLFONT, GREEN,"Experience", 78, -52;
+	drawimage "HUDXP",4, -56;
+	DrawNumber 3, SMALLFONT, White,"PlayerLevel", 26, -52;
+	
+	//Stats
+	DrawNumber 3, SMALLFONT, Red, "StatVit",alignment(left),18,-100;
+	drawimage "HUDVit", 4, -103;
+	DrawNumber 3, SMALLFONT, White, "StatATK",alignment(left),18,-89;
+	drawimage "HUDatk", 4, -92;
+	DrawNumber 3, SMALLFONT, Blue, "StatINT",alignment(left),18,-78;
+	drawimage "HUDInt", 4, -81;
+	//DrawNumber 3, SMALLFONT, DarkRed, "StatSTR",alignment(left),18,-78;
+	//drawimage "HUDSTR", 4, -81;
+	DrawNumber 3, SMALLFONT, Green, "StatDEF",alignment(left),18,-67;
+    drawimage "HUDDEF", 4, -70;
+	
+	drawkeybar 6, horizontal, auto, 84, -55, 0, 3, auto;
+	
+    gamemode deathmatch
+    {
+        drawnumber 2, CONFONT, untranslated, frags, drawshadow, -3, 1;
+    }
+}
+
+statusbar inventory, fullscreenoffsets
+{
+DrawInventoryBar Strife,alwaysshowcounter,translucent, 7, SMALLFONT, 198, -106; 
+}
+
+statusbar inventoryFullscreen, fullscreenoffsets
+{
+DrawInventoryBar Strife,alwaysshowcounter,translucent, 7, SMALLFONT, 198, -66; 
+}

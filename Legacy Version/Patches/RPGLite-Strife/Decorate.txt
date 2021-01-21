@@ -1,0 +1,22 @@
+Actor SSpellSpawner : RandomSpawner Replaces SpellSpawner 
+{
+  DropItem "SPRadiation",256,4
+  DropItem "SPInvis",256,4
+  //DropItem "SPAmmoSynth",256,4
+  DropItem "SPSpeed",256,4
+  DropItem "SPRage",256,4
+  DropItem "SPPush",256,4
+  DropItem "SPLesserGuardian",256,4
+  DropItem "SPWeaken",256,4
+  DropItem "SPSlow",256,4
+  DropItem "SPGuardian",256,2
+  DropItem "SPHolyFire",256,1
+}
+
+Actor SAmmoSynthEffect : RandomSpawner Replaces AmmoSynthEffect
+{
+  DropItem "ClipOfBullets",256, 40
+  DropItem "ElectricBolts",256, 40
+  DropItem "MiniMissiles",256, 4
+  DropItem "EnergyPod",256, 4
+}

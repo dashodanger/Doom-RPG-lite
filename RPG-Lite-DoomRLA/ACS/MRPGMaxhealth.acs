@@ -1,0 +1,8 @@
+#library "MRPGMaxhealth"
+#include "zcommon.acs"
+
+script "GetMaxHealth" (void)
+{
+    SetResultValue(GetActorProperty(0, APROP_SpawnHealth) + (CheckInventory("StatVIT") * 5));
+    terminate;
+}

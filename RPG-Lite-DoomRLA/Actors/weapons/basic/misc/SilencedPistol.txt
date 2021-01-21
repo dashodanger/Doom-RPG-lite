@@ -1,0 +1,555 @@
+
+ACTOR RLSilencedPistol : RLPistolWeapon
+{
+  Obituary "%o was assassinated by %k's silenced pistol."
+  Decal BulletChip
+  Tag "Silenced Pistol"
+  Weapon.SelectionOrder 1900
+  Weapon.SlotNumber 2
+  Weapon.AmmoUse1 1
+  Weapon.AmmoGive1 0
+  Weapon.AmmoType1 "RLSilencedPistolClip"
+  Weapon.AmmoType2 "Clip"
+  Inventory.Icon "SILPICON"
+  States
+  {
+  Ready:
+	TNT1 A 0 A_JumpIfInventory("RLMisfireSpamPreventionCooldown",1,"MisfirePrevention")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolNanoMod",1,2)
+    SILP A 1 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+    Loop
+  NanoRegenCheck:
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip",1,2)
+    SILP A 70 A_WeaponReady (WRF_NOPRIMARY | WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+	Goto NanoRegenCheckBegin
+  NanoRegenCheckBegin:
+    SILP A 70 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolBulkMod",1,2)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip", 6, "Ready")
+	Goto NanoRegen
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolBulkMod",2,2)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip", 8, "Ready")
+	Goto NanoRegen
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip", 10, "Ready")
+	Goto NanoRegen
+  NanoRegen:
+	TNT1 A 0 A_GiveInventory("RLSilencedPistolClip", 1)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolNanoMod",2,2)
+    SILP A 17 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+    Goto NanoRegenCheckBegin+1
+    SILP A 9 A_WeaponReady (WRF_ALLOWZOOM | WRF_ALLOWRELOAD)
+    Goto NanoRegenCheckBegin+1
+	
+  ScavengerDrop:
+	TNT1 A 0 A_JumpIfInventory("RLScavengerDrop",1,"WeaponDropConfirm")
+	TNT1 A 0 A_GiveInventory("RLScavengerDrop",1)
+	TNT1 A 0 A_Print("Press again to drop current weapon,\nor press \crAlt Fire\c- to scrap it to retrieve a Mod Pack.")
+	Goto AfterModDrop
+  WeaponDropConfirm:
+	TNT1 A 0 A_GiveInventory("RLMisfireSpamPreventionCooldown",1)
+	TNT1 A 0 A_TakeInventory("RLScavengerDrop",1)
+	TNT1 A 0 A_TakeInventory("RLWeaponDrop",1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolModLimit", 1, "WeaponDropModded")
+	TNT1 A 0 A_SpawnItemEx("RLSilencedPistolPickup", 0, 0, 40, 16, 0, 0, 0, SXF_SETMASTER)
+	Goto WeaponDropRemoval
+  WeaponDropModded:
+	TNT1 A 2 A_SpawnItemEx("RLSilencedPistolPickupModded", 0, 0, 40, 16, 0, 0, 0, SXF_SETMASTER)
+  WeaponDropRemoval:
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolModLimit", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolPowerMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolBulkMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolAgilityMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolTechnicalMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolSniperMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolFirestormMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolNanoMod", 2)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("RLSilencedPistolSelected", 1)
+	TNT1 A 0 A_TakeInventory("RLWeaponLimit",1)
+	TNT1 A 1 A_TakeInventory("RLSilencedPistol",1)
+	Stop
+	
+  AfterModDrop:
+    SILP A 8 A_WeaponReady (16)
+    Goto Ready
+  MisfirePrevention:
+    SILP A 1 A_WeaponReady (WRF_NOFIRE | WRF_NOBOB)
+    TNT1 A 0 A_JumpIfInventory("RLMisfireSpamPreventionCooldown", 1, "MisfirePrevention")
+    Goto Ready
+	
+  Deselect:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("RLDeselectionFunction",1)
+	TNT1 A 0 A_TakeInventory("RLSilencedPistolSelected", 1)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+  DeselectLoop:
+    TNT1 A 0 A_JumpIfInventory("RLShellshockPerk", 1, "DeselectRenegade")
+    TNT1 AA 0 A_Lower
+    SILP A 1 A_Lower
+    Loop
+  DeselectRenegade:
+    TNT1 A 0 A_Lower
+    loop
+  SelectRenegade: 
+    TNT1 A 0 A_Raise
+    loop
+  SelectSetWeapon:
+	TNT1 A 0 A_GiveInventory("RLBasicAssemblyTypeWeapon", 1)
+	TNT1 A 0 A_GiveInventory("RLPistolTypeWeapon", 1)
+	TNT1 A 0 A_GiveInventory("RLAssembledWeaponToken", 1)
+	TNT1 A 0 A_GiveInventory("RLSilencedPistolSelected", 1)
+	TNT1 A 0 A_JumpIfInventory("RLScavengerPerk",1, 1)
+    Goto SelectLoop
+	TNT1 A 0 A_GiveInventory("PowerRLTechnicianBasicDamage", 1)
+    Goto SelectLoop
+  SelectLoop:
+    TNT1 A 0 A_JumpIfInventory("RLShellshockPerk", 1, "SelectRenegade")
+    TNT1 AA 0 A_Raise
+    SILP A 1 A_Raise
+    Loop
+	
+// 8x damage with Scout, half spread
+// Does 4x damage while under effect of Blursphere, stacks with Scout boost
+  Fire:
+	SILP A 0 A_JumpIfInventory("RLRestrictionMeleeOnly",1,"MeleeRestricted") // Cannot fire in levels that restrict it
+	SILP A 0 A_JumpIfInventory("RLRestrictionBoomOnly",1,"BoomRestricted") // Cannot fire in levels that restrict it
+	SILP A 0 A_JumpIfInventory("RLRestrictionHighTechOnly",1,"HighTechRestricted") // Cannot fire in levels that restrict it
+	SILP A 0 A_JumpIfInventory("RLRestrictionCunningOnly",1,"CunningRestricted") // Cannot fire in levels that restrict it
+	
+	TNT1 A 0 A_JumpIfNoAmmo("Reload")
+	TNT1 A 0 A_AlertMonsters (random(50,150))
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolSniperMod",1,"FireS")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolPowerMod",1,"FireP")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolAgilityMod",1,"FireA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisible")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisible")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (4, 0, -1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0, -1, (48), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisible:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (4, 0, -1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0, -1, (192), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireP:
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolPowerMod",2,"FirePP")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolAgilityMod",1,"FirePA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleP")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleP")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (4, 0, -1, (random(1,5)*7), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0, -1, (56), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleP:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (4, 0, -1, (random(1,5)*28), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0, -1, (224), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireA:
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolPowerMod",1,"FirePA")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolAgilityMod",2,"FireAA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleA")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (3.5, 0, -1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.75, 0, -1, (48), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleA:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (3.5, 0, -1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.75, 0, -1, (192), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FirePP:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisiblePP")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisiblePP")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (4, 0, -1, (random(1,5)*8), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0, -1, (64), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisiblePP:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (4, 0, -1, (random(1,5)*32), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (2, 0, -1, (256), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FirePA:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisiblePA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisiblePA")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (3.5, 0, -1, (random(1,5)*7), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.75, 0, -1, (56), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisiblePA:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (3.5, 0, -1, (random(1,5)*28), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.75, 0, -1, (224), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireAA:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleAA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleAA")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (3, 0, -1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (48), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleAA:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (3, 0, -1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1.5, 0, -1, (192), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireS:
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolSniperMod",2,"FireSS")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolPowerMod",1,"FireSP")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolAgilityMod",1,"FireSA")
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleS")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleS")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0, 1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1, 0, 1, (48), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleS:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0, 1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1, 0, 1, (192), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireSS:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleSS")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleSS")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (48), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleSS:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (0, 0, 1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0, 0, 1, (192), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireSP:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleSP")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleSP")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0, 1, (random(1,5)*7), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1, 0, 1, (56), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleSP:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (2, 0, 1, (random(1,5)*28), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (1, 0, 1, (224), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireSA:
+	TNT1 A 0 A_JumpIfInventory("PowerInvisibility",1,"FireInvisibleSA")
+	TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"FireInvisibleSA")
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (1.5, 0, 1, (random(1,5)*6), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0.75, 0, 1, (48), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireInvisibleSA:
+	TNT1 A 0 A_JumpIfInventory("RLSharpshooterPerk",1,2)
+	TNT1 A 0 A_FireBullets (1.5, 0, 1, (random(1,5)*24), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+	TNT1 A 0 A_FireBullets (0.75, 0, 1, (192), "RLBulletPuff", FBF_NORANDOM | FBF_USEAMMO)
+    Goto FireFinish
+  FireFinish:
+    TNT1 A 0 A_SpawnItemEx ("RLPistolRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    TNT1 A 0 A_PlaySound("weapons/silencedpistol", CHAN_WEAPON, 1, 0, 1.9)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolFirestormMod",2,"FireFinishF2")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolFirestormMod",1,"FireFinishF1")
+    SILP B 4 Bright A_GunFlash
+    SILP CDC 2
+    SILP E 2
+    SILP A 2
+    SILP A 5 A_ReFire
+    Goto Ready
+  FireFinishF1:
+    SILP B 3 Bright A_GunFlash
+    SILP CD 1
+    SILP C 2
+    SILP E 2
+    SILP A 2
+    SILP A 5 A_ReFire
+    Goto Ready
+  FireFinishF2:
+    SILP B 2 Bright A_GunFlash
+    SILP CDC 1
+    SILP E 1
+    SILP A 2
+    SILP A 5 A_ReFire
+    Goto Ready
+	
+  Reload:
+	SILP A 1 A_WeaponReady (WRF_NOPRIMARY | WRF_ALLOWZOOM)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolBulkMod",1,2)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip", 6, "Ready")
+	Goto ReloadStartingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolBulkMod",2,2)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip", 8, "Ready")
+	Goto ReloadStartingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip", 10, "Ready")
+  ReloadStartingAmmoCheck:
+	TNT1 A 0 A_JumpIfInventory("Clip", 1, 1)
+	Goto Ready
+	TNT1 A 0 // Play the reload animation.
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolTechnicalMod",2,"Reload2")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolTechnicalMod",1,"Reload1")
+    SILP F 4
+    SILP G 4
+    SILP H 4 A_PlaySound("weapons/silencedpistolunload", CHAN_ITEM)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadOutRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    SILP I 4
+	Goto ReloadWorking
+  Reload1:
+    SILP F 3
+    SILP G 3
+    SILP H 3 A_PlaySound("weapons/silencedpistolunload", CHAN_ITEM)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadOutRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    SILP I 4
+	Goto ReloadWorking
+  Reload2:
+    SILP F 2
+    SILP G 2
+    SILP H 3 A_PlaySound("weapons/silencedpistolunload", CHAN_ITEM)
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadOutRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+    SILP I 3
+	Goto ReloadWorking
+  ReloadWorking:
+	TNT1 A 0 A_TakeInventory("Clip", 1)
+	TNT1 A 0 A_GiveInventory("RLSilencedPistolClip", 1)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolBulkMod",1,2)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip",6,5)
+	Goto ReloadWorkingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolBulkMod",2,2)
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip",8,3)
+	Goto ReloadWorkingAmmoCheck
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolClip",10,2)
+  ReloadWorkingAmmoCheck:
+	TNT1 A 0 A_JumpIfInventory("Clip",1,2)
+	TNT1 A 0
+	Goto ReloadFinish
+	TNT1 A 0
+	Goto ReloadWorking
+  ReloadFinish:
+    TNT1 A 0 A_SpawnItemEx ("RLStandardReloadInRecoil", 0,0,0, 0,0,0, 0, SXF_NOCHECKPOSITION | SXF_SETMASTER) // Pitch-based recoil
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolTechnicalMod",2,"ReloadFinish2")
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolTechnicalMod",1,"ReloadFinish1")
+	SILP J 8 A_PlaySound("weapons/silencedpistolload", 7)
+	SILP I 5
+	SILP H 2
+	SILP G 2
+	SILP F 2
+	SILP A 2 A_PlaySound("weapons/silencedpistolcock", CHAN_ITEM)
+	Goto Ready
+  ReloadFinish1:
+	SILP J 6 A_PlaySound("weapons/silencedpistolload", 7)
+	SILP I 4
+	SILP H 2
+	SILP G 2
+	SILP F 2
+	SILP A 2 A_PlaySound("weapons/silencedpistolcock", CHAN_ITEM)
+	Goto Ready
+  ReloadFinish2:
+	SILP J 4 A_PlaySound("weapons/silencedpistolload", 7)
+	SILP I 3
+	SILP H 2
+	SILP G 2
+	SILP F 2
+	SILP A 2 A_PlaySound("weapons/silencedpistolcock", CHAN_ITEM)
+	Goto Ready
+	
+  Flash:
+    TNT1 A 3 A_Light2
+    TNT1 A 3 A_Light1
+    Goto LightDone
+	
+  Spawn:
+	TNT1 A 0 NoDelay A_SpawnItemEx("RLSilencedPistolPickup",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION, 0, tid)
+    Stop
+  Altfire:
+	TNT1 A 0 A_JumpIfInventory("RLArmorModItemActivate",1, "ArmorModConversion")
+	TNT1 A 0 A_JumpIfInventory("RLScavengerDrop",1,"ScavengerTime")
+	Goto Ready
+  ModDiscombobulation:
+	TNT1 A 0 A_Print("Applied Mod pack extracted from discarded weapon.")
+	TNT1 A 0 ACS_NamedExecuteAlways("ScavengeMods", 0)
+	TNT1 A 3
+	TNT1 A 0 A_TakeInventory("RLScavengerDrop",1)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolModLimit", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolPowerMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolBulkMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolAgilityMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolTechnicalMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolSniperMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolFirestormMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolNanoMod", 2)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("RLSilencedPistolSelected", 1)
+	TNT1 A 0 A_TakeInventory("RLWeaponLimit",1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+	Goto ScavengerTimeEnd
+  ScavengerTime:
+	TNT1 A 0 A_GiveInventory("RLScavengingExtraEffects", 1)
+    TNT1 A 0 A_GiveInventory("RLSilencedPistolAssemblyLearntToken", 1) // Assembly is now listed in the HUD menus
+	TNT1 A 0 A_JumpIfInventory("RLSilencedPistolModLimit",1,"ModDiscombobulation")
+	TNT1 A 0 A_Print("Mod pack extracted from discarded weapon.")
+	TNT1 A 0 A_TakeInventory("RLScavengerDrop",1)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolModLimit", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolPowerMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolBulkMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolAgilityMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolTechnicalMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolSniperMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolFirestormMod", 2)
+    TNT1 A 0 A_TakeInventory("RLSilencedPistolNanoMod", 2)
+	TNT1 A 0 A_GiveInventory("RLRarityTokenRemover", 1)
+	TNT1 A 0 A_TakeInventory("RLSilencedPistolSelected", 1)
+	TNT1 A 0 A_TakeInventory("RLWeaponLimit",1)
+	TNT1 A 0 A_TakeInventory("PowerRLTechnicianBasicDamage", 1)
+	TNT1 A 0 A_Jump(256,1,2)
+	TNT1 A 0 A_FireCustomMissile("DroppedRLTechnicalMod",0,0,0)
+	Goto ScavengerTimeEnd
+	TNT1 A 0 A_FireCustomMissile("DroppedRLTechnicalMod",0,0,0)
+	Goto ScavengerTimeEnd
+  ScavengerTimeEnd:
+	TNT1 A 1 A_TakeInventory("RLSilencedPistol",1)
+	Stop
+  }
+}
+
+//-------------------------------------------------------------------
+//		MECHANICS
+
+Actor RLSilencedPistolSelected : RLPermanentInventory {}
+Actor RLSilencedPistolModLimit : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolPowerMod : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolBulkMod : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolAgilityMod : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolTechnicalMod : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolNanoMod : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolFirestormMod : RLBasicAssemblyModAmount {}
+Actor RLSilencedPistolSniperMod : RLBasicAssemblyModAmount {}
+
+ACTOR RLSilencedPistolClip : Ammo
+{
+   +INVENTORY.IGNORESKILL
+   Inventory.MaxAmount 10
+   Inventory.Icon ""
+}
+
+//-------------------------------------------------------------------
+//		PICKUPS
+
+ACTOR RLSilencedPistolPickup : RLBasicAssembledWeaponPickup 17437
+{
+	//$Sprite SILPX0
+	Tag "Silenced Pistol [Pickup]"
+	States
+	{
+	SpawnFrame:
+		SILP X 4
+		"####" "#" 0 A_Jump(256, "SpawnLoop")
+		Goto SpawnLoop
+	SpawnLoop:
+		"####" "#" 0 A_JumpIf(Abs(VelZ) <= 0.01 && user_floorhit == 0, "FloorHit")
+		"####" "#" 1
+		Loop
+	FloorHit:
+		"####" "#" 0 A_PlaySound("weapons/gundropsmall")
+		"####" "#" 0 A_ChangeFlag("SPECIAL", true)
+		"####" "#" 0 A_ChangeFlag("THRUACTORS", false)
+		"####" "#" 0 A_SetUserVar("user_floorhit", 1)
+		"####" "#" 0 A_Jump(256, "SpawnLoop")
+		Stop
+	Pickup:
+		"####" "#" 0
+		"####" "#" 0 A_JumpIfInventory("RLSilencedPistol",1,"NotPickup") // If the player already has this weapon, they are not given the weapon
+		"####" "#" 0 A_JumpIfInventory("RLWeaponLimit",0,"NotPickupLimit") // The absolute max limit check for weapons
+		"####" "#" 0 A_Jump(256, "GiveWeapon")
+		Goto GiveWeapon
+	GiveWeapon:
+		"####" "#" 0 A_GiveInventory("RLSilencedPistol",1)
+		"####" "#" 0 A_GiveInventory("RLWeaponLimit",1)
+		"####" "#" 0 A_Print("\ccPicked up a \cvSilenced Pistol.")
+		Goto PickupSound
+	NotPickupLimit:
+		"####" "#" 0 A_Jump(256, "NotPickup")
+		Goto NotPickup
+	NotPickup:
+		"####" "#" 0 A_JumpIfInventory("DRLA_WeaponAntiLogFloodCheck",1,"NotPickup_NoPrint")
+		"####" "#" 0 A_GiveInventory("DRLA_WeaponAntiLogFloodCheck")
+		"####" "#" 0 A_Print("\cv= Silenced Pistol =", 2, "CONFONT")
+		Goto NotPickup_NoPrint
+	NotPickup_NoPrint:
+		"####" "#" 0
+		Fail
+	PickupSound:
+		"####" "#" 0 A_PlaySound("weapons/SilencedPistolpickup")
+		Stop
+//==============================================================================
+	MarathonStuff:
+		"####" "#" 0 A_SpawnItemEx("RLMarathonPistolClip",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+ACTOR RLSilencedPistolPickupModded : RLSilencedPistolPickup
+{
+	+INVENTORY.TRANSFER
+	+DONTGIB
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay ACS_NamedExecuteAlways("GetWeaponMods", 0)
+		TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 0, "NoSpecialStartsStuff")
+		"####" "#" 0 A_Jump(256, "SpecialStartsStuff")
+		Goto SpecialStartsStuff
+		
+	SpawnFrame:
+		SILP X 4
+		"####" "#" 0 A_Jump(256, "SpawnLoop")
+		Goto SpawnLoop
+	SpawnLoop:
+		"####" "#" 0 A_JumpIf(VelZ <= 0.01 && user_floorhit == 0, "FloorHit")
+		"####" "#" 0 ACS_NamedExecuteAlways("RLWeaponModDisplay", 0)
+		"####" "#" 1
+		Loop
+	GiveWeapon:
+		"####" "#" 0 A_GiveInventory("RLSilencedPistol",1)
+		"####" "#" 0 A_GiveInventory("RLWeaponLimit",1)
+		"####" "#" 0 A_Print("\ccPicked up a \cbmodded \cvSilenced Pistol.")
+		Goto PickupSound
+	NotPickupLimit:
+		"####" "#" 0 A_JumpIfInventory("DRLA_WeaponAntiLogFloodCheck",1,"NotPickup_NoPrint")
+		"####" "#" 0 A_GiveInventory("DRLA_WeaponAntiLogFloodCheck")
+		"####" "#" 0 A_Print("\cv= Silenced Pistol =", 2, "CONFONT")
+		Goto NotPickup_NoPrint
+	NotPickup:
+		"####" "#" 0 A_JumpIfInventory("RLSilencedPistolModLimit", 1, "NotPickup_Modded")
+		"####" "#" 0 A_JumpIfInventory("DRLA_WeaponAntiLogFloodCheck",1,"NotPickup_NoPrint")
+		"####" "#" 0 A_GiveInventory("DRLA_WeaponAntiLogFloodCheck")
+		"####" "#" 0 A_Print("\cv= Silenced Pistol =\n\n\ccYou replace your unmodded\n\ccweapon with the one you picked up.", 5, "CONFONT")
+		"####" "#" 0 A_GiveInventory("Clip",6)
+		Goto PickupSound
+	NotPickup_Modded:
+		"####" "#" 0 A_Print("\cv= Silenced Pistol =\n\n\caYou are already carrying a modded\n\caweapon of this type", 5, "CONFONT")
+		Fail
+	}
+}

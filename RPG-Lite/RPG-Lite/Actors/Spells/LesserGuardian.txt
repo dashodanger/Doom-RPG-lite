@@ -1,0 +1,300 @@
+ACTOR SPLesserGuardian : Inventory
+{
+	+FLOATBOB
+	+INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+	Scale 0.1
+	FloatBobStrength 0.6
+	inventory.maxamount 1
+	Inventory.PickupMessage "$SP_PGUA" 
+	States
+	{
+	Spawn:
+		GSSP A 0
+		TNT1 A 0 A_JumpIfInventory("SPLesserGuardian",1,"GotAlready",AAPTR_PLAYER1)
+    TNT1 A 0 A_SetScale(0.5)
+		GSSP A 12 Bright
+    TNT1 A 0 A_SetScale(0.55)
+		GSSP A 2 Bright
+    TNT1 A 0 A_SetScale(0.6)
+		GSSP A 2 Bright
+    TNT1 A 0 A_SetScale(0.65)
+		GSSP A 2 Bright
+    TNT1 A 0 A_SetScale(0.7)
+		GSSP A 2 Bright
+    TNT1 A 0 A_SetScale(0.75)
+		GSSP A -1 Bright
+		Stop
+		GotAlready:
+		Goto Death
+	Death:
+		GSSP A 0
+		TNT1 A 0 A_SpawnItemEx("ManaMote")
+		Stop
+	}
+}
+
+ACTOR SPLesserGuardianCast : CustomInventory
+{
+  //+INVENTORY.INVBAR
+  +INVENTORY.AUTOACTIVATE
+  +FLOATBOB
+  +INVENTORY.ALWAYSPICKUP
+  States
+  {
+  Spawn:
+    GSSP A -1 Bright
+    Stop
+  Use:
+	TNT1 A 0 A_Playsound("misc/p_pkup", CHAN_WEAPON)
+  TNT1 A 0 A_CheckBlock("Walled", CBF_NOACTORS , AAPTR_DEFAULT,45,0,10,0)
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1")
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power1:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect1",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power2:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect2",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power3:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect3",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power4:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect4",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power5:
+	TNT1 A 0 A_SpawnItemEx ("LesserGuardianEffect5",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+	Walled:
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1W")
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power1W:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power2W:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power3W:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect3",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power4W:
+	TNT1 A 0 A_SpawnItemEx("LesserGuardianEffect4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  Power5W:
+	TNT1 A 0 A_SpawnItemEx ("LesserGuardianEffect5",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_SETMASTER )
+	stop
+  }
+}
+
+ACTOR LesserGuardianEffect
+{
+	Tag "$SP_PGUA"
+	Health 200
+	Radius 20
+	Height 39
+	Mass 1000
+	Speed 0
+	PainChance 1
+  Species "Player"
+	Monster
+  DamageFactor "Vacuum", 0 // For Square
+	FloatBobStrength 0.5
+	+FLOAT
+	+FLOATBOB
+	+Friendly
+  +THRUSPECIES
+  +MISSILEEVENMORE
+  +ALWAYSTELEFRAG
+  +NOICEDEATH
+  +DONTGIB
+	-Solid
+	-CountKill
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ACS_NamedExecuteAlways("FriendlySummon",0,90)
+	Spawn2:
+		GSSP B 4 A_Look
+		Loop
+	See:
+		GSSP B 2 A_Chase
+		Loop
+	Missile:
+		GSSP B 8 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("GuardianProvoke")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("SlowEffect")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("WeakenEffect")
+		GSSP B 1 A_ClearTarget
+		Goto See
+	Pain:
+		GSSP B 2
+		GSSP B 2 A_Pain
+		Goto See
+	Death:
+		BAL1 CDE 6 BRIGHT
+		Stop
+	}
+}
+
+ACTOR LesserGuardianEffect1 : LesserGuardianEffect
+{
+	Health 300
+	States
+	{
+	Missile:
+		GSSP B 7 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("GuardianProvoke")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("SlowEffect1")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("WeakenEffect1")
+		GSSP B 1 A_ClearTarget
+		Goto See
+	}
+}
+
+ACTOR LesserGuardianEffect2 : LesserGuardianEffect
+{
+	Health 400
+	States
+	{
+	Missile:
+		GSSP B 6 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("GuardianProvoke")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("SlowEffect2")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("WeakenEffect2")
+		GSSP B 1 A_ClearTarget
+		Goto See
+	}
+}
+
+ACTOR LesserGuardianEffect3 : LesserGuardianEffect
+{
+	Health 500
+	States
+	{
+	Missile:
+		GSSP B 5 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("GuardianProvoke")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("SlowEffect3")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("WeakenEffect3")
+		GSSP B 1 A_ClearTarget
+		Goto See
+	}
+}
+
+ACTOR LesserGuardianEffect4 : LesserGuardianEffect
+{
+	Health 600
+	States
+	{
+	Missile:
+		GSSP B 4 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("GuardianProvoke")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("SlowEffect4")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("WeakenEffect4")
+		GSSP B 1 A_ClearTarget
+		Goto See
+	}
+}
+
+ACTOR LesserGuardianEffect5 : LesserGuardianEffect
+{
+	Health 750
+	States
+	{
+	Missile:
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("GuardianProvoke")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("SlowEffect5")
+		GSSP B 2 A_FaceTarget
+		GSSP BC 2
+		GSSP D 2 A_CustomMissile("WeakenEffect5")
+		GSSP B 1 A_ClearTarget
+		Goto See
+	}
+}
+
+Actor SummonedGuardianSmoke
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+SHADOW
+	+NOTELEPORT
+	+CANNOTPUSH
+	+NODAMAGETHRUST
+	RenderStyle "Translucent"
+	Alpha 0.6
+	States
+	{
+	Spawn:
+		MSGC ABAB 4
+		Stop
+	}
+}
+
+Actor GuardianProvoke : FastProjectile
+{
+  Speed 184
+  Radius 8
+  Height 8
+  Damage (1)
+  DamageType "MinshotPurp"
+  Species "Player"
+  +CANNOTPUSH
+  +THRUSPECIES
+  +MTHRUSPECIES
+  +NODAMAGETHRUST
+  +SPAWNSOUNDSOURCE
+  MissileType "SummonedGuardianSmoke"
+  States
+  {
+	Spawn:
+		MSGC AB 4 Bright
+		Loop
+	Death:
+		MSGC C 4 Bright
+		MSGC D 3 Bright
+		MSGC E 4 Bright
+		MSGC F 3 Bright
+		MSGC G 4 Bright
+		Stop
+  }
+}

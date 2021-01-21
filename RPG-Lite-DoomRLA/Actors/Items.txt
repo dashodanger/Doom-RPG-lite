@@ -1,0 +1,145 @@
+Actor SpellSpawner : RandomSpawner 
+{
+  DropItem "SPRadiation",256,4
+  DropItem "SPLesserGuardian",256,4
+  DropItem "SPVision",256,4
+  DropItem "SPInvis",256,3
+  DropItem "SPGuardian",256,3
+  DropItem "SPProtectWard",256,2
+  DropItem "SPBombMinion",256,2
+  DropItem "SPRage",256,1
+  DropItem "SPTimeStop",256,1
+}
+
+
+
+ACTOR RPGAdamArmEff : BasicArmorBonus 
+{
+  Armor.MaxSaveAmount 100
+  Armor.SavePercent 33
+  Armor.SaveAmount 100
+}
+
+ACTOR RPGFullHealEff : Soulsphere
+{
+  Inventory.Amount 800
+}
+
+
+
+//==============================================================================
+//		HEALTH ITEMS
+//==============================================================================
+
+ACTOR RLHealthBonus : CustomInventory replaces HealthBonus
+{
+  +COUNTITEM
+  Inventory.PickupMessage ""
+  Inventory.PickupSound "misc/healthbonuspickup"
+  States
+  {
+  Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIf(CallACS("DRPGCheckTiem"), 3)
+	TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 2, "SpawnDuke2")
+	TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 3, "SpawnMarathon")
+    BON1 ABCDCB 6
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("HealthBonus", 1)
+	Stop
+//==============================================================================
+  SpawnDuke2:
+	TNT1 A 0// A_SpawnItemEx("RLDuke2HealthCrate",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+    Stop
+  SpawnMarathon:
+	TNT1 A 0// A_SpawnItemEx("RLMarathonStimpack",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+    Stop
+  }
+}
+
+// Used with the Sniper-modded Longhorn Revolver
+ACTOR RLNoCountHealthBonus : RLHealthBonus
+{
+  -COUNTITEM
+}
+
+ACTOR RLStimpack : CustomInventory replaces Stimpack
+{
+  Inventory.PickupMessage "Picked up a stimpack."
+  Inventory.PickupSound "misc/stimpackpickup"
+  States
+  {
+  Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIf(CallACS("DRPGCheckTiem"), 3)
+	TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 2, "SpawnDuke2")
+	TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 3, "SpawnMarathon")
+	STIM A -1
+	Stop
+  Pickup:
+    TNT1 A 0 A_JumpIfHealthLower (CallACS("GetMaxHealth"), 1)
+	Fail
+    TNT1 A 0 A_JumpIfInventory ("RLSurvivalMediArmorToken", 1, "Survival")
+    TNT1 A 0 A_JumpIfInventory ("RLOModSurvivalMediArmorToken", 1, "Survival")
+    TNT1 A 0 A_JumpIfInventory ("RLMedicalArmorToken", 1, "Enhanced")
+    TNT1 A 0 A_JumpIfInventory ("RLMedicalPowerArmorToken", 1, "Enhanced")
+    TNT1 A 0 A_JumpIfInventory ("RLOModMedicalArmorToken", 1, "Enhanced")
+    TNT1 A 0 HealThing(10, 0)
+	Stop
+  Enhanced:
+    TNT1 A 0 HealThing(15, 0)
+    Stop
+  Survival:
+    TNT1 A 0 HealThing(10, 0)
+    TNT1 A 0 A_GiveInventory ("PowerRLSurvivalMediArmorRegen", 1)
+    Stop
+//==============================================================================
+  SpawnDuke2:
+	TNT1 A 0 A_SpawnItemEx("RLDuke2HealthCrate",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+    Stop
+  SpawnMarathon:
+	TNT1 A 0 A_SpawnItemEx("RLMarathonStimpack",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+    Stop
+  }
+}
+
+ACTOR RLMedikit : CustomInventory replaces Medikit
+{
+  Inventory.PickupMessage "Picked up a medikit."
+  Inventory.PickupSound "misc/medikitpickup"
+  States
+  {
+  Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIf(CallACS("DRPGCheckTiem"), 3)
+	TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 2, "SpawnDuke2")
+	TNT1 A 0 A_JumpIf(CallACS("DRLA_specialstarts") == 3, "SpawnMarathon")
+	MEDI A -1
+	Stop
+  Pickup:
+    TNT1 A 0 A_JumpIfHealthLower (CallACS("GetMaxHealth"), 1)
+	Fail
+    TNT1 A 0 A_JumpIfInventory ("RLSurvivalMediArmorToken", 1, "Survival")
+    TNT1 A 0 A_JumpIfInventory ("RLOModSurvivalMediArmorToken", 1, "Survival")
+    TNT1 A 0 A_JumpIfInventory ("RLMedicalArmorToken", 1, "Enhanced")
+    TNT1 A 0 A_JumpIfInventory ("RLMedicalPowerArmorToken", 1, "Enhanced")
+    TNT1 A 0 A_JumpIfInventory ("RLOModMedicalArmorToken", 1, "Enhanced")
+    TNT1 A 0 HealThing(25, 0)
+	Stop
+  Enhanced:
+    TNT1 A 0 HealThing(38, 0)
+    Stop
+  Survival:
+    TNT1 A 0 HealThing(25, 0)
+    TNT1 A 0 A_GiveInventory ("PowerRLSurvivalMediArmorRegen", 1)
+    Stop
+//==============================================================================
+  SpawnDuke2:
+	TNT1 A 0 A_SpawnItemEx("RLDuke2HealthCrate",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+    Stop
+  SpawnMarathon:
+	TNT1 A 0 A_SpawnItemEx("RLMarathonMedikit",0,0,0, 0,0,0, 0,SXF_NOCHECKPOSITION)
+    Stop
+  }
+}

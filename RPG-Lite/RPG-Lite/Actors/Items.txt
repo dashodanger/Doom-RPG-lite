@@ -1,0 +1,263 @@
+Actor SpellSpawner : RandomSpawner 
+{
+  DropItem "SPRadiation",256,4
+  DropItem "SPLesserGuardian",256,4
+  DropItem "SPVision",256,4
+  DropItem "SPInvis",256,3
+  DropItem "SPGuardian",256,3
+  DropItem "SPProtectWard",256,2
+  DropItem "SPBombMinion",256,2
+  DropItem "SPRage",256,1
+  DropItem "SPTimeStop",256,1
+}
+
+Actor ManaMote : CustomInventory
+{
+  Height 10
+  Scale 0.2
+	FloatBobStrength 0.4
+	+FLOATBOB
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpglmanamote"
+  States
+  {
+  Spawn:
+    MNMT A 2 Bright
+    MNMT B 2 Bright
+    MNMT C 2 Bright
+    MNMT D 2 Bright
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(10,20))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(1,6))
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, 1)
+    stop
+    TNT1 A 0 A_TakeInventory ("nullspell", 1)
+    stop
+  }
+}
+
+Actor RPGGogglesReplacer : CustomInventory replaces Infrared
+{
+  Height 12
+  Scale 0.2
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpglbrightmana"
+  States
+  {
+  Spawn:
+    QPMN A 2 Bright
+    QPMN B 2 Bright
+    QPMN C 2 Bright
+    QPMN D 2 Bright
+    QPMN E 2 Bright
+    QPMN F 2 Bright
+    QPMN G 2 Bright
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,30))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(5,15))
+    TNT1 A 0 A_JumpIfInventory("SPVision", 1, 5)
+    TNT1 A 0 A_GiveInventory ("SPVision", 1)
+    TNT1 A 0 A_Log ("\c-$SP_VISI")
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, "Denull")
+    stop
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,30))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(10,30))
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, "Denull")
+    stop
+    Denull:
+    TNT1 A 0 A_TakeInventory ("nullspell", 1)
+    stop
+  }
+}
+
+Actor RPGBlurReplacer : CustomInventory replaces Blursphere
+{
+  Height 10
+  Scale 0.35
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpglinvismana"
+  States
+  {
+  Spawn:
+    QQMN A 2
+    QQMN B 2
+    QQMN C 2
+    QQMN D 2
+    QQMN E 2
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,30))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(5,15))
+    TNT1 A 0 A_JumpIfInventory("SPInvis", 1, 5)
+    TNT1 A 0 A_GiveInventory ("SPInvis", 1)
+    TNT1 A 0 A_Log ("\c-$SP_INVI")
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, "Denull")
+    stop
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,30))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(10,30))
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, "Denull")
+    stop
+    Denull:
+    TNT1 A 0 A_TakeInventory ("nullspell", 1)
+    stop
+  }
+}
+
+Actor RPGRadsuitReplacer : CustomInventory replaces Radsuit
+{
+  Height 10
+  Scale 0.3
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpglgreenmana"
+  States
+  {
+  Spawn:
+    QRMN A 2 Bright
+    QRMN B 2 Bright
+    QRMN C 2 Bright
+    QRMN D 2 Bright
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,30))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(5,15))
+    TNT1 A 0 A_JumpIfInventory("SPRadiation", 1, 5)
+    TNT1 A 0 A_GiveInventory ("SPRadiation", 1)
+    TNT1 A 0 A_Log ("\c-$SP_RADS")
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, "Denull")
+    stop
+    TNT1 A 0 A_GiveInventory ("QMana", random(10,20))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(5,15))
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    TNT1 A 0 A_JumpIfInventory("nullspell", 1, "Denull")
+    stop
+    Denull:
+    TNT1 A 0 A_TakeInventory ("nullspell", 1)
+    stop
+  }
+}
+
+Actor ManaMoteLarge : CustomInventory
+{
+  Height 10
+  Scale 0.25
+	FloatBobStrength 0.4
+	+FLOATBOB
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpglmanamotelarge"
+  States
+  {
+  Spawn:
+    MNAO A 2 Bright A_Jump (96, 1)
+    MNAO E 2 A_Jump (96, 1)
+    MNAO G 2 A_Jump (96, 1)
+    MNAO B 2 Bright A_Jump (96, 1)
+    MNAO F 2 A_Jump (96, 1)
+    MNAO H 2 A_Jump (96, 1)
+    MNAO C 2 Bright A_Jump (96, 1)
+    MNAO G 2 A_Jump (96, 1)
+    MNAO E 2 A_Jump (96, 1)
+    MNAO D 2 Bright A_Jump (96, 1)
+    MNAO H 2 A_Jump (96, 1)
+    MNAO F 2 A_Jump (96, 1)
+	TNT1 A 0
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,40))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(3,12))
+    stop
+  }
+}
+
+Actor RPGAdamantMana : CustomInventory
+{
+  Height 20
+  Scale 0.6
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  +FLOAT
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpgltoughmana"
+  States
+  {
+  Spawn:
+    QARS A 2 Bright
+    QARS B 2 Bright
+    QARS C 2 Bright
+    QARS D 2 Bright
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(20,30))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(5,15))
+    TNT1 A 0 A_GiveInventory ("RPGAdamArmEff", 1)
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    stop
+  }
+}
+
+Actor RPGPulseMana : CustomInventory
+{
+  Height 20
+  Scale 1
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  +FLOAT
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage "$rpglmegamana"
+  States
+  {
+  Spawn:
+    QMGS A 6 
+    QMGS B 3 
+    QMGS C 3 
+    QMGS D 6 Bright
+    QMGS C 3 
+    QMGS B 3
+    Loop
+  Pickup:
+    TNT1 A 0 A_GiveInventory ("QMana", random(60,80))
+    TNT1 A 0 A_GiveInventory ("QExperience", random(25,50))
+    TNT1 A 0 A_GiveInventory ("RPGAdamArmEff", 1)
+    TNT1 A 0 A_GiveInventory ("RPGFullHealEff", 1)
+    TNT1 A 0 ACS_NamedExecuteAlways("Levelupcheck", 0)
+    stop
+  }
+}
+
+ACTOR RPGAdamArmEff : BasicArmorBonus 
+{
+  Armor.MaxSaveAmount 100
+  Armor.SavePercent 33
+  Armor.SaveAmount 100
+}
+
+ACTOR RPGFullHealEff : Soulsphere
+{
+  Inventory.Amount 800
+}
+
+Actor SiphonManaDrop : RandomSpawner 
+{
+  DropItem "ManaMoteLarge",256,25
+  DropItem "RPGRadsuitReplacer",256,7
+  DropItem "RPGBlurReplacer",256,7
+  DropItem "RPGGogglesReplacer",256,7
+  DropItem "RPGAdamantMana",256,2
+  DropItem "RPGPulseMana",256,1
+}

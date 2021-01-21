@@ -1,0 +1,59 @@
+Server Int MRPG_EXPBase = 60;
+Server Int MRPG_StatsPerLevel = 4;
+Server Int MRPG_SkillsPerLevel = 2;
+Server Int MRPG_LevelCap = 100;
+Server Float MRPG_ATKTilt = 1.0;
+Server Float MRPG_DEFTilt = 1.0;
+Server Int RPGLXPLumpCap = 512;
+
+Server bool MRPG_LevelOnePoints = True;
+Server bool MRPG_PlayerSpecies = True;
+Server bool MRPG_SaveEnabled = False;
+User bool MRPG_RandomStats = False;
+Server bool MRPG_SaveSpells = False;
+
+User int MRPG_StatLevel = 0;
+User int MRPG_StatEXP = 0;
+User int MRPG_StatPoints = 0;
+User int MRPG_SkillPoints = 0;
+
+User int MRPG_Statvit = 0;
+User int MRPG_Statatk = 0;
+User int MRPG_Statint = 0;
+User int MRPG_Statdef = 0;
+User int MRPG_Statwis = 0;
+User int MRPG_WisGiven = 0;
+
+User int MRPG_XPNEXT = 0;
+
+User int MRPG_SkillSCV = 0;
+User int MRPG_SkillTAP = 0;
+User int MRPG_SkillSPD = 0;
+User int MRPG_SkillHLR = 0;
+User int MRPG_SkillARR = 0;
+User int MRPG_SkillENR = 0;
+User int MRPG_SkillSPL = 0;
+User int MRPG_SkillQCK = 0;
+
+User int MRPG_SpellWard = 0;
+User int MRPG_SpellRads = 0;
+User int MRPG_SpellVisi = 0;
+User int MRPG_SpellInvi = 0;
+User int MRPG_SpellAtMi = 0;
+User int MRPG_SpellGuMi = 0;
+User int MRPG_SpellSynt = 0;
+User int MRPG_SpellHeal = 0;
+User int MRPG_SpellArma = 0;
+User int MRPG_SpellRage = 0;
+User int MRPG_SpellHast = 0;
+User int MRPG_SpellStop = 0;
+User int MRPG_SpellPush = 0;
+User int MRPG_SpellBomb = 0;
+
+User Float MRPG_scrhudSIx = 8.0;
+User Float MRPG_scrhudSIy = 435.0;
+User bool MRPG_hbon = False;
+User bool MRPG_hby = False;
+User bool MRPG_hbwide = False;
+User bool MRPG_FullScan = False;
+User bool MRPG_ManaWheel = False;

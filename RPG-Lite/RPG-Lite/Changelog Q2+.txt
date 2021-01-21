@@ -1,0 +1,46 @@
+--- 2.0.3
+
+- New stat: Expertise.  It just converts stat points to skill points.
+
+ - Cut four spells with effects covered by skills: Heal, Armour, Speed and Ammo Synthesis.  Spell colours revised to match.
+ - Scavenger skill retooled into Siphon: increases energy gains from whacking monsters, increases spell/mote drops and gives monsters a small chance to drop powerup replacer orbs.  Worth noting that motes and orbs give XP.
+ - Base spell drop chance dropped slightly.  Was meaning to do that anyway, but it makes a point or two in siphon more useful early on.
+ 
+ - Cutting the ammo generators means that there's no need for most of the compatibility patches.
+    -> Strife's one is the only one that actually does something significant:
+     - Changes siphon again; it's called Magpie here and it also gives enemies a chance of dropping gold.
+     - Still has the script that converts stamina upgrade tickets to VIT points.  Poor ol' stamina implant guy is just another NPC now.
+     - UI doesn't show keys, because strife has way too many of them to display properly.
+    -> Ashes' patch just changes the radsuit spell into a rad-curing spell with a much shorter duration.
+    
+ - UI now shows current xp and the xp to the next level but no longer shows your stats.  Also moved the keybar to above the XP bar.
+ - Small tweak to spawnn positioning of bomb minions.  They're also no longer solid, for better or worse.  Partly because you could use them as stepping stones, but mostly because you could get stuck in them.
+ - Actors that floatbob now bob a bit less.
+ 
+ - Scifi submod now has its own square version of the mana wheel.
+ - NoGoodArmour submod's blue armour replacers now top up your (green) armour.  The megasphere one now restores more health than you can actually have, just so that it's a full heal if you have high VIT.
+ 
+--- 2.0.2
+ - Added an alternate/additional mana display: a blue wheel around the spell icon that shows roughly what percentage of your energy reserves are left.  Not as good as the numerical display, but it means you can see your mana levels when using a UI mod.
+ - Changed internal names for mana, experience, playerlevel, skillpoints and statpoints (to the same thing but with a Q at the start).  Should resolve a few incompatibilities.
+ - Fixed a logic error that ate your unspent skillpoints if you manually loaded at level one.
+ - Fixed save spells not saving push/bomb.
+ - Fixed an error in the Heal spell at certain levels of spellcasting.
+ - Lowered the offset for the blue minions so they don't clip into the ceiling.
+ - Lowered duration of the invis spell & increased its cost to 50.
+ - The armour spell now checks your armour colour: if it's green, it won't restore past 100. (strictly, if the savepercent is at least 50% it caps at 200, otherwise at 100.)
+ - Compatibility fix for NeoDoom simplified greatly, since it no longer conflicts by having two items called "mana".
+ - Tweaked the minion mine's behaviour.  Still not quite happy with it, but it'll do for now.
+ - DamNums colour support for minion damage.
+ - Tweaked ammo synth drops for Strife.
+ - Added a compatch for High Noon Drifter.  All it does is add arrows to the synth lists.
+ - Added an optional difficulty increasing file that replaces blue armour and megaspheres with items which very pointedly don't give you any armour.  They're like the other powerup replacers; the armour one will give you the armour spell plus exp/mana, while the megasphere one gives you the regen spell plus a lot of mana (and ok exp).  The megasphere one still gives 200 health, on top of that.  
+    -> Works in heretic too; there it also reduces the armour% for the silver shield to 40%.  Also replaces HacX's body armour. No effect in hexen/strife.  
+    -> Note that if there's more than one replacer item in your load list, the last one takes precedence, so this one's more likely to work if it's later in your load order.  Not compatible with other mods that replace those items, obviously, (eg. DRLA).
+
+
+--- 2.0.1:
+
+- Added manual saving.  Unlike autosave, manual reloading can lower stats/attributes if the saved version has less than the current.  Useful if you somehow get way too much experience from, say, a bunch of npc-type pseudomonsters with 999999 hp that are auto-killed by scripts.  (Put -countkill on things like that, city-of-the-damned guy)
+- Added cvar to cap the amount of XP from a single monster.  Mostly to catch stuff like the above, but it's also there for if you want to limit XP from the seven hundred cyberdemons in whatever horrible map you're on.
+- Stats now update when you enter/exit the menu.  Sometimes you'd have to try to add a point to enact changes, which was annoying.

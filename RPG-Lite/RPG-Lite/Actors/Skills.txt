@@ -1,0 +1,65 @@
+Actor SKmanaregen : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 10
+}
+
+Actor SKHealthregen : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 10
+}
+
+Actor SkillHealthgiver : health
+{
+  Inventory.amount 1
+}
+
+Actor SKArmorregen : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 10
+}
+
+Actor SkillArmorgiver : BasicArmorBonus
+{
+  Armor.SavePercent 5
+  Armor.SaveAmount 1
+  Armor.MaxSaveAmount 100
+}
+
+Actor SKRefuel : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 5
+}
+
+Actor SKVampirisim : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 5
+}
+
+Actor SKMagicPotency : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 5
+}
+
+Actor SKScan : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 3
+}
+
+Actor SkillSpeed : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 8
+}
+
+Actor SKQuicken : Inventory
+{
+  +INVENTORY.UNCLEARABLE
+  Inventory.Maxamount 5
+}

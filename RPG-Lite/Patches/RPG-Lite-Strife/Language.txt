@@ -1,0 +1,3 @@
+[enu default]
+	Menu2opt04 = "Magpie ";
+	Menu2Desc04 = "Enemies yield more energy and have a chance of dropping gold. \nHigher chances per rank.";

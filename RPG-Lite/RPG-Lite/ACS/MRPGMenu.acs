@@ -1,0 +1,441 @@
+#library "MRPGMenu"
+#include "zcommon.acs"
+#include "MRPGMdat.acs"
+
+#Define TotalSubMenus 2
+
+str submenus[TotalSubMenus] =
+{
+	"SubMenu1",
+	"SubMenu2"
+};
+
+Function Bool DrawSprite (Str Sprite, Int ID, Int X, Int Y, Int Alpha)
+{
+	SetFont(Sprite);
+	HUDMessage(s:"A"; HUDMSG_FADEOUT|HUDMSG_NOTWITHFULLMAP|HUDMSG_ALPHA, ID, CR_UNTRANSLATED, X, Y, 0.2, 0.25, Alpha);
+	Return True;
+}
+
+Function Bool DrawEnemyHealthBar (Int CurrentHealth, Int MaxHealth, Str Name)
+{
+	Int a = CurrentHealth << 16;
+	Int b = Maxhealth << 16;
+	Int c = FixedDiv(a, b); // This should give us a percentage of remaining health as a fixed point number between 0 and 1.0
+	Int f_xresolution = 640 << 16;
+	Int hbposy = 0.0;
+	
+	if(GetUserCvar(PlayerNumber(),"MRPG_hby"))
+	{
+    hbposy = 468.0;
+	}
+	
+	if(!GetUserCvar(PlayerNumber(),"MRPG_hbwide"))
+	{
+	Int centerbarx = ((FixedDiv (f_xresolution, 2.0)) - (FixedDiv(120.0, 2.0)));
+	Int barwidth = (FixedMul(c, 120.0) + 0.5) >> 16;
+	
+	SetHudSize(640,480,1);
+	SetHUDClipRect((centerbarx >> 16),(hbposy >> 16),barwidth,400, 0);
+	DrawSprite("HudBHPSM", 573101, (0.1+centerbarx), (hbposy+0.1), 1.0);
+	
+	SetHUDClipRect(0, 0, 0, 0);
+	DrawSprite("HudBSM", 573102, (0.1+centerbarx), (hbposy+0.1), 1.0);
+	}
+	
+	if(GetUserCvar(PlayerNumber(),"MRPG_hbwide"))
+	{
+	Int centerbarx = ((FixedDiv (f_xresolution, 2.0)) - (FixedDiv(240.0, 2.0)));
+	Int barwidth = (FixedMul(c, 240.0) + 0.5) >> 16;
+	
+	SetHudSize(640,480,1);
+	SetHUDClipRect((centerbarx >> 16),(hbposy >> 16),barwidth,400, 0);
+	DrawSprite("HudBHPW", 573101, (0.1+centerbarx), (hbposy+0.1), 1.0);
+	
+	SetHUDClipRect(0, 0, 0, 0);
+	DrawSprite("HudBSMW", 573102, (0.1+centerbarx), (hbposy+0.1), 1.0);
+	}
+	
+	if((GetCvar("MRPG_FullScan")) && !GetUserCvar(PlayerNumber(),"MRPG_hbwide"))
+	{
+	SetFont("SmallFONT");
+	hudmessage(d:CurrentHealth,s: "/",d:MaxHealth;HUDMSG_FADEINOUT|HUDMSG_NOTWITHFULLMAP|HUDMSG_ALPHA,57390,CR_White, (centerbarx+180.1), (hbposy+2.1),0.2,0.025,1.0);
+	hudmessage(s:Name;HUDMSG_FADEINOUT|HUDMSG_NOTWITHFULLMAP|HUDMSG_ALPHA,57391,CR_White, (centerbarx-120.1), (hbposy+2.1),0.2,0.025,1.0);
+	}
+	
+	if((GetCvar("MRPG_FullScan")) && GetUserCvar(PlayerNumber(),"MRPG_hbwide"))
+	{
+	SetFont("SmallFONT");
+	hudmessage(d:CurrentHealth,s: "/",d:MaxHealth;HUDMSG_FADEINOUT|HUDMSG_NOTWITHFULLMAP|HUDMSG_ALPHA,57390,CR_White, (centerbarx+270.1), (hbposy+2.1),0.2,0.025,1.0);
+	hudmessage(s:Name;HUDMSG_FADEINOUT|HUDMSG_NOTWITHFULLMAP|HUDMSG_ALPHA,57391,CR_White, (centerbarx-145.1), (hbposy+2.1),0.2,0.025,1.0);
+	}
+	
+	Return True;
+}
+
+Function Void MRPGinmenuTEXT (Int selected, Int Selections, Int Submenu)
+{
+	int Lvl = CheckInventory("QPlayerlevel"),
+	EXPBase = GetCvar("MRPG_EXPBase"),
+	MenuMaxHealth = getActorProperty(0,APROP_STAMINA) + 100,
+	Nextlevel = EXPBASE * Lvl;
+	SetHudSize(640,400, 1);
+	setfont("MenuBG");
+	Hudmessage(s:"A";HUDMSG_PLAIN,573100,CR_UNTRANSLATED, 320.0, 200.0,0.2,10);	
+	setfont("BIGFONT");
+	Hudmessage(l:submenus[Submenu];HUDMSG_PLAIN,57351,CR_UNTRANSLATED, 320.0, 50.0,0.2,10);	
+	setfont("SmallFONT");	
+	Hudmessage(s:"Level: ",d:CheckInventory("QPlayerLevel"),
+	s:"\nExperience: ",d:CheckInventory("QExperience"),s:" / ",d:Nextlevel,
+	s:"\nHealth: ",d:getActorProperty(0,APROP_HEALTH),s:" / ",d:MenuMaxHealth,
+	s:"\nEnergy: ",d:CheckInventory("QMana"),s:" / ",d:Getammocapacity("Qmana")
+	;HUDMSG_PLAIN,57352,CR_UNTRANSLATED, 65.1, 70.1,0.2,10);
+	Hudmessage(s:"Stat Points: ",d:CheckInventory("QStatPoints");HUDMSG_PLAIN,57355,CR_UNTRANSLATED, 475.1, 70.1,0.2,10);
+	Hudmessage(s:"Skill Points: ",d:CheckInventory("QSkillPoints");HUDMSG_PLAIN,57356,CR_UNTRANSLATED, 475.1, 80.1,0.2,10);
+	Hudmessage(s:"Damage Taken: ",f:getactorproperty(0,APROP_DamageFactor),
+	s:"\nDamage Dealt: ",f:getactorproperty(0,APROP_DamageMultiplier),
+	s:"\nSpeed Factor: ",f:getactorproperty(0,APROP_Speed),
+	s:"\nKnock Resist: ",i:getactorproperty(0,APROP_Mass);
+	HUDMSG_PLAIN,57357,CR_UNTRANSLATED, 65.1, 115.1,0.2,10);
+	Hudmessage(s:"Move up: ",k: "+forward" ,s:"\nMove Down: ",k: "+back" ,s:"\nSelect: ",k: "+use";
+		HUDMSG_PLAIN,57360,CR_DARKGREEN, 475.1, 144.1,0.2,10);
+	
+	str Selectedstring;
+	for(int i = 0; i < Selections; i++)
+	{
+		Selectedstring = (i == Selected) ? "\cf" : "\c-";
+		
+		If(CheckInventory(menuoptions[Submenu][i].item) > 0)
+		{	
+			HudMessage (s:Selectedstring,l:menuoptions[Submenu][i].name,d:CheckInventory(menuoptions[Submenu][i].item);
+				HUDMSG_PLAIN,57310+i,CR_Grey, 320.0, 80.0 + (10.0 * i),0.2,10);
+		}
+		else if(i >= (Selections -2))
+		{		
+			HudMessage (s:Selectedstring,l:menuoptions[Submenu][i].name;
+				HUDMSG_PLAIN,57310+i,CR_Grey, 320.0, 90.0 + (10.0 * i),0.2,10);
+		}
+		else
+		{		
+			HudMessage (s:Selectedstring,l:menuoptions[Submenu][i].name;
+				HUDMSG_PLAIN,57310+i,CR_Grey, 320.0, 80.0 + (10.0 * i),0.2,10);
+		}
+				
+		Hudmessage(l:Menuoptions[SubMenu][selected].desc;
+				HUDMSG_PLAIN,57340,CR_UNTRANSLATED, 320.0, 310.1,0.2,10);
+		
+		if((submenu >= 1) && (Menuoptions[SubMenu][selected].Maxrank != 0))
+		{
+			Hudmessage(s:"Cost: ",
+			d:Menuoptions[SubMenu][selected].Cost * (CheckInventory(menuoptions[Submenu][Selected].item) + 1),
+			s:"\nMax Ranks: ",
+			d:Menuoptions[SubMenu][selected].Maxrank;
+					HUDMSG_PLAIN,57341,CR_UNTRANSLATED, 320.0, 290.1,0.2,10);
+		}
+	}
+
+}
+
+script "MRPGOpenMenu" (void)
+{
+	if(CheckInventory("MenuOpen")>=1)
+	{
+		TakeInventory("MenuOpen",99);
+		SetPlayerProperty(0, False, PROP_TOTALLYFROZEN);
+		ACS_NamedExecuteAlways("UpdateStats",0);
+	}
+	else
+	{
+		GiveInventory("MenuOpen",1);
+		ACS_NamedExecuteAlways("MRPGinmenu",0);
+		ACS_NamedExecuteAlways("UpdateStats",0);
+	}
+	Delay(10);
+}
+
+script "MRPGinmenu" (void)
+{
+	SetPlayerProperty(0, true, PROP_TOTALLYFROZEN);
+	int button,
+	Selection;
+	while(CheckInventory("MenuOpen")==1)
+	{
+		button = GetPlayerInput(-1, INPUT_BUTTONS);
+		if (button & BT_FORWARD)
+		{
+			if(Selection>0)
+			{
+				Selection--;
+				Delay(5);
+			}
+		}
+	
+		else if (button & BT_back)
+		{
+			if(Selection<6)
+			{
+				Selection++;
+				Delay(5);
+			}
+		}
+
+		else if (button & BT_USE)
+		{
+			Switch(Selection)
+			{
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				if (CheckInventory("QStatPoints") >= 1 && CheckInventory(Menuoptions[0][Selection].item) < 1000)
+					{
+						TakeInventory("QStatPoints",1);
+						GiveInventory(Menuoptions[0][Selection].item,1);
+						Delay(5);
+					}
+				Break;
+				
+				//always last
+				case 5:
+				GiveInventory("MenuOpen",1);
+				Selection=0;
+				Delay(5);
+				Break;
+				
+				case 6:
+				TakeInventory("MenuOpen",1);
+				SetPlayerProperty(0, False, PROP_TOTALLYFROZEN);
+				Delay(5);
+				Break;
+				
+			}
+			ACS_NamedExecuteAlways("UpdateStats",0);
+		}
+		MRPGinmenuTEXT(Selection,7,0);
+		Delay(1);
+	}
+	while(CheckInventory("MenuOpen")==2)
+	{
+		button = GetPlayerInput(-1, INPUT_BUTTONS);
+		if (button & BT_FORWARD)
+		{
+			if(Selection>0)
+			{
+				Selection--;
+				Delay(5);
+			}
+		}
+	
+		else if (button & BT_back)
+		{
+			if(Selection<(TotalSkills -1))
+			{
+				Selection++;
+				Delay(5);
+			}
+		}
+		
+		else if (button & BT_USE)
+		{
+			Switch(Selection)
+			{	
+				Case 0:
+				Case 1:
+				Case 2:
+				Case 3:
+				Case 4:
+				Case 5:
+				Case 6:
+				Case 7:
+				if (CheckInventory("QSkillPoints") >= (Menuoptions[1][Selection].Cost * (CheckInventory(Menuoptions[1][Selection].item) + 1)) 
+				&& CheckInventory(Menuoptions[1][Selection].item) < Menuoptions[1][Selection].maxrank 
+				&& CheckInventory("QPlayerlevel") >= Menuoptions[1][Selection].levelreq)
+				{
+					TakeInventory("QSkillPoints",Menuoptions[1][Selection].Cost * (CheckInventory(Menuoptions[1][Selection].item)+1));
+					GiveInventory(Menuoptions[1][Selection].item,1);
+          ACS_NamedExecuteAlways("UpdateStats",0);
+					Delay(5);
+				}
+				Break;
+
+				//always last
+				case 8:
+				TakeInventory("MenuOpen",1);
+				Selection=0;
+				Delay(5);
+				Restart;
+				Break;
+				
+				case 9:
+				TakeInventory("MenuOpen",99);
+				Selection=0;
+				SetPlayerProperty(0, False, PROP_TOTALLYFROZEN);
+				Delay(5);
+				Break;
+			}
+		}
+		MRPGinmenuTEXT(Selection,TotalSkills,1);
+		Delay(1);
+	}
+}
+
+script "ScriptedHudDisplay" (void)
+{
+	int SelectedSpell = Checkinventory("PlayerSpellSelector");
+	int Savemytid = ActivatorTID();
+	int thisThingMaxHealth;
+	int thisThingHealth;
+	int HudCurMana = CheckInventory("QMana");
+	int HudMaxMana = Getammocapacity("Qmana");
+	float HudManaFraction = 1.0;
+	SetHudSize(640,480, 1);
+	DrawSprite(SpellsList[SelectedSpell].Icon, 573120, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+	if(CheckInventory("SpellActive") > 0)
+	{
+		DrawSprite("Cantspel", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+	}
+	if((GetUserCvar(PlayerNumber(),"MRPG_ManaWheel")) && (CheckInventory("SpellActive") < 1))
+	{
+    HudManaFraction = fixeddiv(HudCurMana, HudMaxMana);
+    if(HudManaFraction >= 0.999)
+      {
+        DrawSprite("ManaWH12", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.91)
+      {
+        DrawSprite("ManaWH11", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.83)
+      {
+        DrawSprite("ManaWH10", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.75)
+      {
+        DrawSprite("ManaWH09", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.66)
+      {
+        DrawSprite("ManaWH08", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.58)
+      {
+        DrawSprite("ManaWH07", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.5)
+      {
+        DrawSprite("ManaWH06", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.41)
+      {
+        DrawSprite("ManaWH05", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.33)
+      {
+        DrawSprite("ManaWH04", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.25)
+      {
+        DrawSprite("ManaWH03", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.16)
+      {
+        DrawSprite("ManaWH02", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else if(HudManaFraction >= 0.08)
+      {
+        DrawSprite("ManaWH01", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    else
+      {
+        DrawSprite("ManaWH00", 573119, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+      }
+    }
+	if(CheckInventory("SPWardActive") > 0)
+	{
+		DrawSprite("Auraward", 573911, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIx") +.0, GetUserCvar(PlayerNumber(),"MRPG_scrhudSIy") +.0, 1.0);
+	}
+	if(GetUserCvar(PlayerNumber(),"MRPG_hbon"))
+	{
+		if(SetActivator(0,AAPTR_PLAYER_GETTARGET))  
+		{
+			SetActivator(0,AAPTR_PLAYER_GETTARGET);
+			int thisthingtid = ActivatorTID();
+			if( (ClassifyActor(0) & ACTOR_MONSTER) && (ClassifyActor(0) & ACTOR_ALIVE) && (CheckFlag(0, "Shootable")))
+			{
+				
+				Str Monstername = GetActorProperty(thisthingtid, APROP_NameTag);
+				thisThingMaxHealth = CheckActorInventory(thisthingtid,"MyMaxHealth");
+				thisThingHealth = GetActorProperty(thisthingtid,APROP_Health);
+						
+				if (Savemytid != ActivatorTID())
+				{
+					SetActivator(Savemytid);
+					If (CheckSight (thisthingtid, Savemytid,0))
+					{
+						DrawEnemyHealthBar(thisThingHealth, thisThingMaxHealth, Monstername);
+					}
+				}
+			}
+		}
+		SetActivator(Savemytid);
+	}	
+	Delay(5);
+	Restart;
+}
+
+script "SpellSelectUp" (void)
+{
+	int SelectedSpell = Checkinventory("PlayerSpellSelector");
+	SelectedSpell++;
+	while(Checkinventory(SpellsList[SelectedSpell].item) == 0)
+	{
+		SelectedSpell++;
+		if(SelectedSpell > Totalspells)
+		{
+			SelectedSpell = 0;
+		}
+	}
+	takeinventory("PlayerSpellSelector",99);
+	giveinventory("PlayerSpellSelector",SelectedSpell);
+}
+
+script "SpellSelectDown" (void)
+{
+	int SelectedSpell = Checkinventory("PlayerSpellSelector");
+	SelectedSpell--;
+	while(Checkinventory(SpellsList[SelectedSpell].item) == 0)
+	{
+		SelectedSpell--;
+		if(SelectedSpell < 0)
+		{
+			SelectedSpell = Totalspells;
+		}
+	}
+	takeinventory("PlayerSpellSelector",99);
+	giveinventory("PlayerSpellSelector",SelectedSpell);
+}
+
+script "SpellUse" (void)
+{
+	int SelectedSpell = Checkinventory("PlayerSpellSelector"),
+	CastSpeedQuicken = (CheckInventory("SKQuicken") * 7);
+	
+	If(Checkinventory("SpellActive") < 1)
+	{
+		if(Checkinventory("QMana") >= SpellsList[SelectedSpell].Cost)
+		{
+			Takeinventory("QMana",SpellsList[SelectedSpell].Cost);
+			giveinventory(SpellsList[SelectedSpell].Effect,1);
+			giveinventory("SpellActive",1);
+			Delay(70 - CastSpeedQuicken);
+			Takeinventory("SpellActive",1);
+		}
+		Else
+		{
+			SetHudSize(640,480, 1);
+			setfont("SmallFONT");
+			hudmessage(s:"Needs ",d:SpellsList[SelectedSpell].Cost,s:" Energy";HUDMSG_PLAIN,57392,CR_White, 320.0, 200.0,1.0,1.0);
+		}
+	}
+}

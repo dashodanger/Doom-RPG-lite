@@ -1,0 +1,3 @@
+[enu default]
+	rpgltoughmana = "Adamant Mana";
+	rpglmegamana = "Vivacious Mana";

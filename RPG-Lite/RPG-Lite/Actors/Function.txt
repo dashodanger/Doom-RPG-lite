@@ -1,0 +1,79 @@
+Actor MenuOpen : Inventory
+{          
+  Inventory.PickupMessage "Defense Increased"
+  Inventory.Amount 1
+  Inventory.MaxAmount 99
+  +INVENTORY.ALWAYSPICKUP
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    ESES A -1 
+    loop
+  }
+}
+
+Actor MRPGHasloaded : Inventory
+{
+  Inventory.MaxAmount 1
+}
+
+Actor Monsterinitgiver
+{
+
+  States
+  {
+  Spawn:
+    TNT1 A 0
+	TNT1 A 0 A_RadiusGive( "Monsterinit", 16383.0, RGF_MONSTERS|RGF_NOSIGHT|RGF_CUBE)
+	TNT1 A 35
+    Loop
+  }
+}
+
+Actor Monsterinit : CustomInventory
+{  
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    Loop
+  Pickup:
+    TNT1 A 0
+	TNT1 A 0 A_CheckFlag("CountKill","Activate")
+    stop
+  Activate:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("Monsterinitdone",1,"Done")
+	TNT1 A 0 ACS_NamedExecuteAlways("MonsterLoop")
+	TNT1 A 0 A_GiveInventory("Monsterinitdone")
+	Stop
+  Done:
+	TNT1 A 0
+    Stop
+  }
+}
+
+Actor Monsterinitdone : Inventory
+{
+	Inventory.MaxAmount 1
+}
+
+Actor Playerinitdone : Inventory
+{
+	Inventory.MaxAmount 1
+}
+
+Actor PlayerSpellSelector : Inventory
+{
+	Inventory.MaxAmount 99
+}
+
+Actor NullSpell : Inventory
+{}
+
+Actor Allsecretsprize : Inventory
+{
+  Inventory.MaxAmount 1
+  Inventory.InterHubAmount 0
+}

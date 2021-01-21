@@ -1,0 +1,71 @@
+OptionMenu "OptionsMenu"
+{
+	Title "OPTIONS"
+	Submenu "RPG Options",     "MRPGOpt"
+	StaticText " " // [TP]
+	Submenu "Customize Controls",		"CustomizeControls"
+	Submenu "Mouse options",			"MouseOptions"
+	Submenu "Joystick options",			"JoystickOptions"
+	StaticText " "
+	Submenu "Player Setup",				"PlayerMenu"
+	Submenu "Gameplay Options",			"GameplayOptions"
+	Submenu "Compatibility Options",	"CompatibilityOptions"
+	Submenu "Automap Options",			"AutomapOptions"
+	Submenu "HUD Options",				"HUDOptions"
+	Submenu "Miscellaneous Options",	"MiscOptions"
+	Submenu "Sound Options",			"SoundOptions"
+	Submenu "Display Options",			"VideoOptions"
+	Submenu "Set video mode",			"VideoModeMenu"
+	StaticText " "
+	SafeCommand "Reset to defaults",	"reset2defaults"
+	SafeCommand	"Reset to last saved",	"reset2saved"
+	Command "Go to console",			"menuconsole"
+}
+
+OptionMenu "MRPGOpt"
+{
+	Title "RPG Options"
+	StaticText " "
+	StaticText "GUI Options"
+	StaticText " "
+	Slider "X Pos", "MRPG_scrhudSIx", 000, 640, 1.0, 0
+	Slider "Y Pos", "MRPG_scrhudSIy", 000, 480, 1.0, 0
+	Option "Mana Wheel", "MRPG_ManaWheel", "OnOff"
+	StaticText " "
+	Option "Show Enemy Healthbar", "MRPG_hbon", "OnOff"
+	Option "Wide Healthbar", "MRPG_hbwide", "OnOff"
+	Option "Healthbar shows name & numeric health", "MRPG_FullScan", "OnOff"
+	Option "Healthbar at bottom", "MRPG_hby", "OnOff"
+	StaticText " "
+	StaticText "Player Growth Settings"
+	StaticText " "
+	Slider "Base EXP to level", "MRPG_EXPBase", 010, 200, 5.0, 0
+	Slider "Stat points per level", "MRPG_StatsPerLevel", 1, 8, 1.0, 0
+	Slider "Skill points per level", "MRPG_SkillsPerLevel", 1, 4, 1.0, 0
+	Slider "Level Cap", "MRPG_Levelcap", 10, 500, 1.0, 0
+	Option "Points at first level", "MRPG_LevelOnePoints", "OnOff"
+	Option "Random stat allocation", "MRPG_RandomStats", "OnOff"
+	StaticText " "
+	Slider "Single enemy XP reward cap", "RPGLXPLumpCap", 10, 1000, 1, 0
+	StaticText "Enemies normally give XP equal to 1/20th of their spawn health.  This sets an upper limit to that."
+	StaticText " "
+	Slider "Base Attack", "MRPG_ATKTilt", 0.5, 2.0, 0.01, 2
+	Slider "Base Damage Taken", "MRPG_DEFTilt", 0.5, 2.0, 0.01, 2
+	StaticText " "
+	Option "Player Species", "MRPG_PlayerSpecies", "OnOff"
+	StaticText "This gives the player the same species as summons, reducing friendly fire."
+	StaticText "Isn't 100% reliable at protecting minions from the player, but if it doesn't work, try turning teamplay on."
+	StaticText " "
+	StaticText "Character Saving"
+	StaticText " "
+	Option "Character Saving/Loading", "MRPG_Saveenabled", "OnOff"
+	Option "Save Spells", "MRPG_SaveSpells", "OnOff"
+	StaticText " "
+	SafeCommand "Manual Save", "pukename MRPGsavescript"
+	SafeCommand "Manual Load", "pukename MRPGManualLoad"
+	SafeCommand "Clear Data", "pukename MRPGClearscript"
+	StaticText " "
+	StaticText "Character attributes are autosaved on level end and restored on on level start."
+	StaticText "You can use this to carry stats and skills between episodes, wads or when pistol starting with 'map *'."
+	StaticText "Data is saved to hidden settings and lasts until the next save overwrites them, even if the program is closed."
+}

@@ -1,0 +1,66 @@
+
+height 0;
+Resolution 320,200;
+InterpolateHealth true;
+
+statusbar fullscreen, fullscreenoffsets
+{
+	//drawimage "HUDLONG3", 2, -67;
+	
+	//Mugshot
+	DrawMugShot 4, 0,-36;
+	
+	//health
+    DrawBar "HUDBHPSM", "HUDBSM",health,horizontal,32,-38;
+	drawnumber 4, SMALLFONT, White, health, drawshadow,alignment(left) ,34, -34;
+
+    //Mana
+    DrawBar "HUDBMPSM", "HUDBSM",ammo("QMana"),horizontal,32,-26;
+	drawnumber 3, SMALLFONT, White,ammo("QMana"), drawshadow,alignment(left) ,34, -22;
+	
+	//armor
+    DrawBar "HUDBAPSM", "HUDBSM",armor,horizontal,32,-14;
+	drawnumber 3, SMALLFONT, White, armor, drawshadow,alignment(left) ,34, -10;
+
+
+    usesSecondaryammo not
+	{
+		DrawString SMALLFONT, Untranslated, Weapontag, -16, -32;
+		DrawBar "HUDVAMSM", "HUDVSM", ammo1,Vertical,-14,-124;
+		drawnumber 4, BIGFONT, Untranslated, ammo1, drawshadow, alignment(right), -18, -18;
+	}
+	//secondary ammo
+    usessecondaryammo
+    {
+        DrawString SMALLFONT, Untranslated, Weapontag, -28, -44;
+        DrawBar "HUDVAMSM", "HUDVSM", ammo2,Vertical,-14,-124;
+		drawnumber 4, BIGFONT, Untranslated, ammo2, drawshadow,alignment(right), -28, -18;
+		DrawBar "HUDVAMSM", "HUDVSM", ammo1,Vertical,-26,-124;
+		drawnumber 4, BIGFONT, Untranslated, ammo1, drawshadow, alignment(right), -28, -32;
+
+    }
+
+    //inventory
+	DrawSelectedInventory SMALLFONT, 158, -36;  
+	
+ 	    //XP
+    DrawNumber 6, SMALLFONT, White,"QExperience", 37, -52;
+	drawimage "HUDXP",4, -56;
+  DrawString SMALLFONT, White,"/", 49, -52;
+	DrawNumber 6, SMALLFONT, White,IntCVar MRPG_XPNEXT, 84, -52;
+	
+    gamemode deathmatch
+    {
+        drawnumber 2, CONFONT, untranslated, frags, drawshadow, -3, 1;
+    }
+}
+
+statusbar inventory, fullscreenoffsets
+{
+DrawInventoryBar Doom,alwaysshowcounter,translucent, 7, SMALLFONT, 198, -106; 
+}
+
+statusbar inventoryFullscreen, fullscreenoffsets
+{
+DrawInventoryBar Doom,alwaysshowcounter,translucent, 7, SMALLFONT, 198, -66; 
+}

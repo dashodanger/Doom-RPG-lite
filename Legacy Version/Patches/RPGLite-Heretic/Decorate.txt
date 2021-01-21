@@ -1,0 +1,15 @@
+Actor HAmmoSynthEffect : RandomSpawner Replaces AmmoSynthEffect
+{
+  DropItem "GoldWandAmmo",256, 40
+  DropItem "CrossbowAmmo",256, 40
+  DropItem "BlasterAmmo",256, 40
+  DropItem "SkullRodAmmo",256, 10
+  DropItem "MaceAmmo",256, 10
+  DropItem "PhoenixRodAmmo",256, 10
+  DropItem "GoldWandHefty",256, 4
+  DropItem "CrossbowHefty",256, 4
+  DropItem "BlasterHefty",256, 4
+  DropItem "SkullRodHefty",256, 1
+  DropItem "MaceHefty",256, 1
+  DropItem "PhoenixRodHefty",256, 1
+}

@@ -1,0 +1,47 @@
+#include "zcommon.acs"
+
+INT SSCPlayerTID = 1000;
+
+script "StrifeStamEnter" ENTER
+{
+   Delay(45);
+   if(ActivatorTID() != SSCPlayerTID)
+   {
+	 SSCPlayerTID = ActivatorTID();
+	 }
+	ACS_NamedExecuteAlways("StrifeStamChecker",0);
+}
+
+script "StrifeStamChecker" (void)
+{
+	While (CheckActorInventory(SSCPlayerTID,"HealthTraining") < 1)
+	{
+   Delay(275);
+	}
+
+  if(CheckActorInventory(SSCPlayerTID,"HealthTraining") > 0)
+   {
+   TakeActorInventory(SSCPlayerTID,"HealthTraining",1);
+   GiveActorInventory(SSCPlayerTID,"StatVIT",2);
+   }
+   
+   Delay(450);
+   Restart;
+}
+
+script "TreasureLoop" (Void)
+{
+	
+    Delay(90);
+	While (getactorproperty(0, APROP_Health) > 0)
+	{
+		Delay(30);
+	}
+	//Death
+	
+	if(CheckActorInventory(SSCPlayerTID, "SKRefuel") >= 1)
+	{
+		DropItem(0,"StrifeMagpieEffect",1,(32 * CheckActorInventory(SSCPlayerTID, "SKRefuel")));
+	}
+	
+}

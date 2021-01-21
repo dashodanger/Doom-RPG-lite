@@ -1,0 +1,65 @@
+#library "MRPGMdat"
+#include "zcommon.acs"
+
+#libDefine TotalSubMenus 2
+#libdefine TotalOptions 22
+#libdefine TotalSkills 10
+#libdefine TotalSpells 10
+
+struct Menustruct
+{
+	str name;
+	str item;
+	str desc;
+	int Cost;
+	int levelreq;
+	int maxrank;
+}
+
+Menustruct Menuoptions[TotalSubMenus][TotalOptions] =
+{
+	{
+		{"menu1opt01","StatVIT","menu1Desc01",0,0,0},
+		{"menu1opt02","StatATK","menu1Desc02",0,0,0},
+		{"menu1opt03","StatINT","menu1Desc03",0,0,0},
+		{"menu1opt04","StatDEF","menu1Desc04",0,0,0},
+		{"menu1opt05","StatWIS","menu1Desc05",0,0,0},
+		{"menu1opt06","","menu1Desc06",0,0,0},
+		{"menu1opt07","","menu1Desc07",0,0,0}
+	},
+	{
+		{"menu2opt04","SKRefuel","menu2Desc04",1, 1, 5},
+		{"menu2opt06","SKVampirisim","menu2Desc06",1, 1, 5},
+		{"menu2opt08","SkillSpeed","menu2Desc08",1, 1, 8},
+		{"menu2opt02","SKHealthRegen","menu2Desc02",1, 1, 10},
+		{"menu2opt03","SKArmorRegen","menu2Desc03",1, 1, 10},
+		{"menu2opt01","SKManaRegen","menu2Desc01",2, 1, 10},
+		{"menu2opt07","SKMagicPotency","menu2Desc07",2, 1, 5},
+		{"menu2opt09","SKQuicken","menu2Desc09",2, 1, 5},
+		{"menu2opt05","","menu2Desc05",0,0,0},
+		{"menu1opt07","","menu1Desc07",0,0,0}
+	}
+};
+
+struct Spellstruct
+{
+	str Name;
+	str Icon;
+	str Item;
+	str Effect;
+	int Cost;
+}
+
+Spellstruct SpellsList[TotalSpells] =
+{
+	{"Nullspell","Nullspel","Nullspell","Nullspell",0},
+	{"Alacrity","RGSP_I","SPRage","SPRageCast",60},
+	{"Timestop","STYM_I","SPTimeStop","SPTimeStopCast",120},
+	{"Aura","SPWQ_I","SPProtectWard","SPProtectWardCast",50},
+	{"Hazard Ward","RADS_I","SPRadiation","SPBaseSpellCast",30},
+	{"Cloak","PIN2_I","SPInvis","SPInvisCast",50},
+	{"Vision","PVIS_I","SPVision","SPVisionCast",30},
+	{"Attack Minion","GSSP_I2","SPGuardian","SPGuardianCast",60},
+	{"Guard Minion","GSSP_I","SPLesserGuardian","SPLesserGuardianCast",40},
+	{"Bomb Minion","SPBM_I","SPBombMinion","SPBombMinionCast",75}
+};

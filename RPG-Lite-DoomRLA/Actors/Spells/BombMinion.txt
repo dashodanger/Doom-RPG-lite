@@ -1,0 +1,331 @@
+ACTOR SPBombMinion : Inventory
+{
+	+FLOATBOB
+	+INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+	Scale 0.1
+	FloatBobStrength 0.6
+	inventory.maxamount 1
+	Inventory.PickupMessage "$SP_BOMG" 
+	States
+	{
+	Spawn:
+		SPBM A 0
+		TNT1 A 0 A_JumpIfInventory("SPBombMinion",1,"GotAlready",AAPTR_PLAYER1)
+    TNT1 A 0 A_SetScale(0.5)
+		SPBM A 12 Bright
+    TNT1 A 0 A_SetScale(0.55)
+		SPBM A 2 Bright
+    TNT1 A 0 A_SetScale(0.6)
+		SPBM A 2 Bright
+    TNT1 A 0 A_SetScale(0.65)
+		SPBM A 2 Bright
+    TNT1 A 0 A_SetScale(0.7)
+		SPBM A 2 Bright
+    TNT1 A 0 A_SetScale(0.75)
+		SPBM A -1 Bright
+		Stop
+		GotAlready:
+		Goto Death
+	Death:
+		SPBM A 0
+		TNT1 A 0 A_SpawnItemEx("ManaMote")
+		Stop
+	}
+}
+
+ACTOR SPBombMinionCast : CustomInventory
+{
+  +INVENTORY.AUTOACTIVATE
+  +FLOATBOB
+  +INVENTORY.ALWAYSPICKUP
+  States
+  {
+  Spawn:
+    SPBM A -1 Bright
+    Stop
+  Use:
+	TNT1 A 0 A_Playsound("misc/p_pkup", CHAN_WEAPON)
+  TNT1 A 0 A_CheckBlock("Walled", CBF_NOACTORS , AAPTR_DEFAULT,45,0,10,0)
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1")
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power1:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion1",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power2:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion2",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power3:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion3",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power4:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion4",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power5:
+	TNT1 A 0 A_SpawnItemEx ("BaBombMinion5",45,0,10,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+	Walled:
+  TNT1 A 0 A_CheckBlock("Walled2", CBF_NOACTORS , AAPTR_DEFAULT,15,0,45,0)
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2W")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1W")
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion",15,0,45,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power1W:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion1",15,0,45,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power2W:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion2",15,0,45,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power3W:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion3",15,0,45,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power4W:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion4",15,0,45,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power5W:
+	TNT1 A 0 A_SpawnItemEx ("BaBombMinion5",15,0,45,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+	Walled2:
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5WW")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4WW")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3WW")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2WW")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1WW")
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power1WW:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion1",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power2WW:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion2",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power3WW:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion3",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power4WW:
+	TNT1 A 0 A_SpawnItemEx("BaBombMinion4",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  Power5WW:
+	TNT1 A 0 A_SpawnItemEx ("BaBombMinion5",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION )
+	stop
+  }
+}
+
+ACTOR BaBombMinion
+{
+	Tag "$SP_BOMG"
+	Health 20
+	Radius 28
+	Height 48
+	Mass 400
+	Speed 0
+	Scale 0.5
+	PainChance 0
+	Monster
+  DamageFactor "Vacuum", 0 // For Square
+	+FLOAT
+  +ALWAYSTELEFRAG
+  +NOICEDEATH
+  +DONTGIB
+  +NOPAIN
+  +PAINLESS
+  +Friendly
+	-CountKill
+	-Solid
+  DeathSound "world/barrelx"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ACS_NamedExecuteAlways("FriendlySummon",0,20)
+	Spawn2:
+		GBUM A 4 A_Look
+		GBUM B 4 A_RadiusThrust(-200, 44, RTF_NOIMPACTDAMAGE | RTF_NOTMISSILE | RTF_THRUSTZ)
+		GBUM C 4 A_CustomMeleeAttack(1,"","","MinMineMo",false)
+		GBUM D 4 A_ClearTarget
+		GBUM E 4 A_Look
+		GBUM F 4 A_RadiusThrust(-200, 44, RTF_NOIMPACTDAMAGE | RTF_NOTMISSILE | RTF_THRUSTZ)
+		GBUM G 4 A_CustomMeleeAttack(1,"","","MinMineMo",false)
+		GBUM H 4 A_ClearTarget
+		GBUM I 4 A_Look
+		GBUM J 4 A_RadiusThrust(-200, 44, RTF_NOIMPACTDAMAGE | RTF_NOTMISSILE | RTF_THRUSTZ)
+		GBUM K 4 A_CustomMeleeAttack(1,"","","MinMineMo",false)
+		GBUM L 4 A_ClearTarget
+		Loop
+	Death:
+		GBUM R 3 BRIGHT
+		GBUM S 3 BRIGHT
+		GBUM T 3 BRIGHT
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SetScale(0.7)
+    GBUM U 2 Bright A_Scream
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SetScale(0.8)
+    GBUM U 2 Bright
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SetScale(0.9)
+    GBUM U 2 Bright
+    GBUM V 8 Bright A_Explode(100, 80, XF_NOTMISSILE,false,44,0,0,"BulletPuff","MinMineMo")
+    GBUM W 6 Bright
+    GBUM X 4 Bright
+    GBUM Y 6 Bright
+    GBUM Z 8
+		Stop
+	}
+}
+
+ACTOR BaBombMinion1 : BaBombMinion
+{
+	States
+	{
+	Death:
+		GBUM R 2 BRIGHT
+		GBUM S 3 BRIGHT
+		GBUM T 3 BRIGHT
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect1",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect1",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SetScale(0.7)
+    GBUM U 2 Bright A_Scream
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect1",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect1",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SetScale(0.8)
+    GBUM U 2 Bright
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect1",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect1",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SetScale(0.9)
+    GBUM U 2 Bright
+    GBUM V 8 Bright A_Explode(135, 100, XF_NOTMISSILE,false,44,0,0,"BulletPuff","MinMineMo")
+    GBUM W 6 Bright
+    GBUM X 4 Bright
+    GBUM Y 6 Bright
+    GBUM Z 8
+		Stop
+	}
+}
+
+ACTOR BaBombMinion2 : BaBombMinion
+{
+	States
+	{
+	Death:
+		GBUM R 2 BRIGHT
+		GBUM S 3 BRIGHT
+		GBUM T 3 BRIGHT
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect2",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect2",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,6)))
+    TNT1 A 0 A_SetScale(0.7)
+    GBUM U 2 Bright A_Scream
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect2",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect2",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,6)))
+    TNT1 A 0 A_SetScale(0.8)
+    GBUM U 2 Bright
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect2",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect2",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SetScale(0.9)
+    GBUM U 2 Bright
+    GBUM V 8 Bright A_Explode(170, 120, XF_NOTMISSILE,false,44,0,0,"BulletPuff","MinMineMo")
+    GBUM W 6 Bright
+    GBUM X 4 Bright
+    GBUM Y 6 Bright
+    GBUM Z 8
+		Stop
+	}
+}
+
+ACTOR BaBombMinion3 : BaBombMinion
+{
+	States
+	{
+	Death:
+		GBUM R 2 BRIGHT
+		GBUM S 3 BRIGHT
+		GBUM T 3 BRIGHT
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect3",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect3",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SetScale(0.7)
+    GBUM U 2 Bright A_Scream
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect3",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect3",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SetScale(0.8)
+    GBUM U 2 Bright
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect3",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect3",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SetScale(0.9)
+    GBUM U 2 Bright
+    GBUM V 8 Bright A_Explode(205, 140, XF_NOTMISSILE,false,44,0,0,"BulletPuff","MinMineMo")
+    GBUM W 6 Bright
+    GBUM X 4 Bright
+    GBUM Y 6 Bright
+    GBUM Z 8
+		Stop
+	}
+}
+
+ACTOR BaBombMinion4 : BaBombMinion
+{
+	States
+	{
+	Death:
+		GBUM R 2 BRIGHT
+		GBUM S 3 BRIGHT
+		GBUM T 3 BRIGHT
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect4",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect4",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SetScale(0.7)
+    GBUM U 2 Bright A_Scream
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect4",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect4",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SetScale(0.8)
+    GBUM U 2 Bright
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect4",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect4",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SetScale(0.9)
+    GBUM U 2 Bright
+    GBUM V 8 Bright A_Explode(240, 160, XF_NOTMISSILE,false,44,0,0,"BulletPuff","MinMineMo")
+    GBUM W 6 Bright
+    GBUM X 4 Bright
+    GBUM Y 6 Bright
+    GBUM Z 8
+		Stop
+	}
+}
+
+ACTOR BaBombMinion5 : BaBombMinion
+{
+	States
+	{
+	Death:
+		GBUM R 2 BRIGHT
+		GBUM S 3 BRIGHT
+		GBUM T 3 BRIGHT
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect5",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect5",0,0,3,(Random(-6,6)),(Random(-6,6)),(Random(0,4)))
+    TNT1 A 0 A_SetScale(0.7)
+    GBUM U 2 Bright A_Scream
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect5",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect5",0,0,6,(Random(-6,6)),(Random(-6,6)),(Random(1,5)))
+    TNT1 A 0 A_SetScale(0.8)
+    GBUM U 2 Bright
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect5",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SpawnItemEx("HolyFireEffect5",0,0,9,(Random(-6,6)),(Random(-6,6)),(Random(2,6)))
+    TNT1 A 0 A_SetScale(0.9)
+    GBUM U 2 Bright
+    GBUM V 8 Bright A_Explode(275, 180, XF_NOTMISSILE,false,44,0,0,"BulletPuff","MinMineMo")
+    GBUM W 6 Bright
+    GBUM X 4 Bright
+    GBUM Y 6 Bright
+    GBUM Z 8
+		Stop
+	}
+}

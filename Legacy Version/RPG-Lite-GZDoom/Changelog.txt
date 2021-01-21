@@ -1,0 +1,26 @@
+1.5.0:
+	-Can no longer waste points on a maxed out stat
+	-Mana renamed to Energy to avoid confusion in hexen.
+	-Can no longer gain experience by killing your own summons.
+	-Summons now have their own attack.
+	-Added a skills system.
+	-Fixed bug where random stat allocation would occassionally eat stat points.
+	-Fixed errors in hexen.
+	-Fixed ACS errors that were appearing in several mods and games. Load order shouldnt matter so much now
+	-Menu system entirely recoded.
+	-Health bonuses and soulspheres should max out at 100 above max health now.
+	-Added Holy Fire spell.
+	-All stat effects have been buffed, suggest turning stat points per level down.
+	-Now all enemy deaths give experience, infighting and enviroment alike.
+	
+1.6.0
+	-Rage icon changed.
+	-Added Weaken spell.
+	-Added Slow spell.
+	-Spells are no longer inventory items.
+	-added Scan Skill, when activated enemy statistics are displayed.
+	-Buffed holy fire
+	-Buffed Health regen skill heavilly
+	-Fixed RNG with random stat allocation
+	-Nerfed guardians attacks.
+	-Guardians now scale if scaling monsters are enabled.

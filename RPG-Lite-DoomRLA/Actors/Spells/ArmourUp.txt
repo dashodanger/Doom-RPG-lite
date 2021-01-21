@@ -1,0 +1,161 @@
+ACTOR SPArmour : Inventory
+{
+	+FLOATBOB
+	+INVENTORY.ALWAYSPICKUP
+  +INVENTORY.UNCLEARABLE
+	Scale 0.1
+	FloatBobStrength 0.6
+	inventory.maxamount 1
+	Inventory.PickupMessage "$SP_ARMR"  
+	States
+	{
+	Spawn:
+		PARM A 0
+		TNT1 A 0 A_JumpIfInventory("SPArmour",1,"GotAlready",AAPTR_PLAYER1)
+    TNT1 A 0 A_SetScale(0.5)
+		PARM A 12 Bright
+    TNT1 A 0 A_SetScale(0.55)
+		PARM A 2 Bright
+    TNT1 A 0 A_SetScale(0.6)
+		PARM A 2 Bright
+    TNT1 A 0 A_SetScale(0.65)
+		PARM A 2 Bright
+    TNT1 A 0 A_SetScale(0.7)
+		PARM A 2 Bright
+    TNT1 A 0 A_SetScale(0.75)
+		PARM A -1 Bright
+		Stop
+		GotAlready:
+		Goto Death
+	Death:
+		PARM A 0
+		TNT1 A 0 A_SpawnItemEx("ManaMote")
+		Stop
+	}
+}
+
+ACTOR SPArmourCast : CustomInventory
+{
+  //+INVENTORY.INVBAR
+  +INVENTORY.AUTOACTIVATE
+  +FLOATBOB
+  +INVENTORY.ALWAYSPICKUP
+  States
+  {
+  Spawn:
+    PARM A -1
+    Stop
+  Use:
+	TNT1 A 0 A_Playsound("misc/p_pkup", CHAN_WEAPON)
+	TNT1 A 0 A_JumpIf(CallACS("SPCheckArmourColour", 0, 0, 0) == 1, "BlueArmour")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1")
+	TNT1 A 0 A_GiveInventory("SPArmourEffectGreen")
+	stop
+  Power1:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectGreen1")
+	stop
+  Power2:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectGreen2")
+	stop
+  Power3:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectGreen3")
+	stop
+  Power4:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectGreen4")
+	stop
+  Power5:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectGreen5")
+	stop
+	BlueArmour:
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5b")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4b")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3b")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2b")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1b")
+	TNT1 A 0 A_GiveInventory("SPArmourEffectBlue")
+	stop
+  Power1b:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectBlue1")
+	stop
+  Power2b:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectBlue2")
+	stop
+  Power3b:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectBlue3")
+	stop
+  Power4b:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectBlue4")
+	stop
+  Power5b:
+	TNT1 A 0 A_GiveInventory("SPArmourEffectBlue5")
+	stop
+  }
+}
+
+ACTOR SPArmourEffectGreen : BasicArmorBonus 
+{
+  Armor.MaxSaveAmount 100
+  Armor.SavePercent 33
+  Armor.SaveAmount 5
+}
+
+ACTOR SPArmourEffectGreen1 : SPArmourEffectGreen
+{
+  Armor.SaveAmount 10
+}
+
+ACTOR SPArmourEffectGreen2 : SPArmourEffectGreen
+{
+  Armor.SaveAmount 15
+}
+
+ACTOR SPArmourEffectGreen3 : SPArmourEffectGreen
+{
+  Armor.SaveAmount 20
+}
+
+ACTOR SPArmourEffectGreen4 : SPArmourEffectGreen
+{
+  Armor.SaveAmount 25
+}
+
+ACTOR SPArmourEffectGreen5 : SPArmourEffectGreen
+{
+  Armor.SaveAmount 30
+}
+
+ACTOR SPArmourEffectBlue : BasicArmorBonus 
+{
+  Armor.MaxSaveAmount 200
+  Armor.SavePercent 50
+  Armor.SaveAmount 5
+}
+
+ACTOR SPArmourEffectBlue1 : SPArmourEffectBlue
+{
+  Armor.SaveAmount 10
+}
+
+ACTOR SPArmourEffectBlue2 : SPArmourEffectBlue
+{
+  Armor.SaveAmount 15
+}
+
+ACTOR SPArmourEffectBlue3 : SPArmourEffectBlue
+{
+  Armor.SaveAmount 20
+}
+
+ACTOR SPArmourEffectBlue4 : SPArmourEffectBlue
+{
+  Armor.SaveAmount 25
+}
+
+ACTOR SPArmourEffectBlue5 : SPArmourEffectBlue
+{
+  Armor.SaveAmount 30
+}

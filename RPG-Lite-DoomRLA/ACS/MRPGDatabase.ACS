@@ -1,0 +1,203 @@
+#library "MRPGDatabase"
+#include "zcommon.acs"
+#define PLAYER_TID_START 1000
+
+script "MRPGsavescript" Unloading
+{
+	if (getcvar("MRPG_SaveEnabled") == False)
+	{Terminate;}
+	
+	for(int i = 0; i < PlayerCount(); i++)
+	{
+		SetUserCVar(i,"MRPG_StatLevel",CheckActorInventory(PLAYER_TID_START + i,"QPlayerlevel"));
+		SetUserCVar(i,"MRPG_StatPoints",CheckActorInventory(PLAYER_TID_START + i,"QStatpoints"));
+		SetUserCVar(i,"MRPG_SkillPoints",CheckActorInventory(PLAYER_TID_START + i,"QSkillPoints"));
+		SetUserCVar(i,"MRPG_StatEXP",CheckActorInventory(PLAYER_TID_START + i,"QExperience"));
+		SetUserCVar(i,"MRPG_StatVIT",CheckActorInventory(PLAYER_TID_START + i,"StatVIT"));
+		SetUserCVar(i,"MRPG_StatATK",CheckActorInventory(PLAYER_TID_START + i,"StatATK"));
+		SetUserCVar(i,"MRPG_StatINT",CheckActorInventory(PLAYER_TID_START + i,"StatINT"));
+		SetUserCVar(i,"MRPG_StatDEF",CheckActorInventory(PLAYER_TID_START + i,"StatDEF"));
+		SetUserCVar(i,"MRPG_StatWIS",CheckActorInventory(PLAYER_TID_START + i,"StatWIS"));
+		SetUserCVar(i,"MRPG_WisGiven",CheckActorInventory(PLAYER_TID_START + i,"WisSKGiven"));
+		SetUserCVar(i,"MRPG_SkillSCV",CheckActorInventory(PLAYER_TID_START + i,"SKRefuel"));
+		SetUserCVar(i,"MRPG_SkillTAP",CheckActorInventory(PLAYER_TID_START + i,"SKVampirisim"));
+		SetUserCVar(i,"MRPG_SkillSPD",CheckActorInventory(PLAYER_TID_START + i,"SkillSpeed"));
+		SetUserCVar(i,"MRPG_SkillHLR",CheckActorInventory(PLAYER_TID_START + i,"SKHealthregen"));
+		SetUserCVar(i,"MRPG_SkillARR",CheckActorInventory(PLAYER_TID_START + i,"SKArmorregen"));
+		SetUserCVar(i,"MRPG_SkillENR",CheckActorInventory(PLAYER_TID_START + i,"SKmanaregen"));
+		SetUserCVar(i,"MRPG_SkillSPL",CheckActorInventory(PLAYER_TID_START + i,"SKMagicPotency"));
+		SetUserCVar(i,"MRPG_SkillQCK",CheckActorInventory(PLAYER_TID_START + i,"SKQuicken"));
+		
+    if(GetCvar("MRPG_SaveSpells"))
+    {
+      SetUserCVar(i,"MRPG_SpellWard",CheckActorInventory(PLAYER_TID_START + i,"SPProtectWard"));
+      SetUserCVar(i,"MRPG_SpellRads",CheckActorInventory(PLAYER_TID_START + i,"SPRadiation"));
+      SetUserCVar(i,"MRPG_SpellVisi",CheckActorInventory(PLAYER_TID_START + i,"SPVision"));
+      SetUserCVar(i,"MRPG_SpellInvi",CheckActorInventory(PLAYER_TID_START + i,"SPInvis"));
+      SetUserCVar(i,"MRPG_SpellAtMi",CheckActorInventory(PLAYER_TID_START + i,"SPGuardian"));
+      SetUserCVar(i,"MRPG_SpellGuMi",CheckActorInventory(PLAYER_TID_START + i,"SPLesserGuardian"));
+      SetUserCVar(i,"MRPG_SpellSynt",CheckActorInventory(PLAYER_TID_START + i,"SPAmmoSynth"));
+      SetUserCVar(i,"MRPG_SpellHeal",CheckActorInventory(PLAYER_TID_START + i,"SPHeal"));
+      SetUserCVar(i,"MRPG_SpellArma",CheckActorInventory(PLAYER_TID_START + i,"SPArmour"));
+      SetUserCVar(i,"MRPG_SpellRage",CheckActorInventory(PLAYER_TID_START + i,"SPRage"));
+      SetUserCVar(i,"MRPG_SpellHast",CheckActorInventory(PLAYER_TID_START + i,"SPSpeed"));
+      SetUserCVar(i,"MRPG_SpellStop",CheckActorInventory(PLAYER_TID_START + i,"SPTimeStop"));
+      SetUserCVar(i,"MRPG_SpellPush",CheckActorInventory(PLAYER_TID_START + i,"SPPush"));
+      SetUserCVar(i,"MRPG_SpellBomb",CheckActorInventory(PLAYER_TID_START + i,"SPBombMinion"));
+      }
+	}
+}
+
+script "MRPGLoadscript" Enter
+{
+	if (getcvar("MRPG_SaveEnabled") == False || CheckInventory("MRPGhasloaded") == 1)
+	{Terminate;}
+	
+	TakeInventory("QPlayerlevel",GetUserCVar(PlayerNumber(),"MRPG_StatLevel"));
+	TakeInventory("QStatPoints",GetUserCVar(PlayerNumber(),"MRPG_StatPoints"));
+	TakeInventory("QSkillPoints",GetUserCVar(PlayerNumber(),"MRPG_SkillPoints"));
+	TakeInventory("QExperience",GetUserCVar(PlayerNumber(),"MRPG_StatEXP"));
+	TakeInventory("StatVIT",GetUserCVar(PlayerNumber(),"MRPG_StatVIT"));
+	TakeInventory("StatATK",GetUserCVar(PlayerNumber(),"MRPG_StatATK"));
+	TakeInventory("StatINT",GetUserCVar(PlayerNumber(),"MRPG_StatINT"));
+	TakeInventory("StatDEF",GetUserCVar(PlayerNumber(),"MRPG_StatDEF"));
+	TakeInventory("StatWIS",GetUserCVar(PlayerNumber(),"MRPG_StatWIS"));
+	TakeInventory("WisSKGiven",GetUserCVar(PlayerNumber(),"MRPG_WisGiven"));
+	TakeInventory("SKRefuel",GetUserCVar(PlayerNumber(),"MRPG_SkillSCV"));
+	TakeInventory("SKVampirisim",GetUserCVar(PlayerNumber(),"MRPG_SkillTAP"));
+	TakeInventory("SkillSpeed",GetUserCVar(PlayerNumber(),"MRPG_SkillSPD"));
+	TakeInventory("SKHealthregen",GetUserCVar(PlayerNumber(),"MRPG_SkillHLR"));
+	TakeInventory("SKArmorregen",GetUserCVar(PlayerNumber(),"MRPG_SkillARR"));
+	TakeInventory("SKmanaregen",GetUserCVar(PlayerNumber(),"MRPG_SkillENR"));
+	TakeInventory("SKMagicPotency",GetUserCVar(PlayerNumber(),"MRPG_SkillSPL"));
+	TakeInventory("SKQuicken",GetUserCVar(PlayerNumber(),"MRPG_SkillQCK"));
+	
+	GiveInventory("QPlayerlevel",GetUserCVar(PlayerNumber(),"MRPG_StatLevel"));
+	GiveInventory("QStatPoints",GetUserCVar(PlayerNumber(),"MRPG_StatPoints"));
+	GiveInventory("QSkillPoints",GetUserCVar(PlayerNumber(),"MRPG_SkillPoints"));
+	GiveInventory("QExperience",GetUserCVar(PlayerNumber(),"MRPG_StatEXP"));
+	GiveInventory("StatVIT",GetUserCVar(PlayerNumber(),"MRPG_StatVIT"));
+	GiveInventory("StatATK",GetUserCVar(PlayerNumber(),"MRPG_StatATK"));
+	GiveInventory("StatINT",GetUserCVar(PlayerNumber(),"MRPG_StatINT"));
+	GiveInventory("StatDEF",GetUserCVar(PlayerNumber(),"MRPG_StatDEF"));
+	GiveInventory("StatWIS",GetUserCVar(PlayerNumber(),"MRPG_StatWIS"));
+	GiveInventory("WisSKGiven",GetUserCVar(PlayerNumber(),"MRPG_WisGiven"));
+	GiveInventory("SKRefuel",GetUserCVar(PlayerNumber(),"MRPG_SkillSCV"));
+	GiveInventory("SKVampirisim",GetUserCVar(PlayerNumber(),"MRPG_SkillTAP"));
+	GiveInventory("SkillSpeed",GetUserCVar(PlayerNumber(),"MRPG_SkillSPD"));
+	GiveInventory("SKHealthregen",GetUserCVar(PlayerNumber(),"MRPG_SkillHLR"));
+	GiveInventory("SKArmorregen",GetUserCVar(PlayerNumber(),"MRPG_SkillARR"));
+	GiveInventory("SKmanaregen",GetUserCVar(PlayerNumber(),"MRPG_SkillENR"));
+	GiveInventory("SKMagicPotency",GetUserCVar(PlayerNumber(),"MRPG_SkillSPL"));
+	GiveInventory("SKQuicken",GetUserCVar(PlayerNumber(),"MRPG_SkillQCK"));
+	ACS_NamedExecuteAlways("UpdateStats",0);
+	
+	if(!GetCvar("MRPG_SaveSpells"))
+	{
+	GiveInventory("nullspell",1);
+	}
+	
+	if(GetCvar("MRPG_SaveSpells"))
+	{
+	delay(1);
+	GiveInventory("SPProtectWard",GetUserCVar(PlayerNumber(),"MRPG_SpellWard"));
+	GiveInventory("SPRadiation",GetUserCVar(PlayerNumber(),"MRPG_SpellRads"));
+	GiveInventory("SPVision",GetUserCVar(PlayerNumber(),"MRPG_SpellVisi"));
+	GiveInventory("SPInvis",GetUserCVar(PlayerNumber(),"MRPG_SpellInvi"));
+	GiveInventory("SPGuardian",GetUserCVar(PlayerNumber(),"MRPG_SpellAtMi"));
+	GiveInventory("SPLesserGuardian",GetUserCVar(PlayerNumber(),"MRPG_SpellGuMi"));
+	GiveInventory("SPAmmoSynth",GetUserCVar(PlayerNumber(),"MRPG_SpellSynt"));
+	GiveInventory("SPHeal",GetUserCVar(PlayerNumber(),"MRPG_SpellHeal"));
+	GiveInventory("SPArmour",GetUserCVar(PlayerNumber(),"MRPG_SpellArma"));
+	GiveInventory("SPRage",GetUserCVar(PlayerNumber(),"MRPG_SpellRage"));
+	GiveInventory("SPSpeed",GetUserCVar(PlayerNumber(),"MRPG_SpellHast"));
+	GiveInventory("SPTimeStop",GetUserCVar(PlayerNumber(),"MRPG_SpellStop"));
+	GiveInventory("SPPush",GetUserCVar(PlayerNumber(),"MRPG_SpellPush"));
+	GiveInventory("SPBombMinion",GetUserCVar(PlayerNumber(),"MRPG_SpellBomb"));
+	TakeInventory("nullspell",1);
+		}
+			
+	delay(1);
+	Giveinventory("QMana",GetAmmoCapacity("mana"));
+	GiveInventory("MRPGhasloaded",1);
+	
+}
+
+script "MRPGClearscript" (Void)
+{
+	setCVar("MRPG_StatLevel",0);
+	SetCVar("MRPG_StatPoints",0);
+	SetCVar("MRPG_SkillPoints",0);
+	SetCVar("MRPG_StatEXP",0);
+	SetCVar("MRPG_StatVIT",0);
+	SetCVar("MRPG_StatATK",0);
+	SetCVar("MRPG_StatINT",0);
+	SetCVar("MRPG_StatSTR",0);
+	SetCVar("MRPG_StatDEF",0);
+	SetCVar("MRPG_StatWIS",0);
+	SetCVar("MRPG_WisGiven",0);
+	
+	SetCVar("MRPG_SkillSCV",0);
+	SetCVar("MRPG_SkillTAP",0);
+	SetCVar("MRPG_SkillSPD",0);
+	SetCVar("MRPG_SkillHLR",0);
+	SetCVar("MRPG_SkillARR",0);
+	SetCVar("MRPG_SkillENR",0);
+	SetCVar("MRPG_SkillSPL",0);
+	SetCVar("MRPG_SkillQCK",0);
+	
+	SetCVar("MRPG_SpellWard",0);
+	SetCVar("MRPG_SpellRads",0);
+	SetCVar("MRPG_SpellVisi",0);
+	SetCVar("MRPG_SpellInvi",0);
+	SetCVar("MRPG_SpellAtMi",0);
+	SetCVar("MRPG_SpellGuMi",0);
+	SetCVar("MRPG_SpellSynt",0);
+	SetCVar("MRPG_SpellHeal",0);
+	SetCVar("MRPG_SpellArma",0);
+	SetCVar("MRPG_SpellRage",0);
+	SetCVar("MRPG_SpellHast",0);
+	SetCVar("MRPG_SpellStop",0);
+	SetCVar("MRPG_SpellPush",0);
+	SetCVar("MRPG_SpellBomb",0);
+}
+
+script "MRPGSetDefaults" (Void)
+{
+	setCVar("MRPG_EXPBase",60);
+	SetCVar("MRPG_StatsPerLevel",4);
+	SetCVar("MRPG_SkillsPerLevel",2);
+	SetCVar("MRPG_LevelCap",100);
+	SetCVar("MRPG_SaveEnabled",True);
+	SetCVar("MRPG_SaveSpells",True);
+	SetCVar("MRPG_LevelOnePoints",True);
+	SetCVar("MRPG_PlayerSpecies",True);
+	SetCVar("MRPG_RandomStats",False);
+	SetCVar("MRPG_ATKTilt",1.0);
+	SetCVar("MRPG_DEFTilt",1.0);
+}
+
+script "MRPGManualLoad" (void)
+{
+	TakeInventory("QPlayerlevel",1000);
+	TakeInventory("QStatPoints",1000);
+	TakeInventory("QSkillPoints",1000);
+	TakeInventory("QExperience",9999);
+	TakeInventory("StatVIT",1000);
+	TakeInventory("StatATK",1000);
+	TakeInventory("StatINT",1000);
+	TakeInventory("StatDEF",1000);
+	TakeInventory("StatWIS",1000);
+	TakeInventory("MRPG_WisGiven",1000);
+	TakeInventory("SKRefuel",10);
+	TakeInventory("SKVampirisim",10);
+	TakeInventory("SkillSpeed",10);
+	TakeInventory("SKHealthregen",10);
+	TakeInventory("SKArmorregen",10);
+	TakeInventory("SKmanaregen",10);
+	TakeInventory("SKMagicPotency",10);
+	TakeInventory("SKQuicken",10);
+	TakeInventory("MRPGhasloaded",1);
+	
+	ACS_NamedExecuteAlways("MRPGLoadscript",0);
+}

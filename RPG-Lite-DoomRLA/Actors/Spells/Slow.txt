@@ -1,0 +1,173 @@
+ACTOR SPSlow : Inventory
+{
+	+FLOATBOB
+	+INVENTORY.ALWAYSPICKUP
+	inventory.maxamount 1
+	Inventory.PickupMessage "Slowdown"
+	States
+	{
+	Spawn:
+		SPSL A -1 Bright
+		Stop
+	}
+}
+
+ACTOR SPSlowCast : CustomInventory
+{
+  //+INVENTORY.INVBAR
+  +INVENTORY.AUTOACTIVATE
+  +FLOATBOB
+  +INVENTORY.ALWAYSPICKUP
+  States
+  {
+  Spawn:
+    SPSL A -1 Bright
+    Stop
+  Use:
+	TNT1 A 0 A_Playsound("misc/p_pkup", CHAN_WEAPON)
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1")
+	TNT1 A 0 A_FireCustomMissile("SlowEffect")
+	stop
+  Power1:
+	TNT1 A 0 A_FireCustomMissile("SlowEffect1")
+	stop
+  Power2:
+	TNT1 A 0 A_FireCustomMissile("SlowEffect2")
+	stop
+  Power3:
+	TNT1 A 0 A_FireCustomMissile("SlowEffect3")
+	stop
+  Power4:
+	TNT1 A 0 A_FireCustomMissile("SlowEffect4")
+	stop
+  Power5:
+	TNT1 A 0 A_FireCustomMissile("SlowEffect5")
+	stop
+  }
+}
+
+Actor SlowEffect : FastProjectile
+{
+  Speed 120
+  Radius 8
+  Height 8
+  Damage 0
+  Species "Player"
+  +CANNOTPUSH
+  +THRUSPECIES
+  +MTHRUSPECIES
+  +HITTRACER
+  MissileType "SlowSmokeLaserTrail"
+  States
+  {
+	Spawn:
+		MSGD AB 4 Bright
+		Loop
+	Death:
+		MSGD C 4 Bright ACS_NamedExecuteAlways("SpellSlow",0,20)
+		MSGD C 4 Bright
+		MSGD D 3 Bright
+		MSGD E 4 Bright
+		MSGD F 3 Bright
+		MSGD G 4 Bright
+		Stop
+  }
+}
+
+Actor SlowEffect1 : SlowEffect
+{
+  States
+  {
+	Death:
+		MSGD C 4 Bright ACS_NamedExecuteAlways("SpellSlow",0,24)
+		MSGD C 4 Bright
+		MSGD D 3 Bright
+		MSGD E 4 Bright
+		MSGD F 3 Bright
+		MSGD G 4 Bright
+		Stop
+  }
+}
+
+Actor SlowEffect2 : SlowEffect
+{
+  States
+  {
+	Death:
+		MSGD C 4 Bright ACS_NamedExecuteAlways("SpellSlow",0,28)
+		MSGD C 4 Bright
+		MSGD D 3 Bright
+		MSGD E 4 Bright
+		MSGD F 3 Bright
+		MSGD G 4 Bright
+		Stop
+  }
+}
+
+Actor SlowEffect3 : SlowEffect
+{
+  States
+  {
+	Death:
+		MSGD C 4 Bright ACS_NamedExecuteAlways("SpellSlow",0,32)
+		MSGD C 4 Bright
+		MSGD D 3 Bright
+		MSGD E 4 Bright
+		MSGD F 3 Bright
+		MSGD G 4 Bright
+		Stop
+  }
+}
+
+Actor SlowEffect4 : SlowEffect
+{
+  States
+  {
+	Death:
+		MSGD C 4 Bright ACS_NamedExecuteAlways("SpellSlow",0,36)
+		MSGD DEFG 3 Bright
+		Stop
+  }
+}
+
+Actor SlowEffect5 : SlowEffect
+{
+  States
+  {
+	Death:
+		MSGD C 4 Bright ACS_NamedExecuteAlways("SpellSlow",0,40)
+		MSGD C 4 Bright
+		MSGD D 3 Bright
+		MSGD E 4 Bright
+		MSGD F 3 Bright
+		MSGD G 4 Bright
+		Stop
+  }
+}
+
+Actor slowdebuff : Inventory
+{
+}
+
+
+Actor SlowSmokeLaserTrail
+{ 
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+SHADOW
+	+NOTELEPORT
+	+CANNOTPUSH
+	+NODAMAGETHRUST
+	RenderStyle "Translucent"
+	Alpha 0.6
+	States
+	{
+	Spawn:
+		MSGD ABAB 4
+		Stop
+	}
+}

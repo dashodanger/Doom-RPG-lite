@@ -1,0 +1,40 @@
+ACTOR AshesRadsuitEffect : PowerupGiver replaces RadsuitEffect
+{
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Powerup.Type "IronFeet"
+  Powerup.Color 0, 160, 20, 0.15
+  Powerup.Duration -2
+
+}
+
+ACTOR AshesRadsuitEffect1 : AshesRadsuitEffect replaces RadsuitEffect1
+{
+  Powerup.Duration -3
+
+}
+
+ACTOR AshesRadsuitEffect2 : AshesRadsuitEffect replaces RadsuitEffect2
+{
+  Powerup.Duration -4
+
+}
+
+ACTOR AshesRadsuitEffect3 : AshesRadsuitEffect replaces RadsuitEffect3
+{
+  Powerup.Duration -5
+
+}
+
+ACTOR AshesRadsuitEffect4 : AshesRadsuitEffect replaces RadsuitEffect4
+{
+  Powerup.Duration -6
+
+}
+
+ACTOR AshesRadsuitEffect5 : AshesRadsuitEffect replaces RadsuitEffect5
+{
+  Powerup.Duration -7
+
+}

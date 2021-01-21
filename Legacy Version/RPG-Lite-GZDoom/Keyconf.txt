@@ -1,0 +1,17 @@
+addkeysection "Lite RPG" MonkeysRPG
+
+addmenukey "Open Menu" RPG_OpenMenu
+alias RPG_OpenMenu "Pukename MRPGOpenMenu"
+Defaultbind X RPG_OpenMenu
+
+addmenukey "Use Spell" RPG_UseSpell
+alias RPG_UseSpell "Pukename SpellUse"
+Defaultbind F RPG_UseSpell
+
+addmenukey "Select Next Spell" RPG_SelectNext
+alias RPG_SelectNext "Pukename SpellSelectUp"
+Defaultbind . RPG_SelectNext
+
+addmenukey "Select Previous Spell" RPG_SelectPrevious
+alias RPG_SelectPrevious "Pukename SpellSelectDown"
+Defaultbind , RPG_SelectPrevious

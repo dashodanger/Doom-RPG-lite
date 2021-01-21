@@ -1,0 +1,42 @@
+Spells have flat energy costs, while the effect and/or duration increases with the spellcasting skill.
+Casting a spell with a duration while that spell is active will add to the duration.
+
+There's a cooldown after casting a spell of seventy tics, which is two seconds.  The Quickening skill reduces this timer by seven tics per rank.
+
+Alacrity: 60 energy.  Red, (sword)
+Increases weapon speed.  Amount is variable, since it works by halving the hold time of frames that stay for more than one tic.  Quick and/or smoothly animated weapons therefore may see only minor speed increases.
+Duration is 6s + 3s/rank.
+
+Timestop: 120 energy. Orange, (icy inverted hourglass)
+Freezes all actors.  More or less.
+Duration is 2s + 1s/rank.
+
+Aura: 50 energy. Yellow, (ankh)
+For the duration, the player won't be chased by homing missiles and is immune to splash damage, telefragging and being pierced by ripping projectiles.  A green circle is drawn around the spell icon while aura is active.
+Duration is (rank+3) squared, so ranges from 9s to 64s.
+Note: Splash attacks that work on boss monsters will still hurt you; those have the +FORCERADIUSDAMAGE flag that overrides the immunity this spell grants.  Nothing in vanilla doom does this, but a few gameplay mods like to.
+
+Hazard: 30 energy, Green, (radiation trefoil)
+Radsuit.
+Duration is 20s +10s/rank.
+
+Cloak: 50 energy, Cyan (dark eye)
+Partial invisibility.
+Duration is 8s + 4s/rank.
+
+Vision: 30 energy, Blue (bright eye)
+Dispels darkness (PowerTorch).
+Duration is 30s +15s/rank.
+
+Attack Minion: 60 energy, indigo (blue orb)
+Summons a somewhat fragile orb that flies around and lasers bad guys with moderately powerful piercing rail shots.
+Duration is 45 seconds; health is 75 + 25/rank.  Higher ranks also reduce refire delay.
+
+Guard Minion: 40 energy, violet (purple orb)
+Summons a sturdy but immobile orb that provokes bad guys with weak shots, followed up by debuff shots that reduce attack and speed.  Great distractions.  They forget their target after each volley, so they'll always shoot the closest enemy.  Debuffs reduce speed and damage output of monsters they hit.
+Duration is 90 seconds; health is 200 + 100/rank.  Higher ranks also reduce refire delay.
+
+Minion Mine: 75 energy, magenta (spiked orb)
+Summons a spinny thing.  It has 20 health, a minimum damage melee attack and can't move (although it can be knocked around).  Naturally, it explodes when it dies (or after 20s), scattering six flames over a short distance.  Be mindful, though, because the explosion and fire can both hurt the player.  Unless you're somehow immune to splash damage.
+Duration is 20 seconds; A_Explode damage is 100 + 35/rank, in a radius of 80 + 20/rank.  The fire does about 1+ 1/rank damage, but rapidly.
+Note: Friendly fire, both ways.  You can still shoot them if teamplay is on, unless you're on the purple team.  Mostly a kludge but it's an option if you prefer.

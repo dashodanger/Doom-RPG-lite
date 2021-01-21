@@ -1,5 +1,0 @@
-Nerfed defense stat.
-Added clear data option.
-tweaked some scripts to improve compatibility.
-Changed default experience base to 100.
-Added mana and health displays to the menu.

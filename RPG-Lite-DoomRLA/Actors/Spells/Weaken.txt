@@ -1,0 +1,176 @@
+ACTOR SPWeaken : Inventory
+{
+	+FLOATBOB
+	+INVENTORY.ALWAYSPICKUP
+	inventory.maxamount 1
+	Inventory.PickupMessage "Weaken" 
+	States
+	{
+	Spawn:
+		SPFR A -1 Bright
+		Stop
+	}
+}
+
+ACTOR SPWeakenCast : CustomInventory
+{
+  +Inventory.Autoactivate
+  +FLOATBOB
+  +INVENTORY.ALWAYSPICKUP
+  States
+  {
+  Spawn:
+    SPFR A -1 Bright
+    Stop
+  Use:
+	TNT1 A 0 A_Playsound("misc/p_pkup", CHAN_WEAPON)
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",5,"Power5")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",4,"Power4")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",3,"Power3")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",2,"Power2")
+	TNT1 A 0 A_JumpIfInventory("SKMagicPotency",1,"Power1")
+	TNT1 A 0 A_FireCustomMissile("WeakenEffect")
+	stop
+  Power1:
+	TNT1 A 0 A_FireCustomMissile("WeakenEffect1")
+	stop
+  Power2:
+	TNT1 A 0 A_FireCustomMissile("WeakenEffect2")
+	stop
+  Power3:
+	TNT1 A 0 A_FireCustomMissile("WeakenEffect3")
+	stop
+  Power4:
+	TNT1 A 0 A_FireCustomMissile("WeakenEffect4")
+	stop
+  Power5:
+	TNT1 A 0 A_FireCustomMissile("WeakenEffect5")
+	stop
+  }
+}
+
+Actor WeakenEffect : FastProjectile
+{
+  Speed 80
+  Radius 8
+  Height 8
+  Damage 0
+  Species "Player"
+  +CANNOTPUSH
+  +THRUSPECIES
+  +MTHRUSPECIES
+  +HITTRACER
+  MissileType "WeakenSmokeLaserTrail"
+  States
+  {
+	Spawn:
+		MSGA AB 4 Bright
+		Loop
+	Death:
+		MSGA C 4 Bright ACS_NamedExecuteAlways("SpellWeaken",0,20)
+		MSGA C 4 Bright
+		MSGA D 3 Bright
+		MSGA E 4 Bright
+		MSGA F 3 Bright
+		MSGA G 4 Bright
+		Stop
+  }
+}
+
+Actor WeakenEffect1 : WeakenEffect
+{
+  States
+  {
+	Death:
+		MSGA C 4 Bright ACS_NamedExecuteAlways("SpellWeaken",0,24)
+		MSGA C 4 Bright
+		MSGA D 3 Bright
+		MSGA E 4 Bright
+		MSGA F 3 Bright
+		MSGA G 4 Bright
+		Stop
+  }
+}
+
+Actor WeakenEffect2 : WeakenEffect
+{
+  States
+  {
+	Death:
+		MSGA C 4 Bright ACS_NamedExecuteAlways("SpellWeaken",0,28)
+		MSGA C 4 Bright
+		MSGA D 3 Bright
+		MSGA E 4 Bright
+		MSGA F 3 Bright
+		MSGA G 4 Bright
+		Stop
+  }
+}
+
+Actor WeakenEffect3 : WeakenEffect
+{
+  States
+  {
+	Death:
+		MSGA C 4 Bright ACS_NamedExecuteAlways("SpellWeaken",0,32)
+		MSGA C 4 Bright
+		MSGA D 3 Bright
+		MSGA E 4 Bright
+		MSGA F 3 Bright
+		MSGA G 4 Bright
+		Stop
+  }
+}
+
+Actor WeakenEffect4 : WeakenEffect
+{
+  States
+  {
+	Death:
+		MSGA C 4 Bright ACS_NamedExecuteAlways("SpellWeaken",0,36)
+		MSGA C 4 Bright
+		MSGA D 3 Bright
+		MSGA E 4 Bright
+		MSGA F 3 Bright
+		MSGA G 4 Bright
+		Stop
+  }
+}
+
+Actor WeakenEffect5 : WeakenEffect
+{
+  States
+  {
+	Death:
+		MSGA C 4 Bright ACS_NamedExecuteAlways("SpellWeaken",0,40)
+		MSGA C 4 Bright
+		MSGA D 3 Bright
+		MSGA E 4 Bright
+		MSGA F 3 Bright
+		MSGA G 4 Bright
+		Stop
+  }
+}
+
+Actor WeakenDebuff : Inventory
+{
+	inventory.maxamount 1
+}
+
+Actor WeakenSmokeLaserTrail
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+SHADOW
+	+NOTELEPORT
+	+CANNOTPUSH
+	+NODAMAGETHRUST
+	RenderStyle "Translucent"
+	Alpha 0.6
+	States
+	{
+	Spawn:
+		MSGA ABAB 4
+		Stop
+	}
+}
