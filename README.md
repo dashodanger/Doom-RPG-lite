@@ -18,7 +18,7 @@ Legacy - The original 1.60 version of the mod, with patches
 
 RPG-Lite - Current 2.x branch started by Ixcuazl
 
-RPG-Lite-DoomRLA - DoomRLA-compatible version based off of the 2.x branch
+RPG-Lite-DoomRLA - DoomRLA-compatible version based off of the 2.x branch started by Solid-Head
 
 RPG-Lite-Redux - Monkeybtm6's initial re-write of the Legacy branch
 
